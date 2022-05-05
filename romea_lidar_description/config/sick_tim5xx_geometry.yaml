@@ -1,0 +1,10 @@
+mass: 0.250
+aabb:
+    length: 0.06
+    width: 0.06
+    height: 0.086
+    center: [0.0, 0.0, -0.026]
+mesh:
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
+    filename: package://sick_tim/meshes/sick_tim551.stl

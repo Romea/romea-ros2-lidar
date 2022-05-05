@@ -1,0 +1,8 @@
+minimal_azimut_angle: -135
+maximal_azimut_angle: 135
+azimut_angle_std: 0
+minimal_range: 0.5
+maximal_range: 50
+range_std: 0
+azimut_angle_increment: 0.25
+samples: 1081

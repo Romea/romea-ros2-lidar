@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<launch>
+
+   <arg name="xyz"/>
+   <arg name="rpy"/>
+   <arg name="rate"/>
+   <arg name="mode"/>
+   <arg name="lidar_name" default="lidar"/>
+   <arg name="robot_name" default="robot"/>
+   <arg name="robot_parent_link" default="base_link"/>
+
+   <arg name="embedded" default="false"/>
+   <arg name="connection" default="usb"/>
+   <arg name="ip" if="$(eval arg('embedded') == false and arg('connection') == 'ethernet')"/>
+   <arg name="port" default="2111" if="$(eval arg('embedded') == false and arg('connection') == 'ethernet')"/>
+
+   <arg name="scan_topic" default="/$(arg robot_name)/$(arg lidar_name)/scan"/>
+
+   <group ns="$(arg lidar_name)">
+
+      <include file="$(find romea_lidar_bringup)/launch/common/lidar_common.launch">
+         <arg name="mode" value="$(arg mode)"/>
+         <arg name="lidar_name" value="$(arg lidar_name)"/>
+         <arg name="robot_name" value="$(arg robot_name)"/>
+         <arg name="robot_parent_link" value="$(arg robot_parent_link)"/>
+         <arg name="xyz" value="$(arg xyz)"/>
+         <arg name="rpy" value="$(arg rpy)"/>
+         <arg name="rate" value="$(arg rate)"/>
+         <arg name="type" value="sick"/>
+         <arg name="model" value="tim5xx"/>
+         <arg name="scan_topic" value="$(arg scan_topic)"/>
+      </include>
+
+      <group if="$(eval arg('mode') == 'live' and arg('embedded') == false)">
+
+         <include file="$(find romea_lidar_bringup)/launch/common/sick_tim5xx.launch">
+            <arg name="robot_name" value="$(arg robot_name)"/>
+            <arg name="lidar_name" value="$(arg lidar_name)"/>
+            <arg name="scan_topic" value="$(arg scan_topic)"/>
+            <arg name="ip" value="$(arg ip)" if="$(eval arg('connection') == 'ethernet')"/>
+            <arg name="port" value="$(arg port)" if="$(eval arg('connection') == 'ethernet')"/>
+         </include>
+
+      </group>
+
+    </group>
+
+</launch>

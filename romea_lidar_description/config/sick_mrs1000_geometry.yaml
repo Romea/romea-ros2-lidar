@@ -1,0 +1,10 @@
+mass : 1.2
+aabb :
+    length: 0.152
+    width: 0.150
+    height: 0.925
+    center: [0.0, 0.0, -0.025]
+mesh:
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
+    filename: package://sick_tim/meshes/sick_mrs1000.stl

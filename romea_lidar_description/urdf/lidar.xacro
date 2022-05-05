@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<robot name="lidar" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<xacro:macro name="lidar_sensor" params="xyz rpy parent_link rate type model name">
+
+    <xacro:if value="${type == 'sick'}">
+
+       <xacro:if value="${'lms1' in model}">
+           <xacro:property name="specifications_file" value="$(find romea_lidar_description)/config/sick_lms1xx_${rate}hz_specifications.yaml" />
+           <xacro:property name="geometry_file" value="$(find romea_lidar_description)/config/sick_lms1xx_geometry.yaml" />
+       </xacro:if>
+
+       <xacro:if value="${'tim5' in model}">
+           <xacro:property name="specifications_file" value="$(find romea_lidar_description)/config/sick_tim5xx_specifications.yaml" />
+           <xacro:property name="geometry_file" value="$(find romea_lidar_description)/config/sick_tim5xx_geometry.yaml" />
+       </xacro:if>
+
+    </xacro:if>
+
+    <xacro:property name="specifications" value="${load_yaml(specifications_file)}"/>
+    <xacro:property name="geometry" value="${load_yaml(geometry_file)}"/>
+
+    <xacro:property name="link_name" value="${prefix}${name}_link"/>
+    <xacro:property name="joint_name" value="${prefix}${name}_joint"/>
+    <xacro:property name="controller_name" value="${prefix}${name}_controller"/>
+    <xacro:property name="parent_link_name" value="${prefix}${parent_link}"/>
+
+    <xacro:property name="samples" value="${specifications['samples']}"/>
+    <xacro:property name="minimal_azimut_angle" value="${specifications['minimal_azimut_angle']/180.*pi}"/>
+    <xacro:property name="maximal_azimut_angle" value="${specifications['maximal_azimut_angle']/180.*pi}"/>
+    <xacro:property name="minimal_range" value="${specifications['minimal_range']}"/>
+    <xacro:property name="maximal_range" value="${specifications['maximal_range']}"/>
+
+    <xacro:property name="mass" value="${geometry['mass']}"/>
+    <xacro:property name="aabb_length" value="${geometry['aabb']['length']}"/>
+    <xacro:property name="aabb_width" value="${geometry['aabb']['width']}"/>
+    <xacro:property name="aabb_height" value="${geometry['aabb']['height']}"/>
+    <xacro:property name="aabb_center" value="${geometry['aabb']['center']}"/>
+    <xacro:property name="mesh_xyz" value="${geometry['mesh']['xyz']}"/>
+    <xacro:property name="mesh_rpy" value="${geometry['mesh']['rpy']}"/>
+    <xacro:property name="mesh_filename" value="${geometry['mesh']['filename']}"/>
+
+    <link name="${link_name}">
+      <inertial>
+        <mass value="${mass}" />
+        <origin xyz="${aabb_center[0]} ${aabb_center[1]} ${aabb_center[2]}" />
+        <inertia ixx="${0.0833333 * mass * (aabb_width*aabb_width + aabb_height*aabb_height)}" ixy="0.0" ixz="0.0"
+          iyy="${0.0833333 * mass * (aabb_height*aabb_height + aabb_length*aabb_length)}" iyz="0.0"
+          izz="${0.0833333 * mass * (aabb_length*aabb_length + aabb_width*aabb_width)}" />
+      </inertial>
+      <visual>
+        <origin xyz="${mesh_xyz[0]} ${mesh_xyz[1]} ${mesh_xyz[2]}" rpy="${mesh_rpy[0]} ${mesh_rpy[1]} ${mesh_rpy[2]}" />
+          <geometry>
+            <mesh filename="${mesh_filename}" />
+          </geometry>
+      </visual>
+    <collision>
+      <origin xyz="${aabb_center[0]} ${aabb_center[1]} ${aabb_center[2]}" rpy="0 0 0" />
+      <geometry>
+        <box size="${aabb_length} ${aabb_width} ${aabb_height}" />
+      </geometry>
+    </collision>
+
+    </link>
+
+    <gazebo reference="${link_name}">
+      <sensor type="ray" name="${prefix}${name}">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>true</visualize>
+        <update_rate>${rate}</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>${samples}</samples>
+              <resolution>1</resolution>
+              <min_angle>${minimal_azimut_angle}</min_angle>
+              <max_angle>${maximal_azimut_angle}</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>${minimal_range}</min>
+            <max>${maximal_range}</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </ray>
+        <plugin name="gazebo_ros_laser" filename="libgazebo_ros_laser.so">
+          <topicName>/${prefix}${name}/scan</topicName>
+          <frameName>${link_name}</frameName>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+    <joint name="${joint_name}" type="fixed">
+        <axis xyz="0 0 1" />
+        <origin xyz="${xyz}" rpy="${rpy}"/>
+        <parent link="${parent_link_name}"/>
+        <child link="${link_name}"/>
+    </joint>
+
+</xacro:macro>
+
+</robot>

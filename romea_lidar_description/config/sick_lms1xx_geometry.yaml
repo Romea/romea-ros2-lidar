@@ -1,0 +1,11 @@
+mass : 1.1
+aabb :
+    length: 0.152
+    width: 0.102
+    height: 0.105
+    center: [0.0, 0.0, 0.0]
+mesh:
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
+    filename: package://lms1xx/meshes/sick-lms1xx.dae
+

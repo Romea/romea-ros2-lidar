@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<launch>
+
+   <arg name="mode"/>
+   <arg name="lidar_name"/>
+   <arg name="robot_name"/>
+   <arg name="robot_parent_link"/>
+
+   <arg name="type"/>
+   <arg name="model"/>
+   <arg name="rate"/>
+   <arg name="xyz"/>
+   <arg name="rpy"/>
+
+   <arg name="scan_topic"/>
+   <arg name="xacro_directory" default="$(env HOME)/.ros/log/latest/$(arg robot_name)/description"/>
+
+   <param name="rate" value="$(arg rate)"/>
+   <rosparam param="xyz" subst_value="True">$(arg xyz)</rosparam>
+   <rosparam param="rpy" subst_value="True">$(arg rpy)</rosparam>
+
+   <group if="$(eval arg('model') == 'lms1xx' )">
+      <rosparam command="load" file="$(find romea_lidar_description)/config/$(arg type)_$(arg model)_$(arg rate)hz_specifications.yaml"/>
+   </group>
+
+   <group if="$(eval arg('model') == 'tim5xx' )">
+      <rosparam command="load" file="$(find romea_lidar_description)/config/$(arg type)_$(arg model)_specifications.yaml"/>
+   </group>
+
+   <rosparam command="load" file="$(find romea_lidar_description)/config/$(arg type)_$(arg model)_geometry.yaml"/>
+
+
+   <group if="$(eval arg('mode') != 'replay')">
+      <param name="/records/$(arg robot_name)/$(arg lidar_name)/scan_topic" value="$(arg scan_topic)"/>
+   </group>
+
+   <param name="/$(arg robot_name)/description/$(arg lidar_name)" type="str"
+          command="$(find romea_lidar_bringup)/script/make_lidar_xacro.py
+                   name=$(arg lidar_name)
+                   type=$(arg type)
+                   model=$(arg model)
+                   xyz='$(arg xyz)'
+                   rpy='$(arg rpy)'
+                   rate=$(arg rate)
+                   prefix=$(arg robot_name)/
+                   parent_link=$(arg robot_parent_link)
+                   xacro_directory=$(arg xacro_directory)" />
+
+</launch>
