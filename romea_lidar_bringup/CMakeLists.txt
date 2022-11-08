@@ -7,10 +7,18 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
 
 install(
   DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}
+)
+
+ament_python_install_module(python/lidar_bringup.py)
+
+install(PROGRAMS
+  scripts/urdf_description.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 ament_package()
