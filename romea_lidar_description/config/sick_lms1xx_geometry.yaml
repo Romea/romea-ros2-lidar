@@ -7,5 +7,6 @@ aabb :
 mesh:
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
-    filename: package://lms1xx/meshes/sick-lms1xx.dae
+    scale: [1.0, 1.0, 1.0]
+    filename: "package://sick_scan/meshes/LMS1xx_small.dae"
 

@@ -7,4 +7,5 @@ aabb :
 mesh:
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
-    filename: package://sick_tim/meshes/sick_mrs1000.stl
+    scale: [1.0, 1.0, 1.0]
+    filename: "package://sick_scan/meshes/sick_mrs_1xxx.stl"

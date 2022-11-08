@@ -1,0 +1,19 @@
+minimal_azimut_angle: -135.0
+maximal_azimut_angle: 135.0
+azimut_angle_std: 0.0
+minimal_range: 0.5
+maximal_range:
+  lms10x: 20.0
+  lms11x: 20.0
+  lms12x: 20.0
+  lms13x: 20.0
+  lms14x: 40.0
+  lms15x: 50.0
+range_std: 0.0
+azimut_angle_increment:
+  25hz: 0.25
+  50hz: 0.5
+samples:
+  25hz: 1081
+  50hz: 541
+rate: [25, 50]

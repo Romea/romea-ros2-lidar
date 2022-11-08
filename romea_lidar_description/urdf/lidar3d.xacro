@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot name="lidar" xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
-<xacro:macro name="lidar3d_sensor" params="xyz rpy parent_link rate type model name organize_cloud:=false gpu:=false">
+<xacro:macro name="lidar3d_sensor" params="xyz rpy parent_link rate type model name organize_cloud:=false gpu:=false prefix">
 
     <xacro:if value="${model == 'mrs1000'}">
         <xacro:property name="specifications_file" value="$(find romea_lidar_description)/config/sick_mrs1000_specifications.yaml" />

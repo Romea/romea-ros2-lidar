@@ -1,8 +1,24 @@
-minimal_azimut_angle: -135
-maximal_azimut_angle: 135
-azimut_angle_increment: 0.333333
-azimut_angle_std: 0
-samples: 811
+minimal_azimut_angle: -135.0
+maximal_azimut_angle: 135.0
+azimut_angle_increment:
+  tim510: 0.33
+  tim551: 1.0
+  tim561: 1.0
+  tim571: 0.33
+  tim581: 0.33
+azimut_angle_std: 0.0
+samples:
+  tim510: 811
+  tim551: 271
+  tim561: 271
+  tim571: 811
+  tim581: 811
 minimal_range: 0.05
-maximal_range: 25
-range_std: 0
+maximal_range:
+  tim510: 4.0
+  tim551: 10.0
+  tim561: 10.0
+  tim571: 25.0
+  tim571: 25.0
+range_std: 0.0
+rate: 15

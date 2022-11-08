@@ -1,35 +1,15 @@
 <?xml version="1.0"?>
 <robot name="lidar" xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
-<xacro:macro name="lidar_sensor" params="xyz rpy parent_link rate type model name">
+<xacro:macro name="lidar_sensor" params="prefix name type model parent_link xyz rpy mesh_visual rate minimal_azimut_angle maximal_azimut_angle minimal_range maximal_range samples">
 
-    <xacro:if value="${type == 'sick'}">
-
-       <xacro:if value="${'lms1' in model}">
-           <xacro:property name="specifications_file" value="$(find romea_lidar_description)/config/sick_lms1xx_${rate}hz_specifications.yaml" />
-           <xacro:property name="geometry_file" value="$(find romea_lidar_description)/config/sick_lms1xx_geometry.yaml" />
-       </xacro:if>
-
-       <xacro:if value="${'tim5' in model}">
-           <xacro:property name="specifications_file" value="$(find romea_lidar_description)/config/sick_tim5xx_specifications.yaml" />
-           <xacro:property name="geometry_file" value="$(find romea_lidar_description)/config/sick_tim5xx_geometry.yaml" />
-       </xacro:if>
-
-    </xacro:if>
-
-    <xacro:property name="specifications" value="${load_yaml(specifications_file)}"/>
+    <xacro:property name="geometry_file" value="$(find romea_lidar_description)/config/${type}_${model}_geometry.yaml" />
     <xacro:property name="geometry" value="${load_yaml(geometry_file)}"/>
 
     <xacro:property name="link_name" value="${prefix}${name}_link"/>
     <xacro:property name="joint_name" value="${prefix}${name}_joint"/>
     <xacro:property name="controller_name" value="${prefix}${name}_controller"/>
     <xacro:property name="parent_link_name" value="${prefix}${parent_link}"/>
-
-    <xacro:property name="samples" value="${specifications['samples']}"/>
-    <xacro:property name="minimal_azimut_angle" value="${specifications['minimal_azimut_angle']/180.*pi}"/>
-    <xacro:property name="maximal_azimut_angle" value="${specifications['maximal_azimut_angle']/180.*pi}"/>
-    <xacro:property name="minimal_range" value="${specifications['minimal_range']}"/>
-    <xacro:property name="maximal_range" value="${specifications['maximal_range']}"/>
 
     <xacro:property name="mass" value="${geometry['mass']}"/>
     <xacro:property name="aabb_length" value="${geometry['aabb']['length']}"/>
@@ -38,6 +18,7 @@
     <xacro:property name="aabb_center" value="${geometry['aabb']['center']}"/>
     <xacro:property name="mesh_xyz" value="${geometry['mesh']['xyz']}"/>
     <xacro:property name="mesh_rpy" value="${geometry['mesh']['rpy']}"/>
+    <xacro:property name="mesh_scale" value="${geometry['mesh']['scale']}"/>
     <xacro:property name="mesh_filename" value="${geometry['mesh']['filename']}"/>
 
     <link name="${link_name}">
@@ -49,10 +30,18 @@
           izz="${0.0833333 * mass * (aabb_length*aabb_length + aabb_width*aabb_width)}" />
       </inertial>
       <visual>
-        <origin xyz="${mesh_xyz[0]} ${mesh_xyz[1]} ${mesh_xyz[2]}" rpy="${mesh_rpy[0]} ${mesh_rpy[1]} ${mesh_rpy[2]}" />
-          <geometry>
-            <mesh filename="${mesh_filename}" />
-          </geometry>
+        <xacro:if value="${mesh_visual == True}">
+           <origin xyz="${mesh_xyz[0]} ${mesh_xyz[1]} ${mesh_xyz[2]}" rpy="${mesh_rpy[0]} ${mesh_rpy[1]} ${mesh_rpy[2]}" />
+           <geometry>
+             <mesh filename="${mesh_filename}" scale="${mesh_scale[0]} ${mesh_scale[1]} ${mesh_scale[2]}" />
+           </geometry>
+        </xacro:if>
+        <xacro:if value="${mesh_visual == False}">
+           <origin xyz="${aabb_center[0]} ${aabb_center[1]} ${aabb_center[2]}" rpy="0 0 0" />
+           <geometry>
+             <box size="${aabb_length} ${aabb_width} ${aabb_height}" />
+           </geometry>
+        </xacro:if>
       </visual>
     <collision>
       <origin xyz="${aabb_center[0]} ${aabb_center[1]} ${aabb_center[2]}" rpy="0 0 0" />
@@ -88,9 +77,12 @@
             <stddev>0.001</stddev>
           </noise>
         </ray>
-        <plugin name="gazebo_ros_laser" filename="libgazebo_ros_laser.so">
-          <topicName>/${prefix}${name}/scan</topicName>
-          <frameName>${link_name}</frameName>
+        <plugin name="${name}" filename="libgazebo_ros_ray_sensor.so">
+          <ros>
+            <namespace>${prefix}${name}</namespace>
+            <remapping>~/out:=${name}/scan</remapping>
+          </ros>
+          <output_type>sensor_msgs/LaserScan</output_type>
         </plugin>
       </sensor>
     </gazebo>
