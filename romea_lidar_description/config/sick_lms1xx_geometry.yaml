@@ -1,12 +1,12 @@
 mass : 1.1
 aabb :
-    length: 0.152
+    length: 0.105
     width: 0.102
-    height: 0.105
+    height: 0.152
     center: [0.0, 0.0, 0.0]
-mesh:
-    xyz: [0.0, 0.0, 0.0]
-    rpy: [0.0, 0.0, 0.0]
-    scale: [1.0, 1.0, 1.0]
-    filename: "package://sick_scan/meshes/LMS1xx_small.dae"
+# mesh:
+#     xyz: [0.0, 0.0, 0.0]
+#     rpy: [0.0, 0.0, 0.0]
+#     scale: [1.0, 1.0, 1.0]
+#     filename: "package://sick_scan/meshes/LMS1xx_small.dae"
 

@@ -19,7 +19,6 @@ def sick_lms1xx_configuration(model, rate, resolution):
 
     if rate is not None:
 
-        print(specifications["rate"])
         if rate in specifications["rate"]:
             rate_hz = str(rate) + "hz"
         else:
@@ -45,10 +44,7 @@ def sick_lms1xx_configuration(model, rate, resolution):
             raise ValueError(
                 "Resolution " + str(resolution) + " is not available for lms1xx lidar"
             )
-
     sub_model = model[0:5] + "x"
-    print(sub_model)
-    print(type(sub_model))
 
     return {
         "minimal_azimut_angle": specifications["minimal_azimut_angle"],
@@ -96,16 +92,18 @@ def sick_tim5xx_configuration(model, rate, resolution):
 def urdf(prefix, name, type, model, rate, resolution, parent_link, xyz, rpy):
 
     if "lms1" in model:
-        configuration=lidar_specifications.sick_lms1xx_configuration(model, rate, resolution)
+        configuration=sick_lms1xx_configuration(model, rate, resolution)
 
         xacro_file = (
             get_package_share_directory("romea_lidar_description")
             + "/urdf/sick_lms1xx.xacro.urdf"
         )
 
+        model = model[0:5] + "x"
+
 
     if "tim5" in model:
-        configuration=lidar_specifications.sick_tim5xx_configuration(model, rate, resolution)
+        configuration=sick_tim5xx_configuration(model, rate, resolution)
 
         xacro_file = (
             get_package_share_directory("romea_lidar_description")
@@ -117,7 +115,7 @@ def urdf(prefix, name, type, model, rate, resolution, parent_link, xyz, rpy):
         mappings={
             "prefix": prefix,
             "name": name,
-            "model": sub_model,
+            "model": model,
             "parent_link": parent_link,
             "xyz": " ".join(map(str, xyz)),
             "rpy": " ".join(map(str, rpy)),

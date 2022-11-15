@@ -4,9 +4,8 @@ aabb:
     width: 0.06
     height: 0.086
     center: [0.0, 0.0, -0.026]
-mesh:
-    xyz: [0.0, 0.0, 0.0]
-    rpy: [0.0, 0.0, 0.0]
-    rpy: [1.0, 1.0, 1.0]
-    filename: "package://sick_scan/meshes/sick_tim_5xx.stl"
-l
+# mesh:
+#     xyz: [0.0, 0.0, 0.0]
+#     rpy: [0.0, 0.0, 0.0]
+#     scale: [1.0, 1.0, 1.0]
+#     filename: "package://sick_scan/meshes/sick_tim_5xx.stl"

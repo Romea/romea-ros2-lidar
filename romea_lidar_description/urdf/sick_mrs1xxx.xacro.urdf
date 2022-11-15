@@ -9,6 +9,13 @@
   <xacro:arg name="rpy" default="0.0 0.0 0.0"/>
 
   <xacro:include filename="$(find romea_lidar_description)/urdf/lidar3d.xacro" />
-  <xacro:lidar3d_sensor prefix="$(arg prefix)" name="$(arg name)" xyz="$(arg xyz) " rpy="$(arg rpy)" parent_link="$(arg parent_link)" rate="$(rate)" type="sick" model="mrs1000"/>
+  <xacro:lidar3d_sensor prefix="$(arg prefix)"
+                        name="$(arg name)" 
+                        xyz="$(arg xyz) " 
+                        rpy="$(arg rpy)" 
+                        parent_link="$(arg parent_link)" 
+                        rate="$(rate)" 
+                        type="sick" 
+                        model="mrs1000"/>
 
 </robot>
