@@ -27,12 +27,12 @@ def launch_setup(context, *args, **kwargs):
         device = yaml.safe_load(f)
 
     if "driver" not in device:
-       return []
+        return []
 
-    if robot_namespace != '':
-        frame_id = robot_namespace + "_" + device["name"]+"_link"
+    if robot_namespace != "":
+        frame_id = robot_namespace + "_" + device["name"] + "_link"
     else:
-        frame_id = device["name"]+"_link"
+        frame_id = device["name"] + "_link"
 
     driver = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -41,7 +41,7 @@ def launch_setup(context, *args, **kwargs):
                     [
                         FindPackageShare("romea_lidar_bringup"),
                         "launch",
-                        "drivers/"+device["driver"]["pkg"] + ".launch.py",
+                        "drivers/" + device["driver"]["pkg"] + ".launch.py",
                     ]
                 )
             ]
@@ -50,8 +50,8 @@ def launch_setup(context, *args, **kwargs):
             "ip": device["driver"]["ip"],
             "port": str(device["driver"]["port"]),
             "lidar_model": device["configuration"]["model"],
-            "rate": str(device["configuration"].get("rate","")),
-            "resolution": str(device["configuration"].get("resolution","")),
+            "rate": str(device["configuration"].get("rate", "")),
+            "resolution": str(device["configuration"].get("resolution", "")),
             "frame_id": frame_id,
         }.items(),
     )
@@ -71,7 +71,9 @@ def generate_launch_description():
 
     declared_arguments = []
     declared_arguments.append(DeclareLaunchArgument("description_yaml_file"))
-    declared_arguments.append(DeclareLaunchArgument("robot_namespace",default_value=""))
+    declared_arguments.append(
+        DeclareLaunchArgument("robot_namespace", default_value="")
+    )
 
     return LaunchDescription(
         declared_arguments + [OpaqueFunction(function=launch_setup)]

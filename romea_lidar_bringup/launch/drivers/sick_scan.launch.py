@@ -24,7 +24,7 @@ def launch_setup(context, *args, **kwargs):
     resolution = LaunchConfiguration("resolution").perform(context)
     rate = LaunchConfiguration("rate").perform(context)
 
-    if rate=="" :
+    if rate == "" :
        rate=None
     else :
        rate=int(rate)
