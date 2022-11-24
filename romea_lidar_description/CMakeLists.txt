@@ -9,7 +9,7 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
-ament_python_install_module(python/lidar_description.py)
+ament_python_install_module(python/romea_lidar_description.py)
 
 ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/${PROJECT_NAME}.dsv.in")
 

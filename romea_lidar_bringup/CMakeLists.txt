@@ -14,7 +14,7 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
-ament_python_install_module(python/lidar_bringup.py)
+ament_python_install_module(python/romea_lidar_bringup.py)
 
 install(PROGRAMS
   scripts/urdf_description.py
