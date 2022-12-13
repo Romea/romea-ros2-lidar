@@ -12,7 +12,7 @@ from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
-import lidar_description
+import romea_lidar_description
 import math
 
 def launch_setup(context, *args, **kwargs):
@@ -74,7 +74,7 @@ def launch_setup(context, *args, **kwargs):
     ]
 
     if "lms1" in lidar_model:
-        configuration = lidar_description.sick_lms1xx_configuration(lidar_model,rate,resolution)
+        configuration = romea_lidar_description.sick_lms1xx_configuration(lidar_model,rate,resolution)
         parameters.append({"min_ang": configuration["minimal_azimut_angle"]/180.*math.pi})
         parameters.append({"max_ang": configuration["maximal_azimut_angle"]/180.*math.pi})
         parameters.append({"range_min": configuration["minimal_range"]})
