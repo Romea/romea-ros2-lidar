@@ -82,7 +82,7 @@
         </ray>
         <plugin name="${name}" filename="libgazebo_ros_ray_sensor.so">
           <ros>
-            <namespace>${prefix}${name}</namespace>
+            <!-- <namespace>${prefix}${name}</namespace> --> <!-- not working -->
             <remapping>~/out:=${name}/scan</remapping>
           </ros>
           <output_type>sensor_msgs/LaserScan</output_type>
