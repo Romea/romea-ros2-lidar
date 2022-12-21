@@ -21,4 +21,11 @@ install(PROGRAMS
   DESTINATION lib/${PROJECT_NAME}
 )
 
+if(BUILD_TESTING)
+  find_package(ament_cmake_pytest REQUIRED)
+  configure_file(test/test_lidar_bringup.yaml test_lidar_bringup.yaml)
+  ament_add_pytest_test(test_lidar_bringup test/test_lidar_bringup.py)
+  ament_add_pytest_test(test_urdf_description test/test_urdf_description.py)
+endif()
+
 ament_package()

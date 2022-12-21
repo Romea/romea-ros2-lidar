@@ -13,7 +13,7 @@
 
   <author>Jean Laneurit</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <exec_depend>romea_lidar_bringup</exec_depend>
   <exec_depend>romea_lidar_description</exec_depend>
@@ -21,7 +21,7 @@
   <exec_depend>romea_lidar_gazebo</exec_depend>
 
   <export>
-    <metapackage/>
+    <build_type>ament_cmake</build_type>
   </export>
 
 </package>
