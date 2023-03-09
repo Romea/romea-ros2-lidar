@@ -1,16 +1,9 @@
-#!/usr/bin/env python3
+# Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+# Add license
 
-from ament_index_python.packages import get_package_share_directory
+from romea_common_bringup import MetaDescription, robot_urdf_prefix, device_namespace
 import romea_lidar_description
-import yaml
-
-
-#!/usr/bin/env python3
-
-from ament_index_python.packages import get_package_share_directory
-from romea_common_bringup import MetaDescription
-import romea_lidar_description
-import yaml
+from numpy import radians, deg2rad
 
 
 class LIDARMetaDescription:
@@ -19,6 +12,9 @@ class LIDARMetaDescription:
 
     def get_name(self):
         return self.meta_description.get("name")
+
+    def get_namespace(self):
+        return self.meta_description.get_or("namespace", None)
 
     def has_driver_configuration(self):
         return self.meta_description.exists("driver")
@@ -39,10 +35,13 @@ class LIDARMetaDescription:
         return self.meta_description.get("model", "configuration")
 
     def get_rate(self):
-        return self.meta_description.get_or("rate","configuration", None)
+        return self.meta_description.get_or("rate", "configuration", None)
 
-    def get_resolution(self):
-        return self.meta_description.get_or("resolution","configuration",None)
+    def get_resolution_deg(self):
+        return self.meta_description.get_or("resolution", "configuration", None)
+
+    def get_resolution_rad(self):
+        return deg2rad(self.get_resolution_deg())
 
     def get_parent_link(self):
         return self.meta_description.get("parent_link", "geometry")
@@ -50,21 +49,31 @@ class LIDARMetaDescription:
     def get_xyz(self):
         return self.meta_description.get("xyz", "geometry")
 
-    def get_rpy(self):
+    def get_rpy_deg(self):
         return self.meta_description.get("rpy", "geometry")
 
-def urdf_description(prefix, meta_description_filename):
+    def get_rpy_rad(self):
+        return radians(self.get_rpy_deg()).tolist()
+
+
+def urdf_description(robot_namespace, meta_description_filename):
 
     meta_description = LIDARMetaDescription(meta_description_filename)
 
+    ros_namespace = device_namespace(
+        robot_namespace,
+        meta_description.get_namespace(),
+        meta_description.get_name()
+    )
     return romea_lidar_description.urdf(
-        prefix,
+        robot_urdf_prefix(robot_namespace),
         meta_description.get_name(),
         meta_description.get_type(),
         meta_description.get_model(),
         meta_description.get_rate(),
-        meta_description.get_resolution(),
+        meta_description.get_resolution_deg(),
         meta_description.get_parent_link(),
         meta_description.get_xyz(),
-        meta_description.get_rpy(),
+        meta_description.get_rpy_rad(),
+        ros_namespace
     )

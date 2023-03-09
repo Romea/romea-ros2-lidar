@@ -1,19 +1,14 @@
+# Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+# Add license
+
 from launch import LaunchDescription
-
-from launch.actions import (
-    IncludeLaunchDescription,
-    DeclareLaunchArgument,
-    OpaqueFunction,
-    SetEnvironmentVariable,
-)
-
+from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
-from launch_ros.substitutions import FindPackageShare
-from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 import romea_lidar_description
 import math
+
 
 def launch_setup(context, *args, **kwargs):
 
@@ -24,15 +19,15 @@ def launch_setup(context, *args, **kwargs):
     resolution = LaunchConfiguration("resolution").perform(context)
     rate = LaunchConfiguration("rate").perform(context)
 
-    if rate == "" :
-       rate=None
-    else :
-       rate=int(rate)
+    if rate == "":
+        rate = None
+    else:
+        rate = int(rate)
 
-    if resolution=="" :
-       resolution=None
-    else :
-       resolution=float(resolution)
+    if resolution == "":
+        resolution = None
+    else:
+        resolution = float(resolution)
 
     driver = LaunchDescription()
 
@@ -49,7 +44,8 @@ def launch_setup(context, *args, **kwargs):
         {"timelimit": 5},
         {"sw_pll_only_publish": True},
         {"use_generation_timestamp": True},
-        # Use the lidar generation timestamp (true, default) or send timestamp (false) for the software pll converted message timestamp
+        # Use the lidar generation timestamp (true, default) or send timestamp (false)
+        # for the software pll converted message timestamp
         {"start_services": True},
         # start ros service for cola commands
         {"activate_lferec": True},
@@ -66,17 +62,25 @@ def launch_setup(context, *args, **kwargs):
         {"read_timeout_millisec_default": 5000},
         # 5 sec read timeout in operational mode (measurement mode), default: 5000 milliseconds
         {"read_timeout_millisec_startup": 120000},
-        # 120 sec read timeout during startup (sensor may be starting up, which can take up to 120 sec.), default: 120000 milliseconds
+        # 120 sec read timeout during startup (sensor may be starting up,
+        #  which can take up to 120 sec.), default: 120000 milliseconds
         {"read_timeout_millisec_kill_node": 150000},
-        # 150 sec pointcloud timeout, ros node will be killed if no point cloud published within the last 150 sec., default: 150000 milliseconds
+        # 150 sec pointcloud timeout, ros node will be killed if no point cloud published
+        # within the last 150 sec., default: 150000 milliseconds
         {"client_authorization_pw": "F4724744"},
         # Default password for client authorization
     ]
 
     if "lms1" in lidar_model:
-        configuration = romea_lidar_description.sick_lms1xx_configuration(lidar_model,rate,resolution)
-        parameters.append({"min_ang": configuration["minimal_azimut_angle"]/180.*math.pi})
-        parameters.append({"max_ang": configuration["maximal_azimut_angle"]/180.*math.pi})
+        configuration = romea_lidar_description.sick_lms1xx_configuration(
+            lidar_model, rate, resolution
+        )
+        parameters.append(
+            {"min_ang": configuration["minimal_azimut_angle"] / 180.0 * math.pi}
+        )
+        parameters.append(
+            {"max_ang": configuration["maximal_azimut_angle"] / 180.0 * math.pi}
+        )
         parameters.append({"range_min": configuration["minimal_range"]})
         parameters.append({"range_max": configuration["maximal_range"]})
         parameters.append({"scanner_type": "sick_lms_1xx"})

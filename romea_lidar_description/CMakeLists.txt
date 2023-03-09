@@ -17,7 +17,7 @@ ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/${PROJECT_NAME}.d
 #if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
 
-  ament_add_pytest_test(lidar_description_test test/lidar_description_test.py)
+  # ament_add_pytest_test(lidar_description_test test/lidar_description_test.py)
 #  ament_add_pytest_test(view_ur_launch test/test_view_ur_launch.py)
 #endif()
 

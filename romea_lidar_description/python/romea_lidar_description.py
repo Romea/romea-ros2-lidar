@@ -4,6 +4,7 @@ import xacro
 import yaml
 from ament_index_python.packages import get_package_share_directory
 
+
 def sick_lms1xx_configuration(model, rate, resolution):
 
     specifications_file = (
@@ -55,8 +56,9 @@ def sick_lms1xx_configuration(model, rate, resolution):
         "maximal_range": specifications["maximal_range"][sub_model],
         "range_std": specifications["range_std"],
         "samples": specifications["samples"][rate_hz],
-        "rate": rate
+        "rate": rate,
     }
+
 
 def sick_tim5xx_configuration(model, rate, resolution):
 
@@ -71,7 +73,10 @@ def sick_tim5xx_configuration(model, rate, resolution):
     if rate is not None and rate != specifications["rate"]:
         raise ValueError("Rate " + str(rate) + " is not available for tim5xx lidar")
 
-    if resolution is not None and resolution!=specifications["azimut_angle_increment"][model]:
+    if (
+        resolution is not None
+        and resolution != specifications["azimut_angle_increment"][model]
+    ):
         raise ValueError(
             "Resolution " + str(resolution) + " is not available for tim5xx lidar"
         )
@@ -85,14 +90,16 @@ def sick_tim5xx_configuration(model, rate, resolution):
         "maximal_range": specifications["maximal_range"][model],
         "range_std": specifications["range_std"],
         "samples": specifications["samples"][model],
-        "rate": rate
+        "rate": rate,
     }
 
 
-def urdf(prefix, name, type, model, rate, resolution, parent_link, xyz, rpy):
+def urdf(prefix, name, type, model, rate, resolution,
+         parent_link, xyz, rpy, ros_namespace):
 
     if "lms1" in model:
-        configuration=sick_lms1xx_configuration(model, rate, resolution)
+        # check configuration ?
+        # configuration = sick_lms1xx_configuration(model, rate, resolution)
 
         xacro_file = (
             get_package_share_directory("romea_lidar_description")
@@ -101,9 +108,9 @@ def urdf(prefix, name, type, model, rate, resolution, parent_link, xyz, rpy):
 
         model = model[0:5] + "x"
 
-
     if "tim5" in model:
-        configuration=sick_tim5xx_configuration(model, rate, resolution)
+        # check configuration ?
+        # configuration = sick_tim5xx_configuration(model, rate, resolution)
 
         xacro_file = (
             get_package_share_directory("romea_lidar_description")
@@ -115,11 +122,13 @@ def urdf(prefix, name, type, model, rate, resolution, parent_link, xyz, rpy):
         mappings={
             "prefix": prefix,
             "name": name,
+            # set rate
             "model": model,
             "parent_link": parent_link,
             "xyz": " ".join(map(str, xyz)),
             "rpy": " ".join(map(str, rpy)),
             "mesh_visual": str(True),
+            "ros_namespace": ros_namespace
         },
     )
 

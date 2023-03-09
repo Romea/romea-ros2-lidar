@@ -1,3 +1,6 @@
+# Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+# Add license
+
 from launch import LaunchDescription
 
 from launch.actions import (
@@ -15,8 +18,6 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from romea_common_bringup import device_link_name
 from romea_lidar_bringup import LIDARMetaDescription
 
-import yaml
-
 
 def get_robot_namespace(context):
     return LaunchConfiguration("robot_namespace").perform(context)
@@ -29,7 +30,7 @@ def get_meta_description(context):
     ).perform(context)
 
     return LIDARMetaDescription(meta_description_filename)
- 
+
 
 def launch_setup(context, *args, **kwargs):
 
@@ -40,6 +41,7 @@ def launch_setup(context, *args, **kwargs):
         return []
 
     lidar_name = meta_description.get_name()
+    lidar_namespace = str(meta_description.get_namespace() or "")
 
     driver = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -48,9 +50,7 @@ def launch_setup(context, *args, **kwargs):
                     [
                         FindPackageShare("romea_lidar_bringup"),
                         "launch",
-                        "drivers/"
-                        + meta_description.get_driver_pkg()
-                        + ".launch.py",
+                        "drivers/" + meta_description.get_driver_pkg() + ".launch.py",
                     ]
                 )
             ]
@@ -60,8 +60,8 @@ def launch_setup(context, *args, **kwargs):
             "port": str(meta_description.get_port(meta_description)),
             "lidar_model": meta_description.get_model(meta_description),
             "rate": str(meta_description.get_rate(meta_description) or ""),
-            "resolution": str(meta_description.get_resolution(meta_description) or ""),
-            "frame_id": device_link_name(robot_namespace,lidar_name),
+            "resolution": str(meta_description.get_resolution_deg(meta_description) or ""),
+            "frame_id": device_link_name(robot_namespace, lidar_name),
         }.items(),
     )
 
@@ -69,6 +69,7 @@ def launch_setup(context, *args, **kwargs):
         GroupAction(
             actions=[
                 PushRosNamespace(robot_namespace),
+                PushRosNamespace(lidar_namespace),
                 PushRosNamespace(lidar_name),
                 driver,
             ]

@@ -1,17 +1,20 @@
 name: "lidar"
+namespace: "ns"
 driver:
   pkg: "sick_scan"
-  ip:  "192.168.1.112"
+  ip: "192.168.1.112"
   port: 2112
 configuration:
   type: sick
   model: lms151
-  rate: 50
-  resolution: 0.5
+  rate: 50 # hz
+  resolution: 0.5 # degree
 geometry:
   parent_link: "base_link"
-  xyz: [1.0, 2.0, 3.0]
-  rpy: [4.0, 5.0, 6.0]
+  xyz: [1.0, 2.0, 3.0] # meters
+  rpy: [4.0, 5.0, 6.0] # degrees
 records:
   scan: true
-  cloud: false  
+  cloud: false
+ros:
+  namespace: ns

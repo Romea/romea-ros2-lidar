@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 
-#import xacro
-#import yaml
+# import xacro
+# import yaml
 
-from ament_index_python.packages import get_package_share_directory
+# from ament_index_python.packages import get_package_share_directory
+
 
 def test_lidar_description():
-    print("coucou")
+    # print("coucou")
     assert False
 
 
 if __name__ == "__main__":
-     test_lidar_description()
+    test_lidar_description()
 
-#def sick_lms1xx_configuration(model, rate, resolution):
+# def sick_lms1xx_configuration(model, rate, resolution):
 
 #    specifications_file = (
 #        get_package_share_directory("romea_lidar_description")
@@ -67,7 +68,7 @@ if __name__ == "__main__":
 #        "rate": rate
 #    }
 
-#def sick_tim5xx_configuration(model, rate, resolution):
+# def sick_tim5xx_configuration(model, rate, resolution):
 
 #    specifications_file = (
 #        get_package_share_directory("romea_lidar_description")
@@ -98,7 +99,7 @@ if __name__ == "__main__":
 #    }
 
 
-#def urdf(prefix, name, type, model, rate, resolution, parent_link, xyz, rpy):
+# def urdf(prefix, name, type, model, rate, resolution, parent_link, xyz, rpy):
 
 #    if "lms1" in model:
 #        configuration=sick_lms1xx_configuration(model, rate, resolution)

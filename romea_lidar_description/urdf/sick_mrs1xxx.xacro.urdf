@@ -1,21 +1,25 @@
 <?xml version="1.0"?>
 <robot name="lidar" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:arg name="prefix" default=""/>
-  <xacro:arg name="name" default="lidar"/>
-  <xacro:arg name="rate" default="25"/>
-  <xacro:arg name="parent_link" default="base_link"/>
-  <xacro:arg name="xyz" default="0.0 0.0 0.0"/>
-  <xacro:arg name="rpy" default="0.0 0.0 0.0"/>
+  <xacro:arg name="prefix" default="" />
+  <xacro:arg name="name" default="lidar" />
+  <xacro:arg name="rate" default="25" />
+  <xacro:arg name="parent_link" default="base_link" />
+  <xacro:arg name="xyz" default="0.0 0.0 0.0" />
+  <xacro:arg name="rpy" default="0.0 0.0 0.0" />
+  <xacro:arg name="ros_namespace" default="/" />
+
 
   <xacro:include filename="$(find romea_lidar_description)/urdf/lidar3d.xacro" />
-  <xacro:lidar3d_sensor prefix="$(arg prefix)"
-                        name="$(arg name)" 
-                        xyz="$(arg xyz) " 
-                        rpy="$(arg rpy)" 
-                        parent_link="$(arg parent_link)" 
-                        rate="$(rate)" 
-                        type="sick" 
-                        model="mrs1000"/>
+  <xacro:lidar3d_sensor
+    prefix="$(arg prefix)"
+    name="$(arg name)"
+    xyz="$(arg xyz) "
+    rpy="$(arg rpy)"
+    parent_link="$(arg parent_link)"
+    rate="$(rate)"
+    type="sick"
+    model="mrs1000"
+    ros_namespace="$(arg ros_namespace)" />
 
 </robot>
