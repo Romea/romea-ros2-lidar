@@ -17,8 +17,6 @@
 
   <exec_depend>romea_lidar_bringup</exec_depend>
   <exec_depend>romea_lidar_description</exec_depend>
-  <exec_depend>romea_lidar_calibration</exec_depend>
-  <exec_depend>romea_lidar_gazebo</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
