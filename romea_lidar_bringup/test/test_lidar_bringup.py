@@ -10,8 +10,8 @@ from romea_lidar_bringup import LIDARMetaDescription
 
 @pytest.fixture(scope="module")
 def meta_description():
-    meta_description_filename = os.path.join(os.getcwd(), "test_lidar_bringup.yaml")
-    return LIDARMetaDescription(meta_description_filename)
+    meta_description_file_path = os.path.join(os.getcwd(), "test_lidar_bringup.yaml")
+    return LIDARMetaDescription(meta_description_file_path)
 
 
 def test_get_name(meta_description):
