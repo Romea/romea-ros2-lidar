@@ -85,6 +85,20 @@ def launch_setup(context, *args, **kwargs):
         parameters.append({"range_max": configuration["maximal_range"]})
         parameters.append({"scanner_type": "sick_lms_1xx"})
 
+    if "tim5" in lidar_model:
+        configuration = romea_lidar_description.sick_tim5xx_configuration(
+            lidar_model, rate, resolution
+        )
+        parameters.append(
+            {"min_ang": configuration["minimal_azimut_angle"] / 180.0 * math.pi}
+        )
+        parameters.append(
+            {"max_ang": configuration["maximal_azimut_angle"] / 180.0 * math.pi}
+        )
+        parameters.append({"range_min": configuration["minimal_range"]})
+        parameters.append({"range_max": configuration["maximal_range"]})
+        parameters.append({"scanner_type": "sick_tim_5xx"})
+
     driver_node = Node(
         package="sick_scan",
         executable="sick_generic_caller",
