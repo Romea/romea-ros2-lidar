@@ -84,7 +84,7 @@ Only [sick_scan](https://github.com/SICKAG/sick_scan_xd) is supported for the mo
   port: "2112" # communication port
 ```
 
-For each driver a python launch file with the name of the ROS2 package is provided in launch directory. When the meta-description is red by the main launch file called lidar_driver.launch.py the corresponding driver is automatically launched taking into account parameters define by user. Thanks to remapping defined inside each driver launch files, the data provided by drivers are always the same and are called:
+For each driver a python launch file with the name of the ROS2 package is provided in launch directory. When the meta-description is red by the main launch file called lidar_driver.launch.py the corresponding driver is automatically launched taking into account parameters define by user. Thanks to remapping defined inside each driver launch files, the data provided by drivers are always publish in the same topics called:
 
 - scan(sensor_msgs/LaserScan)
 - cloud(sensor_msgs/PointCloud2)
