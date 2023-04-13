@@ -56,11 +56,11 @@ def launch_setup(context, *args, **kwargs):
             ]
         ),
         launch_arguments={
-            "ip": meta_description.get_ip(),
-            "port": str(meta_description.get_port(meta_description)),
-            "lidar_model": meta_description.get_model(meta_description),
-            "rate": str(meta_description.get_rate(meta_description) or ""),
-            "resolution": str(meta_description.get_resolution_deg(meta_description) or ""),
+            "ip": meta_description.get_driver_ip(),
+            "port": str(meta_description.get_driver_port()),
+            "lidar_model": meta_description.get_model(),
+            "rate": str(meta_description.get_rate() or ""),
+            "resolution": str(meta_description.get_resolution_deg() or ""),
             "frame_id": device_link_name(robot_namespace, lidar_name),
         }.items(),
     )
