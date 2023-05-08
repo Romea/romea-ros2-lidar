@@ -29,7 +29,7 @@ galactic_focal_build:
   script:
     - colcon build
     - source install/setup.bash
-    - colcon test --packages-select romea_imu_bringup romea_imu_description
+    - colcon test --packages-select romea_lidar_bringup romea_lidar_description
     - colcon test-result --verbose
 
 # humble
@@ -39,5 +39,5 @@ humble_jammy_build:
   script:
     - colcon build
     - source install/setup.bash
-    - colcon test --packages-select romea_imu_bringup romea_imu_description
+    - colcon test --packages-select romea_lidar_bringup romea_lidar_description
     - colcon test-result --verbose
