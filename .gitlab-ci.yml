@@ -1,7 +1,7 @@
 before_script:
   # Install ssh-agent if not already installed, it is required by Docker.
   - "apt-get -qq update -y"
-  - "apt-get -qq install git build-essential openssh-client sudo -y"
+  - "apt-get -qq install git build-essential openssh-client libtbb-dev sudo -y"
   # Run ssh-agent (inside the build environment)
   - eval $(ssh-agent -s)
   # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
