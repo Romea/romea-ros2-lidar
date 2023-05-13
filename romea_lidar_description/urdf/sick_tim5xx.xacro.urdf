@@ -2,6 +2,7 @@
 <robot name="lidar" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:arg name="prefix" default="" />
+  <xacro:arg name="mode" default="simulation_gazebo" />
   <xacro:arg name="name" default="lidar" />
   <xacro:arg name="model" default="lms10x" />
   <xacro:arg name="rate" default="15" />
@@ -32,6 +33,7 @@
   <xacro:include filename="$(find romea_lidar_description)/urdf/lidar.xacro" />
   <xacro:lidar_sensor
     prefix="$(arg prefix)"
+    mode="$(arg mode)"
     name="$(arg name)"
     type="sick"
     model="tim5xx"

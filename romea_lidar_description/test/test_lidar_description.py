@@ -111,7 +111,7 @@ if __name__ == "__main__":
 #    }
 
 
-# def urdf(prefix, name, type, model, rate, resolution, parent_link, xyz, rpy):
+# def urdf(prefix, mode, name, type, model, rate, resolution, parent_link, xyz, rpy):
 
 #    if "lms1" in model:
 #        configuration=sick_lms1xx_configuration(model, rate, resolution)
@@ -136,6 +136,7 @@ if __name__ == "__main__":
 #        xacro_file,
 #        mappings={
 #            "prefix": prefix,
+#            "mode": mode,
 #            "name": name,
 #            "model": model,
 #            "parent_link": parent_link,

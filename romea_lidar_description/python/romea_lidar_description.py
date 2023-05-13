@@ -106,7 +106,7 @@ def sick_tim5xx_configuration(model, rate, resolution):
     }
 
 
-def urdf(prefix, name, type, model, rate, resolution,
+def urdf(prefix, mode, name, type, model, rate, resolution,
          parent_link, xyz, rpy, ros_namespace):
 
     if "lms1" in model:
@@ -133,6 +133,7 @@ def urdf(prefix, name, type, model, rate, resolution,
         xacro_file,
         mappings={
             "prefix": prefix,
+            "mode": prefix,
             "name": name,
             # set rate
             "model": model,

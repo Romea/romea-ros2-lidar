@@ -2,7 +2,7 @@
 <robot name="lidar" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:macro name="lidar_sensor"
-    params="prefix name type model parent_link xyz rpy mesh_visual rate minimal_azimut_angle maximal_azimut_angle minimal_range maximal_range samples ros_namespace">
+    params="prefix mode name type model parent_link xyz rpy mesh_visual rate minimal_azimut_angle maximal_azimut_angle minimal_range maximal_range samples ros_namespace">
 
     <xacro:property name="geometry_file"
       value="$(find romea_lidar_description)/config/${type}_${model}_geometry.yaml" />
