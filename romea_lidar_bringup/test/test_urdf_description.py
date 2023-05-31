@@ -32,8 +32,6 @@ def urdf():
 
     meta_description_file_path = os.path.join(os.getcwd(), "test_lidar_bringup.yaml")
 
-    print(urdf_description("robot_", meta_description_file_path))
-
     return ET.fromstring(
         subprocess.check_output(
             [
