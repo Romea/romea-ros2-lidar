@@ -17,15 +17,56 @@ import yaml
 from ament_index_python.packages import get_package_share_directory
 
 
-def sick_lms1xx_configuration(model, rate, resolution):
+def get_sick_model_family(model):
+    if "lms1" in model:
+        return "lms1xx"
+    elif "tim5" in model:
+        return "tim5xx"
+    elif "mrs1" in model:
+        return "mrs1xxx"
+    else:
+        raise RuntimeError(
+            "Sick "
+            + model
+            + " lidar is unsuported by romea_lidar_description package."
+            + "Please check your configuration or contribute to support this sensor."
+        )
 
-    specifications_file = (
+
+def get_lidar_family(type, model):
+    if type == "sick":
+        return get_sick_model_family(model)
+    else:
+        raise RuntimeError(
+            "No"
+            + type
+            + " lidar is unsuported by romea_lidar_description package."
+            + "Please check your configuration or contribute to support this kind of sensor."
+        )
+
+
+def get_lidar_config_file(type, model, what):
+
+    return (
         get_package_share_directory("romea_lidar_description")
-        + "/config/sick_lms1xx_specifications.yaml"
+        + "/config/"
+        + type
+        + "_"
+        + get_lidar_family(type, model)
+        + "_"
+        + what
+        + ".yaml"
     )
 
-    with open(specifications_file) as f:
-        specifications = yaml.safe_load(f)
+
+def get_lidar_config(type, model, what):
+    with open(get_lidar_config_file(type, model, what)) as f:
+        return yaml.safe_load(f)
+
+
+def sick_lms1xx_configuration(model, rate, resolution):
+
+    specifications = get_lidar_config("sick", model, "specifications")
 
     if not rate and not resolution:
         raise ValueError("Rate or resolution must be defined in lidar configuration")
@@ -60,6 +101,7 @@ def sick_lms1xx_configuration(model, rate, resolution):
     sub_model = model[0:5] + "x"
 
     return {
+        "type": specifications["type"],
         "minimal_azimut_angle": specifications["minimal_azimut_angle"],
         "maximal_azimut_angle": specifications["maximal_azimut_angle"],
         "azimut_angle_increment": specifications["azimut_angle_increment"][rate_hz],
@@ -74,13 +116,7 @@ def sick_lms1xx_configuration(model, rate, resolution):
 
 def sick_tim5xx_configuration(model, rate, resolution):
 
-    specifications_file = (
-        get_package_share_directory("romea_lidar_description")
-        + "/config/sick_lms1xx_specifications.yaml"
-    )
-
-    with open(specifications_file) as f:
-        specifications = yaml.safe_load(f)
+    specifications = get_lidar_config("sick", model, "specifications")
 
     if rate is not None and rate != specifications["rate"]:
         raise ValueError("Rate " + str(rate) + " is not available for tim5xx lidar")
@@ -94,6 +130,7 @@ def sick_tim5xx_configuration(model, rate, resolution):
         )
 
     return {
+        "type": specifications["type"],
         "minimal_azimut_angle": specifications["minimal_azimut_angle"],
         "maximal_azimut_angle": specifications["maximal_azimut_angle"],
         "azimut_angle_increment": specifications["azimut_angle_increment"][model],
@@ -106,28 +143,72 @@ def sick_tim5xx_configuration(model, rate, resolution):
     }
 
 
+def sick_mrs1xxx_configuration(model, rate, resolution):
+
+    specifications = get_lidar_config("sick", model, "specifications")
+
+    if rate is not None and rate != specifications["rate"]:
+        raise ValueError("Rate " + str(rate) + " is not available for mrs1xxx lidar")
+
+    if (
+        resolution is not None
+        and resolution not in specifications["azimut_angle_increment"]
+    ):
+        raise ValueError(
+            "Resolution " + str(resolution) + " is not available for mrs1xxx lidar"
+        )
+
+    index = specifications["azimut_angle_increment"].index(resolution)
+
+    return {
+        "type": specifications["type"],
+        "minimal_azimut_angle": specifications["minimal_azimut_angle"],
+        "maximal_azimut_angle": specifications["maximal_azimut_angle"],
+        "azimut_angle_increment": specifications["azimut_angle_increment"][index],
+        "azimut_angle_std": specifications["azimut_angle_std"],
+        "samples": specifications["samples"][index],
+        "minimal_elevation_angle": specifications["minimal_elevation_angle"],
+        "maximal_elevation_angle": specifications["maximal_elevation_angle"],
+        "elevation_angle_increment": specifications["elevation_angle_increment"],
+        "elevation_angle_std": specifications["elevation_angle_std"],
+        "lasers": specifications["lasers"],
+        "minimal_range": specifications["minimal_range"],
+        "maximal_range": specifications["maximal_range"],
+        "range_std": specifications["range_std"],
+        "rate": rate,
+    }
+
+
+def extract_lidar_configuration(type, model, rate, resolution):
+    family = get_lidar_family(type, model)
+    return globals()[type + "_" + family + "_configuration"](model, rate, resolution)
+
+
+def save_lidar_configuration(prefix, lidar_name, configuration):
+    configuration_file_path = (
+        "/tmp/"
+        + prefix
+        + lidar_name
+        + "_configuration.yaml"
+    )
+
+    with open(configuration_file_path, "w") as f:
+        yaml.dump(configuration, f)
+
+    return configuration_file_path
+
+
 def urdf(prefix, mode, name, type, model, rate, resolution,
          parent_link, xyz, rpy, ros_namespace):
 
-    if "lms1" in model:
-        # check configuration ?
-        # configuration = sick_lms1xx_configuration(model, rate, resolution)
+    lidar_config = extract_lidar_configuration(type, model, rate, resolution)
+    lidar_config_yaml_file = save_lidar_configuration(prefix, name, lidar_config)
+    geometry_config_yaml_file = get_lidar_config_file(type, model, "geometry")
 
-        xacro_file = (
-            get_package_share_directory("romea_lidar_description")
-            + "/urdf/sick_lms1xx.xacro.urdf"
-        )
-
-        model = model[0:5] + "x"
-
-    if "tim5" in model:
-        # check configuration ?
-        # configuration = sick_tim5xx_configuration(model, rate, resolution)
-
-        xacro_file = (
-            get_package_share_directory("romea_lidar_description")
-            + "/urdf/sick_lms5xx.xacro.urdf"
-        )
+    xacro_file = (
+        get_package_share_directory("romea_lidar_description")
+        + "/urdf/lidar"+lidar_config["type"]+".xacro.urdf"
+    )
 
     urdf_xml = xacro.process_file(
         xacro_file,
@@ -135,8 +216,8 @@ def urdf(prefix, mode, name, type, model, rate, resolution,
             "prefix": prefix,
             "mode": prefix,
             "name": name,
-            # set rate
-            "model": model,
+            "sensor_config_yaml_file": lidar_config_yaml_file,
+            "geometry_config_yaml_file": geometry_config_yaml_file,
             "parent_link": parent_link,
             "xyz": " ".join(map(str, xyz)),
             "rpy": " ".join(map(str, rpy)),

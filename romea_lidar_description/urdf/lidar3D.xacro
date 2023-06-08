@@ -1,17 +1,34 @@
 <?xml version="1.0"?>
 <robot name="lidar" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="lidar_sensor"
-    params="prefix mode name type model parent_link xyz rpy mesh_visual rate minimal_azimut_angle maximal_azimut_angle minimal_range maximal_range samples ros_namespace">
-
-    <xacro:property name="geometry_file"
-      value="$(find romea_lidar_description)/config/${type}_${model}_geometry.yaml" />
-    <xacro:property name="geometry" value="${load_yaml(geometry_file)}" />
+  <xacro:macro name="lidar3d_sensor"
+    params="prefix mode name configuration geometry xyz rpy parent_link mesh_visual ros_namespace ">
 
     <xacro:property name="link_name" value="${prefix}${name}_link" />
     <xacro:property name="joint_name" value="${prefix}${name}_joint" />
     <xacro:property name="controller_name" value="${prefix}${name}_controller" />
     <xacro:property name="parent_link_name" value="${prefix}${parent_link}" />
+
+    <xacro:property name="samples"
+      value="${configuration['samples']}" />
+    <xacro:property name="minimal_azimut_angle"
+      value="${configuration['minimal_azimut_angle']/180.*pi}" />
+    <xacro:property name="maximal_azimut_angle"
+      value="${configuration['maximal_azimut_angle']/180.*pi}" />
+    <xacro:property name="lasers"
+      value="${configuration['lasers']}" />
+    <xacro:property name="minimal_elevation_angle"
+      value="${configuration['minimal_elevation_angle']/180.*pi}" />
+    <xacro:property name="maximal_elevation_angle"
+      value="${configuration['maximal_elevation_angle']/180.*pi}" />
+    <xacro:property name="minimal_range"
+      value="${configuration['minimal_range']}" />
+    <xacro:property name="maximal_range"
+      value="${configuration['maximal_range']}" />
+    <xacro:property name="range_std"
+      value="${configuration['range_std']}" />
+    <xacro:property name="rate"
+      value="${configuration['rate']}" />
 
     <xacro:property name="mass" value="${geometry['mass']}" />
     <xacro:property name="aabb_length" value="${geometry['aabb']['length']}" />
@@ -61,7 +78,8 @@
     </link>
 
     <gazebo reference="${link_name}">
-      <sensor type="ray" name="${prefix}${name}">
+      <!-- <xacro:if value="${gpu}"> -->
+      <sensor type="gpu_ray" name="${prefix}${name}">
         <pose>0 0 0 0 0 0</pose>
         <visualize>true</visualize>
         <update_rate>${rate}</update_rate>
@@ -73,27 +91,76 @@
               <min_angle>${minimal_azimut_angle}</min_angle>
               <max_angle>${maximal_azimut_angle}</max_angle>
             </horizontal>
+            <vertical>
+              <samples>${lasers}</samples>
+              <resolution>1</resolution>
+              <min_angle>${minimal_elevation_angle}</min_angle>
+              <max_angle>${maximal_elevation_angle}</max_angle>
+            </vertical>
           </scan>
           <range>
             <min>${minimal_range}</min>
             <max>${maximal_range}</max>
-            <resolution>0.01</resolution>
+            <resolution>0.001</resolution>
           </range>
           <noise>
             <type>gaussian</type>
             <mean>0.0</mean>
-            <stddev>0.001</stddev>
+            <stddev>${range_std}</stddev>
           </noise>
         </ray>
         <plugin name="driver" filename="libgazebo_ros_ray_sensor.so">
           <ros>
             <namespace>${ros_namespace}</namespace>
-            <remapping>~/out:=scan</remapping>
+            <remapping>~/out:=points</remapping>
           </ros>
-          <output_type>sensor_msgs/LaserScan</output_type>
+          <output_type>sensor_msgs/PointCloud2</output_type>
         </plugin>
       </sensor>
+      <!-- </xacro:if> -->
+      <!-- <xacro:unless value="${gpu}">
+        <sensor type="ray" name="${prefix}${name}">
+          <pose>0 0 0 0 0 0</pose>
+          <visualize>true</visualize>
+          <update_rate>${rate}</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>${samples}</samples>
+                <resolution>1</resolution>
+                <min_angle>${minimal_azimut_angle}</min_angle>
+                <max_angle>${maximal_azimut_angle}</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>${lasers}</samples>
+                <resolution>1</resolution>
+                <min_angle>${minimal_elevation_angle}</min_angle>
+                <max_angle>${maximal_elevation_angle}</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>${minimal_range}</min>
+              <max>${maximal_range}</max>
+              <resolution>0.001</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>${range_std}</stddev>
+            </noise>
+          </ray>
+          <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_romea_lidar3d.so">
+            <topicName>/${prefix}${name}/points</topicName>
+            <frameName>${link_name}</frameName>
+            <organize_cloud>${organize_cloud}</organize_cloud>
+            <min_range>${minimal_range}</min_range>
+            <max_range>${maximal_range}</max_range>
+            <gaussianNoise>${range_std}</gaussianNoise>
+          </plugin>
+        </sensor> 
+      </xacro:unless>-->
     </gazebo>
+
 
     <joint name="${joint_name}" type="fixed">
       <axis xyz="0 0 1" />
