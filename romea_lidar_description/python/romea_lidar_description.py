@@ -45,28 +45,26 @@ def get_lidar_family(type, model):
         )
 
 
-def get_lidar_config_file(type, model, what):
-
+def get_lidar_family_specifications_file_path(type, model):
     return (
         get_package_share_directory("romea_lidar_description")
         + "/config/"
         + type
         + "_"
         + get_lidar_family(type, model)
-        + "_"
-        + what
-        + ".yaml"
+        + "_specifications.yaml"
     )
 
 
-def get_lidar_config(type, model, what):
-    with open(get_lidar_config_file(type, model, what)) as f:
+def get_lidar_family_specifications(type, model):
+
+    with open(get_lidar_family_specifications_file_path(type, model)) as f:
         return yaml.safe_load(f)
 
 
-def sick_lms1xx_configuration(model, rate, resolution):
+def sick_lms1xx_specifications(model, rate, resolution):
 
-    specifications = get_lidar_config("sick", model, "specifications")
+    specifications = get_lidar_family_specifications("sick", model)
 
     if not rate and not resolution:
         raise ValueError("Rate or resolution must be defined in lidar configuration")
@@ -114,9 +112,9 @@ def sick_lms1xx_configuration(model, rate, resolution):
     }
 
 
-def sick_tim5xx_configuration(model, rate, resolution):
+def sick_tim5xx_specifications(model, rate, resolution):
 
-    specifications = get_lidar_config("sick", model, "specifications")
+    specifications = get_lidar_family_specifications("sick", model)
 
     if rate is not None and rate != specifications["rate"]:
         raise ValueError("Rate " + str(rate) + " is not available for tim5xx lidar")
@@ -143,9 +141,9 @@ def sick_tim5xx_configuration(model, rate, resolution):
     }
 
 
-def sick_mrs1xxx_configuration(model, rate, resolution):
+def sick_mrs1xxx_specifications(model, rate, resolution):
 
-    specifications = get_lidar_config("sick", model, "specifications")
+    specifications = get_lidar_family_specifications("sick", model)
 
     if rate is not None and rate != specifications["rate"]:
         raise ValueError("Rate " + str(rate) + " is not available for mrs1xxx lidar")
@@ -179,17 +177,17 @@ def sick_mrs1xxx_configuration(model, rate, resolution):
     }
 
 
-def extract_lidar_configuration(type, model, rate, resolution):
+def get_lidar_specifications(type, model, rate, resolution):
     family = get_lidar_family(type, model)
-    return globals()[type + "_" + family + "_configuration"](model, rate, resolution)
+    return globals()[type + "_" + family + "_specifications"](model, rate, resolution)
 
 
-def save_lidar_configuration(prefix, lidar_name, configuration):
+def save_lidar_specifications(prefix, lidar_name, configuration):
     configuration_file_path = (
         "/tmp/"
         + prefix
         + lidar_name
-        + "_configuration.yaml"
+        + "_specifications.yaml"
     )
 
     with open(configuration_file_path, "w") as f:
@@ -198,16 +196,33 @@ def save_lidar_configuration(prefix, lidar_name, configuration):
     return configuration_file_path
 
 
+def get_lidar_geometry_file_path(type, model):
+    return (
+        get_package_share_directory("romea_lidar_description")
+        + "/config/"
+        + type
+        + "_"
+        + get_lidar_family(type, model)
+        + "_geometry.yaml"
+    )
+
+
+def get_lidar_geometry(type, model):
+
+    with open(get_lidar_geometry_file_path(type, model)) as f:
+        return yaml.safe_load(f)
+
+
 def urdf(prefix, mode, name, type, model, rate, resolution,
          parent_link, xyz, rpy, ros_namespace):
 
-    lidar_config = extract_lidar_configuration(type, model, rate, resolution)
-    lidar_config_yaml_file = save_lidar_configuration(prefix, name, lidar_config)
-    geometry_config_yaml_file = get_lidar_config_file(type, model, "geometry")
+    specifications = get_lidar_specifications(type, model, rate, resolution)
+    specifications_yaml_file = save_lidar_specifications(prefix, name, specifications)
+    geometry_yaml_file = get_lidar_geometry_file_path(type, model)
 
     xacro_file = (
         get_package_share_directory("romea_lidar_description")
-        + "/urdf/lidar"+lidar_config["type"]+".xacro.urdf"
+        + "/urdf/lidar"+specifications["type"]+".xacro.urdf"
     )
 
     urdf_xml = xacro.process_file(
@@ -216,8 +231,8 @@ def urdf(prefix, mode, name, type, model, rate, resolution,
             "prefix": prefix,
             "mode": prefix,
             "name": name,
-            "sensor_config_yaml_file": lidar_config_yaml_file,
-            "geometry_config_yaml_file": geometry_config_yaml_file,
+            "sensor_config_yaml_file": specifications_yaml_file,
+            "geometry_config_yaml_file": geometry_yaml_file,
             "parent_link": parent_link,
             "xyz": " ".join(map(str, xyz)),
             "rpy": " ".join(map(str, rpy)),

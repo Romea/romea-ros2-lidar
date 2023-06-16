@@ -68,6 +68,18 @@ class LIDARMetaDescription:
         return radians(self.get_rpy_deg()).tolist()
 
 
+def get_sensor_specifications(meta_description):
+    return romea_lidar_description.get_lidar_specifications(
+        meta_description.get_type(), meta_description.get_model()
+    )
+
+
+def get_sensor_geometry(meta_description):
+    return romea_lidar_description.get_lidar_family_geometry(
+        meta_description.get_type(), meta_description.get_model()
+    )
+
+
 def urdf_description(robot_namespace, mode, meta_description_file_path):
 
     meta_description = LIDARMetaDescription(meta_description_file_path)
