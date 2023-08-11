@@ -20,7 +20,8 @@ from numpy import radians, deg2rad
 
 class LIDARMetaDescription:
     def __init__(self, meta_description_file_path):
-        self.meta_description = MetaDescription("lidar", meta_description_file_path)
+        self.meta_description = MetaDescription(
+            "lidar", meta_description_file_path)
 
     def get_name(self):
         return self.meta_description.get("name")
@@ -66,6 +67,10 @@ class LIDARMetaDescription:
 
     def get_rpy_rad(self):
         return radians(self.get_rpy_deg()).tolist()
+
+
+def load_meta_description(meta_description_file_path):
+    return LIDARMetaDescription(meta_description_file_path)
 
 
 def get_sensor_specifications(meta_description):
