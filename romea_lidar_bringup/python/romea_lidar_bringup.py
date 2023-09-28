@@ -68,6 +68,12 @@ class LIDARMetaDescription:
     def get_rpy_rad(self):
         return radians(self.get_rpy_deg()).tolist()
 
+    def get_records(self):
+        return self.meta_description.get_or("records", None,  {})
+
+    def get_bridge(self):
+        return self.meta_description.get_or("bridge", None,  {})
+
 
 def load_meta_description(meta_description_file_path):
     return LIDARMetaDescription(meta_description_file_path)

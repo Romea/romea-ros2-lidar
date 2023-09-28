@@ -84,3 +84,9 @@ def test_get_rpy_deg(meta_description):
 
 def test_get_rpy_rad(meta_description):
     assert meta_description.get_rpy_rad() == radians([4.0, 5.0, 6.0]).tolist()
+
+
+def test_get_records(meta_description):
+    records = meta_description.get_records()
+    assert records["scan"] is True
+    assert records["cloud"] is False
