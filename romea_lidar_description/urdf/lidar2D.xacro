@@ -13,31 +13,26 @@
     <xacro:property name="parent_link_name"
       value="${prefix}${parent_link}" />
 
-    <xacro:property name="minimal_azimut_angle"
-      value="${configuration['minimal_azimut_angle']/180.*pi}" />
-    <xacro:property name="maximal_azimut_angle"
-      value="${configuration['maximal_azimut_angle']/180.*pi}" />
-    <xacro:property name="minimal_range"
-      value="${configuration['minimal_range']}" />
-    <xacro:property name="maximal_range"
-      value="${configuration['maximal_range']}" />
-    <xacro:property name="samples"
-      value="${configuration['samples']}" />
-    <xacro:property name="rate"
-      value="${configuration['rate']}" />
-
-
-    <xacro:property name="mass" value="${geometry['mass']}" />
-    <xacro:property name="aabb_length" value="${geometry['aabb']['length']}" />
-    <xacro:property name="aabb_width" value="${geometry['aabb']['width']}" />
-    <xacro:property name="aabb_height" value="${geometry['aabb']['height']}" />
-    <xacro:property name="aabb_center" value="${geometry['aabb']['center']}" />
+    <xacro:property name="mass" 
+      value="${geometry['mass']}" />
+    <xacro:property name="aabb_length" 
+      value="${geometry['aabb']['length']}" />
+    <xacro:property name="aabb_width" 
+      value="${geometry['aabb']['width']}" />
+    <xacro:property name="aabb_height" 
+      value="${geometry['aabb']['height']}" />
+    <xacro:property name="aabb_center" 
+      value="${geometry['aabb']['center']}" />
 
     <xacro:if value="${mesh_visual == True and 'mesh' in geometry}">
-      <xacro:property name="mesh_xyz" value="${geometry['mesh']['xyz']}" />
-      <xacro:property name="mesh_rpy" value="${geometry['mesh']['rpy']}" />
-      <xacro:property name="mesh_scale" value="${geometry['mesh']['scale']}" />
-      <xacro:property name="mesh_filename" value="${geometry['mesh']['filename']}" />
+      <xacro:property name="mesh_xyz" 
+        value="${geometry['mesh']['xyz']}" />
+      <xacro:property name="mesh_rpy" 
+        value="${geometry['mesh']['rpy']}" />
+      <xacro:property name="mesh_scale" 
+        value="${geometry['mesh']['scale']}" />
+      <xacro:property name="mesh_filename" 
+        value="${geometry['mesh']['filename']}" />
     </xacro:if>
 
     <link name="${link_name}">
@@ -74,42 +69,16 @@
 
     </link>
 
-    <gazebo reference="${link_name}">
-      <material>Gazebo/Blue</material>
-      <sensor type="ray" name="${prefix}${name}">
-        <pose>0 0 0 0 0 0</pose>
-        <visualize>true</visualize>
-        <update_rate>${rate}</update_rate>
-        <ray>
-          <scan>
-            <horizontal>
-              <samples>${samples}</samples>
-              <resolution>1</resolution>
-              <min_angle>${minimal_azimut_angle}</min_angle>
-              <max_angle>${maximal_azimut_angle}</max_angle>
-            </horizontal>
-          </scan>
-          <range>
-            <min>${minimal_range}</min>
-            <max>${maximal_range}</max>
-            <resolution>0.01</resolution>
-          </range>
-          <noise>
-            <type>gaussian</type>
-            <mean>0.0</mean>
-            <stddev>0.001</stddev>
-          </noise>
-        </ray>
-        <plugin name="driver" filename="libgazebo_ros_ray_sensor.so">
-          <ros>
-            <namespace>${ros_namespace}</namespace>
-            <remapping>~/out:=scan</remapping>
-          </ros>
-          <frame_name>${link_name}</frame_name>
-          <output_type>sensor_msgs/LaserScan</output_type>
-        </plugin>
-      </sensor>
-    </gazebo>
+    <xacro:if value="${'simulation' in  mode}">
+      <xacro:include filename="$(find romea_lidar_description)/urdf/lidar2D.simulation.xacro" />
+      <xacro:lidar2d_sensor_simulation
+        prefix="${prefix}"
+        mode="${mode}" 
+        name="${name}"
+        link_name="${link_name}" 
+        configuration="${configuration}" 
+        ros_namespace="${ros_namespace}"/>
+    </xacro:if>
 
     <joint name="${joint_name}" type="fixed">
       <axis xyz="0 0 1" />

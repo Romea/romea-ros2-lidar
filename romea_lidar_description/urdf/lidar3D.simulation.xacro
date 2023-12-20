@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<robot name="lidar" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="lidar3d_sensor_simulation"
+    params="prefix mode link_name name configuration ros_namespace">
+
+    <xacro:property name="samples"
+      value="${configuration['samples']}" />
+    <xacro:property name="minimal_azimut_angle"
+      value="${configuration['minimal_azimut_angle']/180.*pi}" />
+    <xacro:property name="maximal_azimut_angle"
+      value="${configuration['maximal_azimut_angle']/180.*pi}" />
+    <xacro:property name="lasers"
+      value="${configuration['lasers']}" />
+    <xacro:property name="minimal_elevation_angle"
+      value="${configuration['minimal_elevation_angle']/180.*pi}" />
+    <xacro:property name="maximal_elevation_angle"
+      value="${configuration['maximal_elevation_angle']/180.*pi}" />
+    <xacro:property name="minimal_range"
+      value="${configuration['minimal_range']}" />
+    <xacro:property name="maximal_range"
+      value="${configuration['maximal_range']}" />
+    <xacro:property name="range_std"
+      value="${configuration['range_std']}" />
+    <xacro:property name="rate"
+      value="${configuration['rate']}" />
+
+
+    <xacro:if value="${'gazebo' in  mode}">
+
+      <gazebo reference="${link_name}">
+        <material>Gazebo/Blue</material>
+
+        <sensor type="gpu_ray" name="${prefix}${name}">
+          <pose>0 0 0 0 0 0</pose>
+          <visualize>true</visualize>
+          <update_rate>${rate}</update_rate>
+
+          <topic>${ros_namespace}/points</topic>
+          <gz_frame_id>${link_name}</gz_frame_id>  <!-- used only with gazebo 6 or lower -->
+          <ignition_frame_id>${link_name}</ignition_frame_id> <!-- used by gazebo 7 or higher-->
+
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>${samples}</samples>
+                <resolution>1</resolution>
+                <min_angle>${minimal_azimut_angle}</min_angle>
+                <max_angle>${maximal_azimut_angle}</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>${lasers}</samples>
+                <resolution>1</resolution>
+                <min_angle>${minimal_elevation_angle}</min_angle>
+                <max_angle>${maximal_elevation_angle}</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>${minimal_range}</min>
+              <max>${maximal_range}</max>
+              <resolution>0.001</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0.0</mean>
+              <stddev>${range_std}</stddev>
+            </noise>
+          </ray>
+          
+          <xacro:if value="${'classic' in mode}">
+            <plugin name="driver" filename="libgazebo_ros_ray_sensor.so">
+              <ros>
+                <namespace>${ros_namespace}</namespace>
+                <remapping>~/out:=points</remapping>
+              </ros>
+              <output_type>sensor_msgs/PointCloud2</output_type>
+            </plugin>
+          </xacro:if>
+
+        </sensor>
+      </gazebo>
+    </xacro:if>
+    
+  </xacro:macro>
+
+</robot>

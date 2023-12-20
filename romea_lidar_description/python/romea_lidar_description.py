@@ -225,11 +225,14 @@ def urdf(prefix, mode, name, type, model, rate, resolution,
         + "/urdf/lidar"+specifications["type"]+".xacro.urdf"
     )
 
+    if mode == "simulation":
+        mode += "_gazebo_classic"
+
     urdf_xml = xacro.process_file(
         xacro_file,
         mappings={
             "prefix": prefix,
-            "mode": prefix,
+            "mode": mode,
             "name": name,
             "sensor_config_yaml_file": specifications_yaml_file,
             "geometry_config_yaml_file": geometry_yaml_file,
