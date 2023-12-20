@@ -98,7 +98,7 @@ def launch_setup(context, *args, **kwargs):
                     [
                         PathJoinSubstitution(
                             [
-                                FindPackageShare("romea_camera_bringup"),
+                                FindPackageShare("romea_lidar_bringup"),
                                 "launch",
                                 "drivers/gazebo_bridge.launch.py",
                             ]
