@@ -115,6 +115,7 @@
             <namespace>${ros_namespace}</namespace>
             <remapping>~/out:=points</remapping>
           </ros>
+          <frame_name>${link_name}</frame_name>
           <output_type>sensor_msgs/PointCloud2</output_type>
         </plugin>
       </sensor>
