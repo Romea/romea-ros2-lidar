@@ -2,8 +2,10 @@ name: "lidar"
 namespace: "ns"
 driver:
   pkg: "sick_scan"
-  ip: "192.168.1.112"
-  port: 2112
+  executable: "sick_generic_caller"
+  parameters:
+    hostname: "192.168.1.112"
+    port: "2112"
 configuration:
   type: sick
   model: lms151

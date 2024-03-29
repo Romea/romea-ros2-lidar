@@ -20,12 +20,13 @@ from launch_ros.actions import Node
 
 import romea_lidar_description
 import math
+import yaml
 
 
 def launch_setup(context, *args, **kwargs):
 
-    ip = LaunchConfiguration("ip").perform(context)
-    port = LaunchConfiguration("port").perform(context)
+    executable = LaunchConfiguration("executable").perform(context)
+    config_path = LaunchConfiguration("config_path").perform(context)
     frame_id = LaunchConfiguration("frame_id").perform(context)
     lidar_model = LaunchConfiguration("lidar_model").perform(context)
     resolution = LaunchConfiguration("resolution").perform(context)
@@ -43,10 +44,15 @@ def launch_setup(context, *args, **kwargs):
 
     driver = LaunchDescription()
 
+    print(f'config_path: {config_path}')
+    with open(config_path, 'r') as file:
+        config_parameters = yaml.safe_load(file)
+
     parameters = [
+        config_parameters,
         {"nodename": "driver"},
-        {"hostname": ip},
-        {"port": port},
+        # {"hostname": ip},
+        # {"port": port},
         {"cloud_topic": "cloud"},
         {"frame_id": frame_id},
         {"range_filter_handling": 0},
@@ -113,7 +119,7 @@ def launch_setup(context, *args, **kwargs):
 
     driver_node = Node(
         package="sick_scan",
-        executable="sick_generic_caller",
+        executable=executable,
         name="driver",
         output="screen",
         parameters=parameters,
@@ -126,13 +132,14 @@ def launch_setup(context, *args, **kwargs):
 
 def generate_launch_description():
 
-    declared_arguments = []
-    declared_arguments.append(DeclareLaunchArgument("ip"))
-    declared_arguments.append(DeclareLaunchArgument("port"))
-    declared_arguments.append(DeclareLaunchArgument("frame_id"))
-    declared_arguments.append(DeclareLaunchArgument("lidar_model"))
-    declared_arguments.append(DeclareLaunchArgument("rate"))
-    declared_arguments.append(DeclareLaunchArgument("resolution"))
+    declared_arguments = [
+        DeclareLaunchArgument("executable"),
+        DeclareLaunchArgument("config_path"),
+        DeclareLaunchArgument("frame_id"),
+        DeclareLaunchArgument("lidar_model"),
+        DeclareLaunchArgument("rate"),
+        DeclareLaunchArgument("resolution"),
+    ]
 
     return LaunchDescription(
         declared_arguments + [OpaqueFunction(function=launch_setup)]

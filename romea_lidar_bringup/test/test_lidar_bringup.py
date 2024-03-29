@@ -42,16 +42,14 @@ def test_get_driver_pkg(meta_description):
     assert meta_description.get_driver_pkg() == "sick_scan"
 
 
-def test_get_driver_ip(meta_description):
-    assert meta_description.get_driver_ip() == "192.168.1.112"
+def test_get_driver_executable(meta_description):
+    assert meta_description.get_driver_executable() == "sick_generic_caller"
 
 
-def test_get_driver_baudrate(meta_description):
-    assert meta_description.get_driver_port() == 2112
-
-
-def test_get_type(meta_description):
-    assert meta_description.get_type() == "sick"
+def test_get_driver_parameters(meta_description):
+    parameters = meta_description.get_driver_parameters()
+    assert parameters["hostname"] == "192.168.1.112"
+    assert parameters["port"] == "2112"
 
 
 def test_get_model(meta_description):
