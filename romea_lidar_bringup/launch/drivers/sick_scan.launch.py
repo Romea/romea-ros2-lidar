@@ -90,7 +90,7 @@ def launch_setup(context, *args, **kwargs):
     ]
 
     if "lms1" in lidar_model:
-        configuration = romea_lidar_description.sick_lms1xx_configuration(
+        configuration = romea_lidar_description.sick_lms1xx_specifications(
             lidar_model, rate, resolution
         )
         parameters.append(
@@ -104,7 +104,7 @@ def launch_setup(context, *args, **kwargs):
         parameters.append({"scanner_type": "sick_lms_1xx"})
 
     if "tim5" in lidar_model:
-        configuration = romea_lidar_description.sick_tim5xx_configuration(
+        configuration = romea_lidar_description.sick_tim5xx_specifications(
             lidar_model, rate, resolution
         )
         parameters.append(

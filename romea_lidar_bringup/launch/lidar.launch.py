@@ -77,10 +77,10 @@ def launch_setup(context, *args, **kwargs):
         PushRosNamespace(lidar_name),
     ]
 
-    if mode == "live" and meta_description.get_driver_package() is not None:
+    if mode == "live" and meta_description.has_driver_configuration():
         parameters = meta_description.get_driver_parameters()
         config_path = generate_yaml_temp_file('lidar_driver', parameters)
-      
+
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(
