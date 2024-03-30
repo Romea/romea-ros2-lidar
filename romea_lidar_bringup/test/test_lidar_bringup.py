@@ -39,7 +39,7 @@ def test_has_driver_configuration(meta_description):
 
 
 def test_get_driver_package(meta_description):
-    assert meta_description.get_driver_pkg() == "sick_scan"
+    assert meta_description.get_driver_package() == "sick_scan"
 
 
 def test_get_driver_executable(meta_description):
