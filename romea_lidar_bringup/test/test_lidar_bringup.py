@@ -38,7 +38,7 @@ def test_has_driver_configuration(meta_description):
     assert meta_description.has_driver_configuration() is True
 
 
-def test_get_driver_pkg(meta_description):
+def test_get_driver_package(meta_description):
     assert meta_description.get_driver_pkg() == "sick_scan"
 
 

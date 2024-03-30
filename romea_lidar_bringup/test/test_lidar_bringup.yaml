@@ -1,7 +1,7 @@
 name: "lidar"
 namespace: "ns"
 driver:
-  pkg: "sick_scan"
+  package: "sick_scan"
   executable: "sick_generic_caller"
   parameters:
     hostname: "192.168.1.112"

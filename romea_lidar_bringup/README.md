@@ -44,11 +44,11 @@ Example :
 ```yaml
 name: "lidar"  # name of the lidar
 driver: #driver configuration
-  pkg: "sick_scan" #ros2 driver package name
-  executable: "sick_generic_caller" # node to launch
+  pkg: sick_scan #ros2 driver package name
+  executable: sick_generic_caller # node to be launched
   parameters: # node parameters
   	ip: "192.168.1.112" #device ip
-  	port: "2112" #communication port
+  	port: 2112 #communication port
 configuration: # lidar configuration
   type: sick  # lidar type
   model: lms151 # lidar model
@@ -81,15 +81,15 @@ Only [sick_scan](https://github.com/SICKAG/sick_scan_xd) is supported for the mo
 - Sick scan:
 
 ```yaml
-  pkg: "sick_scan" #ros2 driver package name
-  executable: "sick_generic_caller" # node to launch
+  pkg: sick_scan #ros2 driver package name
+  executable: sick_generic_caller # node to be launched
   parameters: # node parameters
   	ip: "192.168.1.112" #device ip
-  	port: "2112" #communication port
+  	port: 2112 #communication port
 
 ```
 
-For each driver a python launch file with the name of the ROS2 package is provided in launch directory. When the meta-description is red by the main launch file called lidar_driver.launch.py the corresponding driver is automatically launched taking into account parameters define by user. Thanks to remapping defined inside each driver launch files, the data provided by drivers are always publish in the same topics called:
+For each driver a python launch file with the name of the ROS2 package is provided in launch directory. When the meta-description is red by the main launch file called lidar.launch.py the corresponding driver is automatically launched taking into account parameters define by user. Thanks to remapping defined inside each driver launch files, the data provided by drivers are always publish in the same topics called:
 
 - scan(sensor_msgs/LaserScan)
 - cloud(sensor_msgs/PointCloud2)

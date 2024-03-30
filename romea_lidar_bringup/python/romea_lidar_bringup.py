@@ -33,7 +33,7 @@ class LIDARMetaDescription:
         return self.meta_description.exists("driver")
 
     def get_driver_pkg(self):
-        return self.meta_description.get("pkg", "driver")
+        return self.meta_description.get("package", "driver")
 
     def get_driver_executable(self):
         return self.meta_description.get("executable", "driver")
