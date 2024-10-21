@@ -1,6 +1,6 @@
-# ROMEA Lidar Stack
+# romea_ros2_lidar #
 
-This stack contains several ROS2 packages for working with lidar, both in real-world applications and simulations. For more detailed information, please refer to the README files of each individual package.
+This project contains several ROS2 packages for working with lidar, both in real-world applications and simulations. For more detailed information, please refer to the README files of each individual package.
 
 ## **Usage**
 
@@ -31,8 +31,8 @@ This project is released under the Apache License 2.0. See the LICENSE file for 
 
 ## **Authors**
 
-The Romea Lidar stack was developed by **Jean Laneurit** in the context of various research projects carried out at INRAE.
+The romea_ros2_lidar project was developed by **Jean Laneurit** in the context of various research projects carried out at INRAE.
 
 ## **Contact**
 
-If you have any questions or comments about Romea Lidar stack, please contact **[Jean Laneurit](mailto:jean.laneurit@inrae.fr)** 
+If you have any questions or comments about romea_ros2_lidar project, please contact **[Jean Laneurit](mailto:jean.laneurit@inrae.fr)** 
