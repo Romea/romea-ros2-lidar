@@ -1,0 +1,15 @@
+type: 3D
+minimal_azimut_angle: -180.0
+maximal_azimut_angle: 180.0
+azimut_angle_increment: [0.703125, 0.3515625, 0.17578125]
+azimut_angle_std: 0.0
+samples: [512, 1024, 2048]
+minimal_elevation_angle: -22.5
+maximal_elevation_angle: 22.5
+elevation_angle_increment: 2.5
+elevation_angle_std: 0.0
+lasers: 32
+minimal_range: 0.3
+maximal_range: 55.0
+range_std: 0.0
+rate: [10, 20]

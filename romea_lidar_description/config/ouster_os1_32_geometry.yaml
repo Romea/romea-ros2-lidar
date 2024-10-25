@@ -1,0 +1,11 @@
+mass: 1.2
+aabb:
+    length: 0.085
+    width: 0.085
+    height: 0.0735
+    center: [0.0, 0.0, 0.0]
+# mesh:
+#     xyz: [0.0, 0.0, 0.0]
+#     rpy: [0.0, 0.0, 0.0]
+#     scale: [1.0, 1.0, 1.0]
+#     filename: 
