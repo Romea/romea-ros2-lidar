@@ -56,7 +56,7 @@
         <xacro:if value="${mesh_visual == False or 'mesh' not in geometry}">
           <origin xyz="${aabb_center[0]} ${aabb_center[1]} ${aabb_center[2]}" rpy="0 0 0" />
           <geometry>
-            <box size="${aabb_length} ${aabb_width} ${aabb_height}" />
+            <cylinder length="${aabb_height}" radius="${aabb_length / 2.0}" />
           </geometry>
         </xacro:if>
       </visual>
