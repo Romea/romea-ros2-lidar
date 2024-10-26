@@ -60,12 +60,12 @@
           </geometry>
         </xacro:if>
       </visual>
-      <collision>
+      <!-- <collision>
         <origin xyz="${aabb_center[0]} ${aabb_center[1]} ${aabb_center[2]}" rpy="0 0 0" />
         <geometry>
           <box size="${aabb_length} ${aabb_width} ${aabb_height}" />
         </geometry>
-      </collision>
+      </collision> -->
 
     </link>
 
