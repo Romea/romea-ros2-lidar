@@ -82,7 +82,16 @@
     </xacro:if>
 
 
-    <joint name="${joint_name}" type="fixed">
+    <!-- <joint name="${joint_name}" type="fixed">
+      <axis xyz="0 0 1" />
+      <origin xyz="${xyz}" rpy="${rpy}" />
+      <parent link="${parent_link_name}" />
+      <child link="${link_name}" />
+    </joint> -->
+
+    <joint name="${joint_name}" type="revolute">
+      <limit lower="0." upper="0."
+        effort="10000000" velocity="1000000" />
       <axis xyz="0 0 1" />
       <origin xyz="${xyz}" rpy="${rpy}" />
       <parent link="${parent_link_name}" />
