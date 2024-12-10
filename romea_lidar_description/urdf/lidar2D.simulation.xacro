@@ -59,6 +59,7 @@
                 <remapping>~/out:=scan</remapping>
               </ros>
               <output_type>sensor_msgs/LaserScan</output_type>
+              <frame_name>${link_name}</frame_name>
             </plugin>
           </xacro:if>
 
