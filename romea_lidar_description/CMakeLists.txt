@@ -5,19 +5,18 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 
 install(
-  DIRECTORY config urdf meshes
+  DIRECTORY config urdf
   DESTINATION share/${PROJECT_NAME}
 )
 
-ament_python_install_module(python/romea_lidar_description.py)
+# ament_python_install_module(python/romea_lidar_description.py)
 
-ament_environment_hooks("${CMAKE_CURRENT_SOURCE_DIR}/env-hooks/${PROJECT_NAME}.dsv.in")
+ament_python_install_package(${PROJECT_NAME})
 
-#if(BUILD_TESTING)
+
+if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
-
-  # ament_add_pytest_test(lidar_description_test test/lidar_description_test.py)
-#  ament_add_pytest_test(view_ur_launch test/test_view_ur_launch.py)
-#endif()
+  ament_add_pytest_test(test_sick_lsm1xx_description test/test_sick_lsm1xx_description.py)
+endif()
 
 ament_package()

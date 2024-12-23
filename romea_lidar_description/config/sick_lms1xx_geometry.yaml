@@ -1,5 +1,5 @@
-mass : 1.1
-aabb :
+mass: 1.1
+aabb:
     length: 0.105
     width: 0.102
     height: 0.152
