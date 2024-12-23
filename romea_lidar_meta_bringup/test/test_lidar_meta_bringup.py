@@ -17,12 +17,12 @@ import os
 import pytest
 from numpy import deg2rad, radians
 
-from romea_lidar_bringup import LIDARMetaDescription
+from romea_lidar_meta_bringup import LIDARMetaDescription
 
 
 @pytest.fixture(scope="module")
 def meta_description():
-    meta_description_file_path = os.path.join(os.getcwd(), "test_lidar_bringup.yaml")
+    meta_description_file_path = os.path.join(os.getcwd(), "test_lidar_meta_bringup.yaml")
     return LIDARMetaDescription(meta_description_file_path)
 
 

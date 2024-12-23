@@ -18,108 +18,56 @@ from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
-import romea_lidar_description
-import math
 import yaml
 
 
 def launch_setup(context, *args, **kwargs):
-    package = LaunchConfiguration("package").perform(context)
+
     executable = LaunchConfiguration("executable").perform(context)
-    config_path = LaunchConfiguration("config_path").perform(context)
-    frame_id = LaunchConfiguration("frame_id").perform(context)
-    lidar_model = LaunchConfiguration("lidar_model").perform(context)
-    lidar_name = LaunchConfiguration("lidar_name").perform(context)
-    resolution = LaunchConfiguration("resolution").perform(context)
-    rate = LaunchConfiguration("rate").perform(context)
-
-    if rate == "":
-        rate = None
-    else:
-        rate = int(rate)
-
-    if resolution == "":
-        resolution = None
-    else:
-        resolution = float(resolution)
+    executable_namespace = LaunchConfiguration("executable").perform(context)
+    configuration_file_path = LaunchConfiguration("configuration_file_path").perform(context)
 
     driver = LaunchDescription()
 
-    print(f'config_path: {config_path}')
-    with open(config_path, 'r') as file:
+    print(f'config_path: {configuration_file_path}')
+    with open(configuration_file_path, 'r') as file:
         config_parameters = yaml.safe_load(file)
 
     parameters = [
+        {"nodename": "driver"},
+        {"cloud_topic": "cloud"},
+        {"laserscan_topic": "scan"},
+        {"range_filter_handling": 0},
+        {"intensity": False},
+        {"intensity_resolution_16bit": False},
+        {"use_binary_protocol": True},
+        {"timelimit": 5},
+        {"sw_pll_only_publish": True},
+        {"use_generation_timestamp": True},
+        {"start_services": True},
+        {"activate_lferec": True},
+        {"activate_lidoutputstate": True},
+        {"activate_lidinputstate": True},
+        {"min_intensity": 0.0},
+        {"encoder_mode": -1},
+        {"scandatacfg_timingflag": -1},
+        {"add_transform_xyz_rpy": "0,0,0,0,0,0"},
+        {"add_transform_check_dynamic_updates": False},
+        {"message_monitoring_enabled": True},
+        {"read_timeout_millisec_default": 5000},
+        {"read_timeout_millisec_startup": 120000},
+        {"read_timeout_millisec_kill_node": 150000},
+        {"client_authorization_pw": "F4724744"},
+        {"ros_qos": -1},
+        {"tick_to_timestamp_mode": 0},
         config_parameters,
-        {
-            "nodename": "driver",
-            # "hostname": ip,
-            # "port": port,
-            "cloud_topic": "cloud",
-            "frame_id": frame_id,
-            "range_filter_handling": 0,
-            "intensity": False,
-            "intensity_resolution_16bit": False,
-            "use_binary_protocol": True,
-            "timelimit": 5,
-            "sw_pll_only_publish": True,
-            "use_generation_timestamp": True,
-            # Use the lidar generation timestamp (true, default) or send timestamp (false)
-            # for the software pll converted message timestamp
-            "start_services": True,
-            # start ros service for cola commands
-            "activate_lferec": True,
-            # activate field monitoring by lferec message
-            "activate_lidoutputstate": True,
-            # activate field monitoring by lidoutputstate messages
-            "activate_lidinputstate": True,
-            # activate field monitoring by lidinputstate messages
-            "min_intensity": 0.0,
-            # Set range of LaserScan messages to infinity, if intensity < min_intensity (default: 0)
-            # "add_transform_xyz_rpy": "0,0,0,0,0,0",
-            "message_monitoring_enabled": True,
-            # Enable message monitoring with reconnect+reinit in case of timeouts
-            "read_timeout_millisec_default": 5000,
-            # 5 sec read timeout in operational mode (measurement mode), default: 5000 milliseconds
-            "read_timeout_millisec_startup": 120000,
-            # 120 sec read timeout during startup (sensor may be starting up,
-            #  which can take up to 120 sec.), default: 120000 milliseconds
-            "read_timeout_millisec_kill_node": 150000,
-            "client_authorization_pw": "F4724744",  # Default password
-            "tf_publish_rate": 0.0,  # disable TF
-        }
     ]
 
-    if "lms1" in lidar_model:
-        configuration = romea_lidar_description.sick_lms1xx_specifications(
-            lidar_model, rate, resolution
-        )
-        parameters.append({
-            "min_ang": configuration["minimal_azimut_angle"] / 180.0 * math.pi,
-            "max_ang": configuration["maximal_azimut_angle"] / 180.0 * math.pi,
-            "range_min": configuration["minimal_range"],
-            "range_max": configuration["maximal_range"],
-            "scanner_type": "sick_lms_1xx",
-            "use_binary_protocol": False,  # disabled to work with old lidar
-        })
-
-    if "tim5" in lidar_model:
-        configuration = romea_lidar_description.sick_tim5xx_specifications(
-            lidar_model, rate, resolution
-        )
-        parameters.append({
-            "min_ang": configuration["minimal_azimut_angle"] / 180.0 * math.pi,
-            "max_ang": configuration["maximal_azimut_angle"] / 180.0 * math.pi,
-            "range_min": configuration["minimal_range"],
-            "range_max": configuration["maximal_range"],
-            "scanner_type": "sick_tim_5xx",
-        })
-
     driver_node = Node(
-        package=package,
+        package="sick_scan_xd",
         executable=executable,
-        exec_name=lidar_name,
         name="driver",
+        namespace=executable_namespace,
         output="screen",
         parameters=parameters,
     )
@@ -133,15 +81,10 @@ def generate_launch_description():
 
     declared_arguments = [
         DeclareLaunchArgument("executable"),
-        DeclareLaunchArgument("config_path"),
-        DeclareLaunchArgument("frame_id"),
-        DeclareLaunchArgument("lidar_model"),
-        DeclareLaunchArgument("lidar_name"),
-        DeclareLaunchArgument("rate"),
-        DeclareLaunchArgument("resolution"),
-        DeclareLaunchArgument("package", default_value="sick_scan_xd"),
+        DeclareLaunchArgument("executable_namespace", default_value=""),
+        DeclareLaunchArgument("component_container", default_value=""),
+        DeclareLaunchArgument("configuration_file_path"),
     ]
-
     return LaunchDescription(
         declared_arguments + [OpaqueFunction(function=launch_setup)]
     )

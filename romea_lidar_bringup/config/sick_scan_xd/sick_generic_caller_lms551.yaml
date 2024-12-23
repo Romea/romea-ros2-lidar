@@ -1,0 +1,33 @@
+hostname: "192.168.1.112"
+port: 2112
+frame_id: lidar_link
+min_ang: -2.35619
+max_ang: 2.35619
+scanner_type: sick_tim_5xx
+range_min: 0.05
+range_max: 10.0
+#range_filter_handling: 0  # optional default is 0
+#intensity: false  # optional default is false
+#intensity_resolution_16bit: false  # optional default is false
+#use_binary_protocol: true  # optional default is true
+#timelimit: 5  # optional default is 5
+#sw_pll_only_publish: true  # optional default is true
+#use_generation_timestamp: true  # optional default is true
+#start_services: true  # optional default is true
+#activate_lferec: true # optional default is true
+#activate_lidoutputstate: true  # optional default is true
+#activate_lidinputstate: true  # optional default is true
+#min_intensity: 0.0  # optional default is 0.0
+#encoder_mode: -1  # optional default is -1
+#scandatacfg_timingflag: -1  # optional default is -1
+#add_transform_xyz_rpy: "0,0,0,0,0,0" # optional default is null vector
+#add_transform_check_dynamic_updates: false  # optional default is false
+#message_monitoring_enabled: true  # optional default is true
+#read_timeout_millisec_default: 5000  # optional default is 5000
+#read_timeout_millisec_startup: 120000 # optional default is 120000
+#read_timeout_millisec_kill_node: 150000 # optional default is 150000
+#client_authorization_pw: F4724744  # optional default is F4724744
+#ros_qos: -1  # optional default is -1
+#tick_to_timestamp_mode: 0  # optional default is 0
+
+# see sick_lms_1xx.launch for more details on these parameters

@@ -27,7 +27,7 @@ from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
-from romea_common_bringup import device_link_name
+from romea_common_bringup import device_link_name, device_namespace
 from romea_lidar_bringup import LIDARMetaDescription
 
 import tempfile
@@ -70,14 +70,12 @@ def launch_setup(context, *args, **kwargs):
 
     lidar_name = meta_description.get_name()
     lidar_namespace = str(meta_description.get_namespace() or "")
+    lidar_full_namespace = device_namespace(robot_namespace, lidar_namespace, lidar_name)
+    lidar_frame_id = device_link_name(robot_namespace, lidar_name)
 
-    actions = [
-        PushRosNamespace(robot_namespace),
-        PushRosNamespace(lidar_namespace),
-        PushRosNamespace(lidar_name),
-    ]
-
+    actions = []
     if mode == "live" and meta_description.has_driver_configuration():
+
         parameters = meta_description.get_driver_parameters()
         config_path = generate_yaml_temp_file('lidar_driver', parameters)
 
@@ -95,13 +93,9 @@ def launch_setup(context, *args, **kwargs):
                     ]
                 ),
                 launch_arguments={
-                    "lidar_name": lidar_name,
-                    "config_path": config_path,
-                    "executable": meta_description.get_driver_executable(),
-                    "lidar_model": meta_description.get_model(),
-                    "rate": str(meta_description.get_rate() or ""),
-                    "resolution": str(meta_description.get_resolution_deg() or ""),
-                    "frame_id": device_link_name(robot_namespace, lidar_name),
+                    "executable": executable,
+                    "executable_namespace": lidar_full_namespace,
+                    "configuration_file_path": configuration_file_path,
                 }.items(),
             )
         )

@@ -91,6 +91,28 @@ def get_sensor_geometry(meta_description):
     )
 
 
+def get_sensor_configuration(meta_description, ns=None):
+    return {
+        "frame_rate": meta_description.get_frame_rate(ns),
+        "resolution": meta_description.get_resolution(ns)
+    }
+
+
+def driver_executable_parameters(executable, driver_configuration, camera_configuration, frame_id):
+    parameters = driver_configuration
+    parameters["frame_id"] = frame_id
+
+    if executable == "sick_generic_caller":
+        parameters["framerate"] = camera_configuration("frame_rate")
+        parameters["image_height"] = camera_configuration("image_height")
+        parameters["image_width"] = camera_configuration("image_width")
+    else:
+        # TODO (add other drivers)
+        pass
+
+    return parameters
+
+
 def urdf_description(robot_namespace, mode, meta_description_file_path):
 
     meta_description = LIDARMetaDescription(meta_description_file_path)
