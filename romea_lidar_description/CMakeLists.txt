@@ -17,6 +17,7 @@ ament_python_install_package(${PROJECT_NAME})
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
   ament_add_pytest_test(test_sick_lsm1xx_description test/test_sick_lsm1xx_description.py)
+  ament_add_pytest_test(test_sick_tim5xx_description test/test_sick_tim5xx_description.py)
 endif()
 
 ament_package()

@@ -25,7 +25,7 @@ def get_lms1xx_complete_configuration(model, rate, resolution):
         if rate in specifications['rate']:
             rate_hz = str(rate) + 'hz'
         else:
-            raise ValueError('A ' + str(rate) + 'Hz rate is not available for lms1xx lidar')
+            raise ValueError('A ' + str(rate) + 'Hz rate is not available for ' + model + ' lidar')
 
         if resolution is not None:
             if resolution != specifications['azimut_angle_increment'][rate_hz]:
@@ -34,7 +34,9 @@ def get_lms1xx_complete_configuration(model, rate, resolution):
                     + str(rate)
                     + 'Hz rate and a '
                     + str(resolution)
-                    + '° resolution is not an available configuration for lms1xx lidar'
+                    + '° resolution is not an available configuration for '
+                    + model
+                    + ' lidar'
                 )
 
     else:
@@ -42,7 +44,14 @@ def get_lms1xx_complete_configuration(model, rate, resolution):
             rate = dict.keys()[dict.values().index(resolution)]
             rate_hz = str(rate) + 'hz'
         else:
-            raise ValueError('A ' + str(resolution) + '° resolution is not available for lms1xx lidar')
+            raise ValueError(
+                'A '
+                + str(resolution) 
+                + '° resolution is not available for '
+                + model
+                + ' lidar'
+            )
+
     sub_model = model[0:5] + 'x'
 
     return {
@@ -63,10 +72,22 @@ def get_tim5xx_complete_configuration(model, rate, resolution):
     specifications = common.get_lidar_specifications("sick", "tim5xx")
 
     if rate is not None and rate != specifications['rate']:
-        raise ValueError('Rate ' + str(rate) + ' is not available for tim5xx lidar')
+        raise ValueError(
+            'A '
+            + str(rate)
+            + 'Hz rate is not available for '
+            + model 
+            + ' lidar'
+        )
 
     if resolution is not None and resolution != specifications['azimut_angle_increment'][model]:
-        raise ValueError('Resolution ' + str(resolution) + ' is not available for tim5xx lidar')
+        raise ValueError(
+            'A '
+            + str(resolution)
+            + '° resolution is not available for '
+            + model 
+            + ' lidar'
+        )
 
     return {
         'type': specifications['type'],
