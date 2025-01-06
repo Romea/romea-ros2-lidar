@@ -11,15 +11,13 @@ install(
 
 ament_python_install_module(python/romea_lidar_description.py)
 
-# ament_python_install_package(${PROJECT_NAME})
-
-
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
   ament_add_pytest_test(test_sick_lsm1xx_description test/test_sick_lsm1xx_description.py)
   ament_add_pytest_test(test_sick_tim5xx_description test/test_sick_tim5xx_description.py)
   ament_add_pytest_test(test_sick_mrs1xxx_description test/test_sick_mrs1xxx_description.py)
   ament_add_pytest_test(test_ouster_os1_description test/test_ouster_os1_description.py)
+  ament_add_pytest_test(test_lidar_urdf test/test_lidar_urdf.py)
 endif()
 
 ament_package()

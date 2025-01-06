@@ -20,7 +20,7 @@
 # range_std: 0.0
 # rate: [10, 20]
 
-type: 3D
+# type: 3D
 model:
   list: [os1_32, os1_64, os_128]
 minimal_azimut_angle: -180.0

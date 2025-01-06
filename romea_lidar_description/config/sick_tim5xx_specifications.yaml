@@ -23,7 +23,7 @@
 # range_std: 0.0
 # rate: 15
 
-type: 2D
+# type: 2D
 model:
   list: [tim510, tim551, tim561, tim571, tim581]
 minimal_azimut_angle: -135.0

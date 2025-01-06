@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import math
 import pytest
 from ament_index_python.packages import get_package_share_directory
 
@@ -49,31 +50,56 @@ def test_get_lidar_geometry_ok():
     assert get_lidar_geometry("ouster", "os1_32")['mass'] == 0.447
 
 
-# def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
-#     with pytest.raises(ValueError) as excinfo:
-#         get_lidar_complete_configuration("sick", "tim551", 25, None)
-#     msg = (
-#         "rate value (25Hz) provided by user is not available for sick tim551 lidar, "
-#         + "it must be equal to 15"
-#     )
-#     assert msg == str(excinfo.value)
+def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
+    user_description = {
+       "type": "ouster",
+       "model": "os1_32",
+       "rate": 25,
+    }
+
+    with pytest.raises(ValueError) as excinfo:
+        get_lidar_complete_configuration("lidar", user_description)
+    msg = (
+        "rate value (25Hz) provided by user is not available for ouster os1_32 lidar "
+        + "called lidar, it must be one of these values: [10, 20]"
+
+    )
+
+    assert msg == str(excinfo.value)
 
 
-# def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
-#     with pytest.raises(ValueError) as excinfo:
-#         get_lidar_complete_configuration("sick", "tim551", None, 0.25)
-#     msg = (
-#         "azimut_angle_increment value (0.25°) provided by user is not available "
-#         + "for this configuration of sick tim551 lidar, it must be equal to 1.0"
-#     )
-#     assert msg == str(excinfo.value)
+def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
+
+    user_description = {
+       "type": "ouster",
+       "model": "os1_32",
+       "rate": 10,
+       "azimut_angle_increment": 1.0,
+    }
+
+    with pytest.raises(ValueError) as excinfo:
+        get_lidar_complete_configuration("lidar", user_description)
+    msg = (
+        "azimut_angle_increment value (1.0°) provided by user is not available "
+        + "for ouster os1_32 lidar called lidar, it must be one of these values: "
+        + "[0.703125, 0.3515625, 0.17578125]"
+    )
+
+    assert msg == str(excinfo.value)
 
 
 def test_get_lidar_complete_configuration_ok():
-    configuration = get_lidar_complete_configuration("ouster", "os1_32", 10, 0.703125)
-    assert configuration["type"] == "3D"
+    user_description = {
+       "type": "ouster",
+       "model": "os1_32",
+       "rate": 10,
+       "azimut_angle_increment": 0.703125,
+    }
+
+    configuration = get_lidar_complete_configuration("lidar", user_description)
+
     assert configuration["maximal_range"] == 55.0
-    assert configuration["azimut_angle_increment"] == 0.703125
+    assert configuration["azimut_angle_increment"] == 0.703125 / 180 * math.pi
     assert configuration["samples"] == 512
     assert configuration["lasers"] == 32
     assert configuration["rate"] == 10

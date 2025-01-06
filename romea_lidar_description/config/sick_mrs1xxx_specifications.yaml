@@ -14,7 +14,7 @@
 # range_std: 0.0
 # rate: 50
 
-type: 3D
+# type: 3D
 minimal_azimut_angle: -135.0
 maximal_azimut_angle: 135.0
 azimut_angle_increment:

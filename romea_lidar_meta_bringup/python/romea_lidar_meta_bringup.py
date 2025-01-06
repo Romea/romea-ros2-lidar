@@ -40,7 +40,10 @@ class LIDARMetaDescription:
 
     def get_driver_parameters(self):
         return self.meta_description.get("parameters", "driver")
-    
+
+    def get_configuration(self):
+        return self.meta_description.get("configuration")
+
     def get_type(self):
         return self.meta_description.get("type", "configuration")
 
@@ -55,6 +58,9 @@ class LIDARMetaDescription:
 
     def get_resolution_rad(self):
         return deg2rad(self.get_resolution_deg())
+
+    def get_geometry(self):
+        return self.meta_description.get("geometry")
 
     def get_parent_link(self):
         return self.meta_description.get("parent_link", "geometry")
@@ -86,16 +92,15 @@ def get_sensor_specifications(meta_description):
 
 
 def get_sensor_geometry(meta_description):
-    return romea_lidar_description.get_lidar_family_geometry(
+    return romea_lidar_description.get_lidar_geometry(
         meta_description.get_type(), meta_description.get_model()
     )
 
 
-def get_sensor_configuration(meta_description, ns=None):
-    return {
-        "frame_rate": meta_description.get_frame_rate(ns),
-        "resolution": meta_description.get_resolution(ns)
-    }
+def get_complete_configuration(meta_description):
+    return romea_lidar_description.get_complete_configuration(
+        meta_description.get_name(), meta_description.get_configuration()
+    )
 
 
 def driver_executable_parameters(executable, driver_configuration, camera_configuration, frame_id):
@@ -126,12 +131,7 @@ def urdf_description(robot_namespace, mode, meta_description_file_path):
         robot_urdf_prefix(robot_namespace),
         mode,
         meta_description.get_name(),
-        meta_description.get_type(),
-        meta_description.get_model(),
-        meta_description.get_rate(),
-        meta_description.get_resolution_deg(),
-        meta_description.get_parent_link(),
-        meta_description.get_xyz(),
-        meta_description.get_rpy_rad(),
-        ros_namespace
+        meta_description.get_configuration(),
+        meta_description.get_geometry(),
+        ros_namespace,
     )

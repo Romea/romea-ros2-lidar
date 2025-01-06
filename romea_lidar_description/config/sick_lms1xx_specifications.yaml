@@ -19,7 +19,7 @@
 #   50hz: 541
 # rate: [25, 50]
 
-type: 2D
+# type: 2D
 model:
   list:
     [

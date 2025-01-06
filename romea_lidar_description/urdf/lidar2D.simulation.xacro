@@ -5,9 +5,9 @@
     params="prefix mode link_name name configuration ros_namespace">
 
     <xacro:property name="minimal_azimut_angle"
-      value="${configuration['minimal_azimut_angle']/180.*pi}" />
+      value="${configuration['minimal_azimut_angle']}" />
     <xacro:property name="maximal_azimut_angle"
-      value="${configuration['maximal_azimut_angle']/180.*pi}" />
+      value="${configuration['maximal_azimut_angle']}" />
     <xacro:property name="minimal_range"
       value="${configuration['minimal_range']}" />
     <xacro:property name="maximal_range"

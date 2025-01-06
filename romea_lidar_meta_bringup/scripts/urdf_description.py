@@ -15,7 +15,7 @@
 # limitations under the License.
 
 
-from romea_lidar_bringup import urdf_description
+from romea_lidar_meta_bringup import urdf_description
 import sys
 
 if __name__ == "__main__":

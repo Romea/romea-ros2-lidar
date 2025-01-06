@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import math
 import pytest
 from ament_index_python.packages import get_package_share_directory
 
@@ -50,29 +51,48 @@ def test_get_lidar_geometry_ok():
 
 
 def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
+    user_description = {
+        "type": "sick",
+        "model": "mrs1000",
+        "rate": 25,
+    }
     with pytest.raises(ValueError) as excinfo:
-        get_lidar_complete_configuration("sick", "mrs1000", 25, None)
+        get_lidar_complete_configuration("lidar", user_description)
     msg = (
-        "rate value (25Hz) provided by user is not available for sick mrs1000 lidar, "
-        + "it must be equal to 50"
+        "rate value (25Hz) provided by user is not available for sick mrs1000 " 
+        + "lidar called lidar, it must be equal to 50"
     )
     assert msg == str(excinfo.value)
 
 
 def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
+    user_description = {
+        "type": "sick",
+        "model": "mrs1000",
+        "rate": 50,
+        "azimut_angle_increment": 0.5,
+    }
+
     with pytest.raises(ValueError) as excinfo:
-        get_lidar_complete_configuration("sick", "mrs1000", 50, 0.5)
+        get_lidar_complete_configuration("lidar", user_description)
     msg = (
-        "azimut_angle_increment value (0.5°) provided by user is not available "
-        + "for sick mrs1000 lidar, it must be one of these values: [0.25, 0.125, 0.0625]"
+        "azimut_angle_increment value (0.5°) provided by user is not available for "
+        + "sick mrs1000 lidar called lidar, it must be one of these values: [0.25, 0.125, 0.0625]"
     )
     assert msg == str(excinfo.value)
 
 
 def test_get_lidar_complete_configuration_ok():
-    configuration = get_lidar_complete_configuration("sick", "mrs1000", 50, 0.25)
-    assert configuration["type"] == "3D"
+    user_description = {
+        "type": "sick",
+        "model": "mrs1000",
+        "rate": 50,
+        "azimut_angle_increment": 0.25,
+    }
+
+    configuration = get_lidar_complete_configuration("lidar", user_description)
+
     assert configuration["maximal_range"] == 64.0
-    assert configuration["azimut_angle_increment"] == 0.25
+    assert configuration["azimut_angle_increment"] == 0.25 / 180 * math.pi
     assert configuration["samples"] == 1081
     assert configuration["rate"] == 50
