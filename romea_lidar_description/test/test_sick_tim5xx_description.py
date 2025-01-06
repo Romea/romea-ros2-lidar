@@ -34,7 +34,7 @@ def test_get_lidar_specifications_file_path_ok():
 
 
 def test_get_lidar_specifications_ok():
-    assert get_lidar_specifications("sick", "tim551")['maximal_range']['tim551'] == 10.0
+    assert get_lidar_specifications("sick", "tim551")['maximal_range']['dict']['tim551'] == 10.0
 
 
 def test_get_lidar_geometry_file_path_ok():
@@ -52,13 +52,21 @@ def test_get_lidar_geometry_ok():
 def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
     with pytest.raises(ValueError) as excinfo:
         get_lidar_complete_configuration("sick", "tim551", 25, None)
-    assert 'A 25Hz rate is not available for tim551 lidar' == str(excinfo.value)
+    msg = (
+        "rate value (25Hz) provided by user is not available for sick tim551 lidar, "
+        + "it must be equal to 15"
+    )
+    assert msg == str(excinfo.value)
 
 
 def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
     with pytest.raises(ValueError) as excinfo:
         get_lidar_complete_configuration("sick", "tim551", None, 0.25)
-    assert 'A 0.25° resolution is not available for tim551 lidar' == str(excinfo.value)
+    msg = (
+        "azimut_angle_increment value (0.25°) provided by user is not available "
+        + "for this configuration of sick tim551 lidar, it must be equal to 1.0"
+    )
+    assert msg == str(excinfo.value)
 
 
 def test_get_lidar_complete_configuration_ok():

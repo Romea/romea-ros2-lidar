@@ -1,24 +1,103 @@
+# type: 2D
+# minimal_azimut_angle: -135.0
+# maximal_azimut_angle: 135.0
+# azimut_angle_increment:
+#   tim510: 0.33
+#   tim551: 1.0
+#   tim561: 1.0
+#   tim571: 0.33
+#   tim581: 0.33
+# azimut_angle_std: 0.0
+# samples:
+#   tim510: 811
+#   tim551: 271
+#   tim561: 271
+#   tim571: 811
+#   tim581: 811
+# minimal_range: 0.05
+# maximal_range:
+#   tim510: 4.0
+#   tim551: 10.0
+#   tim561: 10.0
+#   tim571: 25.0
+# range_std: 0.0
+# rate: 15
+
 type: 2D
+model:
+  list: [tim510, tim551, tim561, tim571, tim581]
 minimal_azimut_angle: -135.0
 maximal_azimut_angle: 135.0
 azimut_angle_increment:
-  tim510: 0.33
-  tim551: 1.0
-  tim561: 1.0
-  tim571: 0.33
-  tim581: 0.33
+  depend: model
+  dict:
+    tim510: 0.33
+    tim551: 1.0
+    tim561: 1.0
+    tim571: 0.33
+    tim581: 0.33
 azimut_angle_std: 0.0
 samples:
-  tim510: 811
-  tim551: 271
-  tim561: 271
-  tim571: 811
-  tim581: 811
+  depend: model
+  dict:
+    tim510: 811
+    tim551: 271
+    tim561: 271
+    tim571: 811
+    tim581: 811
 minimal_range: 0.05
 maximal_range:
-  tim510: 4.0
-  tim551: 10.0
-  tim561: 10.0
-  tim571: 25.0
+  depend: model
+  dict:
+    tim510: 4.0
+    tim551: 10.0
+    tim561: 10.0
+    tim571: 25.0
 range_std: 0.0
 rate: 15
+# type: 2D
+# model:
+#   list: [tim510, tim551, tim561, tim571, tim581]
+# minimal_azimut_angle:
+#   value: -135.0
+#   unit: °
+# maximal_azimut_angle:
+#   value: 135.0
+#   unit: °
+# azimut_angle_increment:
+#   depend: model
+#   dict:
+#     tim510: 0.33
+#     tim551: 1.0
+#     tim561: 1.0
+#     tim571: 0.33
+#     tim581: 0.33
+#   unit: °
+# azimut_angle_std:
+#   value: 0.0
+#   unit: °
+# samples:
+#   depend: model
+#   dict:
+#     tim510: 811
+#     tim551: 271
+#     tim561: 271
+#     tim571: 811
+#     tim581: 811
+# minimal_range:
+#   value: 0.05
+#   unit: m
+# maximal_range:
+#   depend: model
+#   dict:
+#     tim510: 4.0
+#     tim551: 10.0
+#     tim561: 10.0
+#     tim571: 25.0
+#   unit: m
+# range_std:
+#   value: 0.0
+#   unit: m
+# rate:
+#   value: 15
+#   unit: Hz

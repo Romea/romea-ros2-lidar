@@ -1,9 +1,31 @@
+# type: 3D
+# minimal_azimut_angle: -135.0
+# maximal_azimut_angle: 135.0
+# azimut_angle_increment: [0.25, 0.125, 0.0625]
+# azimut_angle_std: 0.0
+# samples: [1081, 2161, 4321]
+# minimal_elevation_angle: -2.5
+# maximal_elevation_angle: 5
+# elevation_angle_increment: 2.5
+# elevation_angle_std: 0.0
+# lasers: 4
+# minimal_range: 0.5
+# maximal_range: 64.0
+# range_std: 0.0
+# rate: 50
+
 type: 3D
 minimal_azimut_angle: -135.0
 maximal_azimut_angle: 135.0
-azimut_angle_increment: [0.25, 0.125, 0.0625]
+azimut_angle_increment:
+  list: [0.25, 0.125, 0.0625]
 azimut_angle_std: 0.0
-samples: [1081, 2161, 4321]
+samples:
+  depend: azimut_angle_increment
+  dict:
+    0.25: 1081
+    0.125: 2161
+    0.0625: 4321
 minimal_elevation_angle: -2.5
 maximal_elevation_angle: 5
 elevation_angle_increment: 2.5
@@ -13,3 +35,48 @@ minimal_range: 0.5
 maximal_range: 64.0
 range_std: 0.0
 rate: 50
+# type: 3D
+# minimal_azimut_angle:
+#   value: -135.0
+#   unit: °
+# maximal_azimut_angle:
+#   value: 135.0
+#   unit: °
+# azimut_angle_increment:
+#   list: [0.25, 0.125, 0.0625]
+#   unit: °
+# azimut_angle_std:
+#   value: 0.0
+#   unit: °
+# samples:
+#   depend: azimut_angle_increment
+#   dict:
+#     0.25: 1081
+#     0.125: 2161
+#     0.0625: 4321
+# minimal_elevation_angle:
+#   value: -2.5
+#   unit: °
+# maximal_elevation_angle:
+#   value: 5
+#   unit: °
+# elevation_angle_increment:
+#   value: 2.5
+#   unit: °
+# elevation_angle_std:
+#   value: 0.0
+#   unit: °
+# lasers:
+#   value: 4
+# minimal_range:
+#   value: 0.5
+#   unit: m
+# maximal_range:
+#   value: 64.0
+#   unit: m
+# range_std:
+#   value: 0.0
+#   unit: m
+# rate:
+#   value: 50
+#   unit: Hz

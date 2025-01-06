@@ -27,52 +27,52 @@ from romea_lidar_description import (
 
 def test_get_lidar_specifications_file_path_ok():
     assert (
-        get_lidar_specifications_file_path("sick", "lms151")
+        get_lidar_specifications_file_path("sick", "mrs1000")
         == get_package_share_directory("romea_lidar_description")
-        + "/config/sick_lms1xx_specifications.yaml"
+        + "/config/sick_mrs1xxx_specifications.yaml"
     )
 
 
 def test_get_lidar_specifications_ok():
-    assert get_lidar_specifications("sick", "lms151")['maximal_range']['dict']['lms15x'] == 50.0
+    assert get_lidar_specifications("sick", "mrs1000")['samples']['dict'][0.25] == 1081
 
 
 def test_get_lidar_geometry_file_path_ok():
     assert (
-        get_lidar_geometry_file_path("sick", "lms151")
+        get_lidar_geometry_file_path("sick", "mrs1000")
         == get_package_share_directory("romea_lidar_description")
-        + "/config/sick_lms1xx_geometry.yaml"
+        + "/config/sick_mrs1xxx_geometry.yaml"
     )
 
 
 def test_get_lidar_geometry_ok():
-    assert get_lidar_geometry("sick", "lms151")['mass'] == 1.1
-
-
-def test_get_lidar_complete_configuration_ok():
-    configuration = get_lidar_complete_configuration("sick", "lms151", 25, None)
-    assert configuration["type"] == "2D"
-    assert configuration["maximal_range"] == 50.0
-    assert configuration["azimut_angle_increment"] == 0.25
-    assert configuration["samples"] == 1081
-    assert configuration["rate"] == 25
+    assert get_lidar_geometry("sick", "mrs1000")['mass'] == 1.2
 
 
 def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
     with pytest.raises(ValueError) as excinfo:
-        get_lidar_complete_configuration("sick", "lms151", 33, None)
+        get_lidar_complete_configuration("sick", "mrs1000", 25, None)
     msg = (
-        "rate value (33Hz) provided by user is not available for sick lms151 lidar, "
-        + "it must be one of these values: [25, 50]"
+        "rate value (25Hz) provided by user is not available for sick mrs1000 lidar, "
+        + "it must be equal to 50"
     )
     assert msg == str(excinfo.value)
 
 
 def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
     with pytest.raises(ValueError) as excinfo:
-        get_lidar_complete_configuration("sick", "lms151", 25, 1.0)
+        get_lidar_complete_configuration("sick", "mrs1000", 50, 0.5)
     msg = (
-        "azimut_angle_increment value (1.0°) provided by user is not available "
-        + "for this configuration of sick lms151 lidar, it must be equal to 0.25"
+        "azimut_angle_increment value (0.5°) provided by user is not available "
+        + "for sick mrs1000 lidar, it must be one of these values: [0.25, 0.125, 0.0625]"
     )
     assert msg == str(excinfo.value)
+
+
+def test_get_lidar_complete_configuration_ok():
+    configuration = get_lidar_complete_configuration("sick", "mrs1000", 50, 0.25)
+    assert configuration["type"] == "3D"
+    assert configuration["maximal_range"] == 64.0
+    assert configuration["azimut_angle_increment"] == 0.25
+    assert configuration["samples"] == 1081
+    assert configuration["rate"] == 50
