@@ -17,7 +17,7 @@ import os
 import pytest
 import subprocess
 
-from romea_lidar_bringup import urdf_description
+from romea_lidar_meta_bringup import urdf_description
 from ament_index_python import get_package_prefix
 import xml.etree.ElementTree as ET
 
@@ -26,11 +26,11 @@ import xml.etree.ElementTree as ET
 def urdf():
 
     exe = (
-        get_package_prefix("romea_lidar_bringup")
-        + "/lib/romea_lidar_bringup/urdf_description.py"
+        get_package_prefix("romea_lidar_meta_bringup")
+        + "/lib/romea_lidar_meta_bringup/urdf_description.py"
     )
 
-    meta_description_file_path = os.path.join(os.getcwd(), "test_lidar_bringup.yaml")
+    meta_description_file_path = os.path.join(os.getcwd(), "test_lidar_meta_bringup.yaml")
 
     return ET.fromstring(
         subprocess.check_output(

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-from romea_common_bringup import MetaDescription, robot_urdf_prefix, device_namespace
+from romea_common_meta_bringup import MetaDescription, robot_urdf_prefix, device_namespace
 import romea_lidar_description
 from numpy import radians, deg2rad
 
