@@ -24,11 +24,12 @@ import yaml
 
 
 def launch_setup(context, *args, **kwargs):
-
+    package = LaunchConfiguration("package").perform(context)
     executable = LaunchConfiguration("executable").perform(context)
     config_path = LaunchConfiguration("config_path").perform(context)
     frame_id = LaunchConfiguration("frame_id").perform(context)
     lidar_model = LaunchConfiguration("lidar_model").perform(context)
+    lidar_name = LaunchConfiguration("lidar_name").perform(context)
     resolution = LaunchConfiguration("resolution").perform(context)
     rate = LaunchConfiguration("rate").perform(context)
 
@@ -101,7 +102,7 @@ def launch_setup(context, *args, **kwargs):
             "range_min": configuration["minimal_range"],
             "range_max": configuration["maximal_range"],
             "scanner_type": "sick_lms_1xx",
-            "use_binary_protocol": False,
+            "use_binary_protocol": False,  # disabled to work with old lidar
         })
 
     if "tim5" in lidar_model:
@@ -117,8 +118,9 @@ def launch_setup(context, *args, **kwargs):
         })
 
     driver_node = Node(
-        package="sick_scan_xd",
+        package=package,
         executable=executable,
+        exec_name=lidar_name,
         name="driver",
         output="screen",
         parameters=parameters,
@@ -136,8 +138,10 @@ def generate_launch_description():
         DeclareLaunchArgument("config_path"),
         DeclareLaunchArgument("frame_id"),
         DeclareLaunchArgument("lidar_model"),
+        DeclareLaunchArgument("lidar_name"),
         DeclareLaunchArgument("rate"),
         DeclareLaunchArgument("resolution"),
+        DeclareLaunchArgument("package", default_value="sick_scan_xd"),
     ]
 
     return LaunchDescription(

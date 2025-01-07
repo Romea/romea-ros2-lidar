@@ -95,6 +95,7 @@ def launch_setup(context, *args, **kwargs):
                     ]
                 ),
                 launch_arguments={
+                    "lidar_name": lidar_name,
                     "config_path": config_path,
                     "executable": meta_description.get_driver_executable(),
                     "lidar_model": meta_description.get_model(),
