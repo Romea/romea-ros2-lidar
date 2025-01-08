@@ -76,7 +76,7 @@ def launch_setup(context, *args, **kwargs):
             # activate field monitoring by lidinputstate messages
             "min_intensity": 0.0,
             # Set range of LaserScan messages to infinity, if intensity < min_intensity (default: 0)
-            "add_transform_xyz_rpy": "0,0,0,0,0,0",
+            # "add_transform_xyz_rpy": "0,0,0,0,0,0",
             "message_monitoring_enabled": True,
             # Enable message monitoring with reconnect+reinit in case of timeouts
             "read_timeout_millisec_default": 5000,
@@ -85,10 +85,8 @@ def launch_setup(context, *args, **kwargs):
             # 120 sec read timeout during startup (sensor may be starting up,
             #  which can take up to 120 sec.), default: 120000 milliseconds
             "read_timeout_millisec_kill_node": 150000,
-            # 150 sec pointcloud timeout, ros node will be killed if no point cloud published
-            # within the last 150 sec., default: 150000 milliseconds
-            "client_authorization_pw": "F4724744",
-            # Default password for client authorization
+            "client_authorization_pw": "F4724744",  # Default password
+            "tf_publish_rate": 0.0,  # disable TF
         }
     ]
 
