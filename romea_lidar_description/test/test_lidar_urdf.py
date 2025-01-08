@@ -39,6 +39,9 @@ def urdf_xml():
     ros_namespace = "ns"
 
     print(urdf(prefix, mode, name, description, location, ros_namespace))
+    with open('/tmp/urdf', 'w') as file:
+        file.write(urdf(prefix, mode, name, description, location, ros_namespace))
+
     return ET.fromstring(urdf(prefix, mode, name, description, location, ros_namespace))
 
 
@@ -62,8 +65,34 @@ def test_lidar_parent_link(urdf_xml):
     assert urdf_xml.find("joint/parent").get("link") == "robot_base_link"
 
 
-def test_sensor_update_rate(urdf_xml):
+def test_gazebo_update_rate(urdf_xml):
     assert urdf_xml.find("gazebo/sensor/update_rate").text == "25"
+
+
+def test_gazebo_horizontal_samples(urdf_xml):
+    assert urdf_xml.find("gazebo/sensor/ray/scan/horizontal/samples").text == "1081"
+
+
+def test_gazebo_horizontal_min_angle(urdf_xml):
+    assert (
+        urdf_xml.find("gazebo/sensor/ray/scan/horizontal/min_angle").text
+        == "-2.356194490192345"
+    )
+
+
+def test_gazebo_horizontal_max_angle(urdf_xml):
+    assert (
+        urdf_xml.find("gazebo/sensor/ray/scan/horizontal/max_angle").text
+        == "2.356194490192345"
+    )
+
+
+def test_gazebo_minimal_range(urdf_xml):
+    assert urdf_xml.find("gazebo/sensor/ray/range/min").text == "0.05"
+
+
+def test_gazebo_maximal_range(urdf_xml):
+    assert urdf_xml.find("gazebo/sensor/ray/range/max").text == "50.0"
 
 
 def test_plugin_namespace(urdf_xml):

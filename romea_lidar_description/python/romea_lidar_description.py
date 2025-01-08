@@ -100,10 +100,10 @@ def get_lidar_complete_configuration(lidar_name, lidar_description):
 
     configuration = {}
     configuration['rate'] = lidar.get('rate')
-    configuration['minimal_azimut_angle'] = lidar.get('minimal_azimut_angle')/180*math.pi
-    configuration['maximal_azimut_angle'] = lidar.get('maximal_azimut_angle')/180*math.pi
-    configuration['azimut_resolution'] = lidar.get('azimut_resolution')/180*math.pi
-    configuration['azimut_angle_std'] = lidar.get('azimut_angle_std')/180*math.pi
+    configuration['minimal_azimut_angle'] = lidar.get('minimal_azimut_angle')
+    configuration['maximal_azimut_angle'] = lidar.get('maximal_azimut_angle')
+    configuration['azimut_resolution'] = lidar.get('azimut_resolution')
+    configuration['azimut_angle_std'] = lidar.get('azimut_angle_std')
     configuration['minimal_range'] = lidar.get('minimal_range')
     configuration['maximal_range'] = lidar.get('maximal_range')
     configuration['range_std'] = lidar.get('range_std')
@@ -113,10 +113,10 @@ def get_lidar_complete_configuration(lidar_name, lidar_description):
         return configuration
 
     configuration['lasers'] = lidar.get('lasers')
-    configuration['minimal_elevation_angle'] = lidar.get('minimal_elevation_angle')/180*math.pi
-    configuration['maximal_elevation_angle'] = lidar.get('maximal_elevation_angle')/180*math.pi
-    configuration['elevation_resolution'] = lidar.get('elevation_resolution')/180*math.pi
-    configuration['elevation_angle_std'] = lidar.get('elevation_angle_std')/180*math.pi
+    configuration['minimal_elevation_angle'] = lidar.get('minimal_elevation_angle')
+    configuration['maximal_elevation_angle'] = lidar.get('maximal_elevation_angle')
+    configuration['elevation_resolution'] = lidar.get('elevation_resolution')
+    configuration['elevation_angle_std'] = lidar.get('elevation_angle_std')
 
     return configuration
 

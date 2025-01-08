@@ -40,7 +40,7 @@ model_family:
 minimal_azimut_angle: -135.0
 maximal_azimut_angle: 135.0
 azimut_angle_std: 0.0
-minimal_range: 0.5
+minimal_range: 0.05
 maximal_range:
   depend: model_family
   dict:

@@ -59,7 +59,7 @@ def test_get_lidar_complete_configuration_ok():
 
     lidar_configuration = get_lidar_complete_configuration("lidar", user_description)
     assert lidar_configuration["maximal_range"] == 50.0
-    assert lidar_configuration["azimut_resolution"] == 0.25 / 180 * math.pi
+    assert lidar_configuration["azimut_resolution"] == 0.25
     assert lidar_configuration["samples"] == 1081
     assert lidar_configuration["rate"] == 25
 
