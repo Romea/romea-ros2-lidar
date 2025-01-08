@@ -53,11 +53,11 @@ class LIDARMetaDescription:
     def get_rate(self):
         return self.meta_description.get_or("rate", "configuration", None)
 
-    def get_resolution_deg(self):
-        return self.meta_description.get_or("resolution", "configuration", None)
+    def get_azimut_resolution_deg(self):
+        return self.meta_description.get_or("azimut_resolution", "configuration", None)
 
-    def get_resolution_rad(self):
-        return deg2rad(self.get_resolution_deg())
+    def get_azimut_resolution_rad(self):
+        return deg2rad(self.get_azimut_resolution_deg())
 
     def get_geometry(self):
         return self.meta_description.get("geometry")

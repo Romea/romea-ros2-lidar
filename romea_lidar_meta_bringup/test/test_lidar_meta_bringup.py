@@ -60,12 +60,12 @@ def test_get_rate(meta_description):
     assert meta_description.get_rate() == 50
 
 
-def test_get_resolution_deg(meta_description):
-    assert meta_description.get_resolution_deg() == 0.5
+def test_get_azimut_resolution_deg(meta_description):
+    assert meta_description.get_azimut_resolution_deg() == 0.5
 
 
-def test_get_resolution_rad(meta_description):
-    assert meta_description.get_resolution_rad() == deg2rad(0.5)
+def test_get_azimut_resolution_rad(meta_description):
+    assert meta_description.get_azimut_resolution_rad() == deg2rad(0.5)
 
 
 def test_get_parent_link(meta_description):

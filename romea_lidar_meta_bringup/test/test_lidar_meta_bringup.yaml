@@ -10,7 +10,7 @@ configuration:
   type: sick
   model: lms151
   rate: 50 # hz
-  resolution: 0.5 # degree
+  azimut_resolution: 0.5 # degree
 geometry:
   parent_link: "base_link"
   xyz: [1.0, 2.0, 3.0] # meters
