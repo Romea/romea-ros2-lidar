@@ -71,13 +71,13 @@ def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
     user_description = {
         "type": "sick",
         "model": "tim551",
-        "azimut_angle_increment": 0.25,
+        "azimut_resolution": 0.25,
     }
 
     with pytest.raises(ValueError) as excinfo:
         get_lidar_complete_configuration("lidar", user_description)
     msg = (
-        "azimut_angle_increment value (0.25°) provided by user is not available "
+        "azimut_resolution value (0.25°) provided by user is not available "
         + "for this configuration of sick tim551 lidar called lidar, it must be equal to 1.0"
     )
 
@@ -89,12 +89,12 @@ def test_get_lidar_complete_configuration_ok():
         "type": "sick",
         "model": "tim551",
         "rate": 15,
-        "azimut_angle_increment": 1.0,
+        "azimut_resolution": 1.0,
     }
 
     configuration = get_lidar_complete_configuration("lidar", user_description)
 
     assert configuration["maximal_range"] == 10.0
-    assert configuration["azimut_angle_increment"] == 1.0 / 180 * math.pi
+    assert configuration["azimut_resolution"] == 1.0 / 180 * math.pi
     assert configuration["samples"] == 271
     assert configuration["rate"] == 15

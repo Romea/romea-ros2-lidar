@@ -46,15 +46,19 @@ def test_lidar_name(urdf_xml):
     assert urdf_xml.find("link").get("name") == "robot_lidar_link"
 
 
-def test_camera_position(urdf_xml):
-    assert urdf_xml.find("joint/origin").get("xyz") == "1.0 2.0 3.0 "
+def test_lidar_position(urdf_xml):
+    assert urdf_xml.find("joint/origin").get("xyz") == "1.0 2.0 3.0"
 
 
-def test_camera_orientation(urdf_xml):
-    assert urdf_xml.find("joint/origin").get("rpy") == "4.0 5.0 6.0"
+def test_lidar_orientation(urdf_xml):
+    print("orientation", urdf_xml.find("joint/origin").get("rpy"))
+    assert (
+        urdf_xml.find("joint/origin").get("rpy")
+        == "0.06981317007977318 0.08726646259971647 0.10471975511965977"
+    )
 
 
-def test_camera_parent_link(urdf_xml):
+def test_lidar_parent_link(urdf_xml):
     assert urdf_xml.find("joint/parent").get("link") == "robot_base_link"
 
 

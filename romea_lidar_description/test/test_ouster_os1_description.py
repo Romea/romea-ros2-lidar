@@ -74,13 +74,13 @@ def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
        "type": "ouster",
        "model": "os1_32",
        "rate": 10,
-       "azimut_angle_increment": 1.0,
+       "azimut_resolution": 1.0,
     }
 
     with pytest.raises(ValueError) as excinfo:
         get_lidar_complete_configuration("lidar", user_description)
     msg = (
-        "azimut_angle_increment value (1.0°) provided by user is not available "
+        "azimut_resolution value (1.0°) provided by user is not available "
         + "for ouster os1_32 lidar called lidar, it must be one of these values: "
         + "[0.703125, 0.3515625, 0.17578125]"
     )
@@ -93,13 +93,13 @@ def test_get_lidar_complete_configuration_ok():
        "type": "ouster",
        "model": "os1_32",
        "rate": 10,
-       "azimut_angle_increment": 0.703125,
+       "azimut_resolution": 0.703125,
     }
 
     configuration = get_lidar_complete_configuration("lidar", user_description)
 
     assert configuration["maximal_range"] == 55.0
-    assert configuration["azimut_angle_increment"] == 0.703125 / 180 * math.pi
+    assert configuration["azimut_resolution"] == 0.703125 / 180 * math.pi
     assert configuration["samples"] == 512
     assert configuration["lasers"] == 32
     assert configuration["rate"] == 10

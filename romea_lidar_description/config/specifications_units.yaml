@@ -1,10 +1,10 @@
 minimal_azimut_angle: °
 maximal_azimut_angle: °
-azimut_angle_increment: °
+azimut_resolution: °
 azimut_angle_std: °
 minimal_elevation_angle": °
 maximal_elevation_angle": °
-elevation_angle_increment": °
+elevation_resolution": °
 elevation_angle_std": °
 minimal_range: m
 maximal_range: m

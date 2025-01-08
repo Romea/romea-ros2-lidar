@@ -59,7 +59,7 @@ def test_get_lidar_complete_configuration_ok():
 
     lidar_configuration = get_lidar_complete_configuration("lidar", user_description)
     assert lidar_configuration["maximal_range"] == 50.0
-    assert lidar_configuration["azimut_angle_increment"] == 0.25 / 180 * math.pi
+    assert lidar_configuration["azimut_resolution"] == 0.25 / 180 * math.pi
     assert lidar_configuration["samples"] == 1081
     assert lidar_configuration["rate"] == 25
 
@@ -86,13 +86,13 @@ def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
         "type": "sick",
         "model": "lms151",
         "rate": 25,
-        "azimut_angle_increment": 1.0,
+        "azimut_resolution": 1.0,
     }
 
     with pytest.raises(ValueError) as excinfo:
         get_lidar_complete_configuration("lidar", user_description)
     msg = (
-        "azimut_angle_increment value (1.0°) provided by user is not available "
+        "azimut_resolution value (1.0°) provided by user is not available "
         + "for this configuration of sick lms151 lidar called lidar, it must be equal to 0.25"
     )
     assert msg == str(excinfo.value)
