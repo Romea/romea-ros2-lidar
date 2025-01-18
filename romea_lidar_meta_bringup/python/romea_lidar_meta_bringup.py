@@ -103,14 +103,22 @@ def get_complete_configuration(meta_description):
     )
 
 
-def driver_executable_parameters(executable, driver_configuration, camera_configuration, frame_id):
+def driver_executable_parameters(executable, driver_configuration, lidar_configuration, frame_id):
     parameters = driver_configuration
     parameters["frame_id"] = frame_id
 
     if executable == "sick_generic_caller":
-        parameters["framerate"] = camera_configuration("frame_rate")
-        parameters["image_height"] = camera_configuration("image_height")
-        parameters["image_width"] = camera_configuration("image_width")
+        parameters["framerate"] = lidar_configuration("frame_rate")
+        parameters["min_ang"] = deg2rad(lidar_configuration("minimal_azimut_angle"))
+        parameters["max_ang"] = deg2rad(lidar_configuration("maximal_azimut_angle"))
+        parameters["range_min"] = lidar_configuration("minimal_range")
+        parameters["range_max"] = lidar_configuration("maximal_range")
+        if lidar_configuration["model"] == "lms1xx":
+            parameters["scanner_type"] = "sick_lms_1xx"
+        if lidar_configuration["model"] == "tim5xx":
+            parameters["scanner_type"] = "sick_tim_5xx"
+        if lidar_configuration["model"] == "mrs1xxx":
+            parameters["scanner_type"] = "sick_mrs_1xxx"
     else:
         # TODO (add other drivers)
         pass

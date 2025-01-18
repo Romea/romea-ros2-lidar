@@ -14,8 +14,6 @@
 
 import xacro
 import yaml
-import math
-from numpy import deg2rad
 from romea_common_description import DeviceConfiguration as Device
 from ament_index_python.packages import get_package_share_directory
 

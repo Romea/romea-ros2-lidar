@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import math
 import pytest
 from ament_index_python.packages import get_package_share_directory
 
@@ -59,7 +58,7 @@ def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
     with pytest.raises(ValueError) as excinfo:
         get_lidar_complete_configuration("lidar", user_description)
     msg = (
-        "rate value (25Hz) provided by user is not available for sick mrs1000 " 
+        "rate value (25Hz) provided by user is not available for sick mrs1000 "
         + "lidar called lidar, it must be equal to 50"
     )
     assert msg == str(excinfo.value)

@@ -22,14 +22,17 @@ from launch.actions import (
     GroupAction,
 )
 
-from launch_ros.actions import PushRosNamespace
 from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from romea_common_bringup import device_link_name, device_namespace
-from romea_lidar_bringup import LIDARMetaDescription
-
+from romea_lidar_description import get_lidar_complete_configuration
+from romea_lidar_bringup import (
+    LIDARMetaDescription,
+    driver_executable_parameters,
+    get_sensor_configuration
+)
 import tempfile
 import yaml
 import os
@@ -73,11 +76,25 @@ def launch_setup(context, *args, **kwargs):
     lidar_full_namespace = device_namespace(robot_namespace, lidar_namespace, lidar_name)
     lidar_frame_id = device_link_name(robot_namespace, lidar_name)
 
+    user_lidar_configuration = get_sensor_configuration(meta_description)
+
+    lidar_configuration = get_lidar_complete_configuration(
+        meta_description.get_type(), meta_description.get_model(), user_lidar_configuration
+    )
+
     actions = []
     if mode == "live" and meta_description.has_driver_configuration():
 
-        parameters = meta_description.get_driver_parameters()
-        config_path = generate_yaml_temp_file('lidar_driver', parameters)
+        driver_configuration = meta_description.get_driver_parameters()
+
+        executable = meta_description.get_driver_executable()
+        executable_parameters = driver_executable_parameters(
+            executable,  driver_configuration, lidar_configuration, lidar_frame_id
+        )
+
+        driver_configuration_file_path = generate_yaml_temp_file(
+            "camera_driver", executable_parameters
+        )
 
         actions.append(
             IncludeLaunchDescription(
@@ -95,7 +112,7 @@ def launch_setup(context, *args, **kwargs):
                 launch_arguments={
                     "executable": executable,
                     "executable_namespace": lidar_full_namespace,
-                    "configuration_file_path": configuration_file_path,
+                    "configuration_file_path": driver_configuration_file_path,
                 }.items(),
             )
         )

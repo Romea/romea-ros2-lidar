@@ -38,7 +38,6 @@ def urdf_xml():
 
     ros_namespace = "ns"
 
-    print(urdf(prefix, mode, name, description, location, ros_namespace))
     with open('/tmp/urdf', 'w') as file:
         file.write(urdf(prefix, mode, name, description, location, ros_namespace))
 
