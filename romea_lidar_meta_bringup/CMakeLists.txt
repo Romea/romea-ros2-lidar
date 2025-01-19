@@ -24,6 +24,8 @@ install(PROGRAMS
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
   configure_file(test/test_lidar_meta_bringup.yaml test_lidar_meta_bringup.yaml)
+  configure_file(test/test_lidar_sick_generic_caller_parameters.yaml test_lidar_sick_generic_caller_parameters.yaml)
+  ament_add_pytest_test(test_lidar_driver_parameters test/test_lidar_driver_parameters.py)
   ament_add_pytest_test(test_lidar_meta_bringup test/test_lidar_meta_bringup.py)
   ament_add_pytest_test(test_urdf_description test/test_urdf_description.py)
 endif()

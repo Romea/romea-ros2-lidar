@@ -17,7 +17,12 @@ import os
 import pytest
 from numpy import deg2rad, radians
 
-from romea_lidar_meta_bringup import LIDARMetaDescription
+from romea_lidar_meta_bringup import (
+    LIDARMetaDescription,
+    get_complete_sensor_configuration,
+    get_sensor_specifications,
+    get_sensor_geometry,
+)
 
 
 @pytest.fixture(scope="module")
@@ -88,3 +93,18 @@ def test_get_records(meta_description):
     records = meta_description.get_records()
     assert records["scan"] is True
     assert records["cloud"] is False
+
+
+def test_get_receiver_specifications(meta_description):
+    lidar_specifactions = get_sensor_specifications(meta_description)
+    assert lidar_specifactions['maximal_range']['dict']['lms15x'] == 50.0
+
+
+def test_get_sensor_geometry(meta_description):
+    lidar_geometry = get_sensor_geometry(meta_description)
+    assert lidar_geometry['mass'] == 1.1
+
+
+def test_get_complete_sensor_configuration(meta_description):
+    lidar_configuration = get_complete_sensor_configuration(meta_description)
+    assert lidar_configuration['maximal_range'] == 50.0

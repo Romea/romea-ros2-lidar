@@ -13,7 +13,13 @@
 # limitations under the License.
 
 
-from romea_common_meta_bringup import MetaDescription, robot_urdf_prefix, device_namespace
+from romea_common_meta_bringup import (
+    MetaDescription,
+    robot_urdf_prefix,
+    device_namespace,
+    device_link_name,
+)
+
 import romea_lidar_description
 from numpy import radians, deg2rad
 
@@ -97,27 +103,32 @@ def get_sensor_geometry(meta_description):
     )
 
 
-def get_complete_configuration(meta_description):
-    return romea_lidar_description.get_complete_configuration(
+def get_complete_sensor_configuration(meta_description):
+    return romea_lidar_description.get_lidar_complete_configuration(
         meta_description.get_name(), meta_description.get_configuration()
     )
 
 
-def driver_executable_parameters(executable, driver_configuration, lidar_configuration, frame_id):
-    parameters = driver_configuration
+def get_complete_driver_parameters(meta_description, robot_namespace):
+
+    lidar_configuration = get_complete_sensor_configuration(meta_description)
+    frame_id = device_link_name(robot_namespace, meta_description.get_name())
+
+    executable = meta_description.get_driver_executable()
+    parameters = meta_description.get_driver_parameters()
     parameters["frame_id"] = frame_id
 
     if executable == "sick_generic_caller":
-        parameters["framerate"] = lidar_configuration("frame_rate")
-        parameters["min_ang"] = deg2rad(lidar_configuration("minimal_azimut_angle"))
-        parameters["max_ang"] = deg2rad(lidar_configuration("maximal_azimut_angle"))
-        parameters["range_min"] = lidar_configuration("minimal_range")
-        parameters["range_max"] = lidar_configuration("maximal_range")
-        if lidar_configuration["model"] == "lms1xx":
+        parameters["framerate"] = lidar_configuration["rate"]
+        parameters["min_ang"] = deg2rad(lidar_configuration["minimal_azimut_angle"])
+        parameters["max_ang"] = deg2rad(lidar_configuration["maximal_azimut_angle"])
+        parameters["range_min"] = lidar_configuration["minimal_range"]
+        parameters["range_max"] = lidar_configuration["maximal_range"]
+        if "lms1" in lidar_configuration["model"]:
             parameters["scanner_type"] = "sick_lms_1xx"
-        if lidar_configuration["model"] == "tim5xx":
+        if "tim5" in lidar_configuration["model"]:
             parameters["scanner_type"] = "sick_tim_5xx"
-        if lidar_configuration["model"] == "mrs1xxx":
+        if "mrs1" in lidar_configuration["model"]:
             parameters["scanner_type"] = "sick_mrs_1xxx"
     else:
         # TODO (add other drivers)
