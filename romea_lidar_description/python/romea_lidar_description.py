@@ -97,6 +97,7 @@ def get_lidar_complete_configuration(lidar_name, lidar_description):
     lidar = Device(lidar_name, specifications, lidar_description, specifications_units)
 
     configuration = {}
+    configuration['model'] = model
     configuration['rate'] = lidar.get('rate')
     configuration['minimal_azimut_angle'] = lidar.get('minimal_azimut_angle')
     configuration['maximal_azimut_angle'] = lidar.get('maximal_azimut_angle')
