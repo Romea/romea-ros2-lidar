@@ -108,34 +108,24 @@ def get_lidar_complete_configuration(lidar_name, lidar_description):
     configuration['range_std'] = lidar.get('range_std')
     configuration['samples'] = lidar.get('samples')
 
-    if "lasers" not in specifications:
-        return configuration
-
-    configuration['lasers'] = lidar.get('lasers')
-    configuration['minimal_elevation_angle'] = lidar.get('minimal_elevation_angle')
-    configuration['maximal_elevation_angle'] = lidar.get('maximal_elevation_angle')
-    configuration['elevation_resolution'] = lidar.get('elevation_resolution')
-    configuration['elevation_angle_std'] = lidar.get('elevation_angle_std')
+    if "lasers" in specifications:
+        configuration['lasers'] = lidar.get('lasers')
+        configuration['minimal_elevation_angle'] = lidar.get('minimal_elevation_angle')
+        configuration['maximal_elevation_angle'] = lidar.get('maximal_elevation_angle')
+        configuration['elevation_resolution'] = lidar.get('elevation_resolution')
+        configuration['elevation_angle_std'] = lidar.get('elevation_angle_std')
 
     return configuration
-
-
-def save_lidar_configuration(prefix, lidar_name, configuration):
-    configuration_file_path = '/tmp/' + prefix + lidar_name + '_specifications.yaml'
-
-    with open(configuration_file_path, 'w') as f:
-        yaml.dump(configuration, f)
-
-    return configuration_file_path
 
 
 def urdf(prefix, mode, lidar_name, lidar_description, lidar_location, ros_namespace):
 
     configuration = get_lidar_complete_configuration(lidar_name, lidar_description)
 
-    configuration_yaml_file = save_lidar_configuration(
-        prefix, lidar_name, {**configuration, **lidar_location}
-    )
+    configuration_yaml_file = f'/tmp/{prefix}{lidar_name}_urdf_configuration.yaml'
+
+    with open(configuration_yaml_file, 'w') as f:
+        yaml.dump({**configuration, **lidar_location}, f)
 
     geometry_yaml_file = get_lidar_geometry_file_path(
         lidar_description["type"], lidar_description["model"]
