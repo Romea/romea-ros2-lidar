@@ -50,8 +50,8 @@ class LIDARMetaDescription:
     def get_configuration(self):
         return self.meta_description.get("configuration")
 
-    def get_type(self):
-        return self.meta_description.get("type", "configuration")
+    def get_manufacturer(self):
+        return self.meta_description.get("manufacturer", "configuration")
 
     def get_model(self):
         return self.meta_description.get("model", "configuration")
@@ -93,13 +93,13 @@ def load_meta_description(meta_description_file_path):
 
 def get_sensor_specifications(meta_description):
     return romea_lidar_description.get_lidar_specifications(
-        meta_description.get_type(), meta_description.get_model()
+        meta_description.get_manufacturer(), meta_description.get_model()
     )
 
 
 def get_sensor_geometry(meta_description):
     return romea_lidar_description.get_lidar_geometry(
-        meta_description.get_type(), meta_description.get_model()
+        meta_description.get_manufacturer(), meta_description.get_model()
     )
 
 
