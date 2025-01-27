@@ -4,8 +4,8 @@ aabb:
     width: 0.085
     height: 0.0735
     center: [0.0, 0.0, 0.0]
-# mesh:
-#     xyz: [0.0, 0.0, 0.0]
-#     rpy: [0.0, 0.0, 0.0]
-#     scale: [1.0, 1.0, 1.0]
-#     filename: 
+mesh:
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [1.5707, 0.0, 0.0]
+    scale: [0.001, 0.001, 0.001]
+    filename: "package://romea_lidar_description/meshes/ouster_os1.stl"

@@ -4,8 +4,8 @@ aabb:
     width: 0.150
     height: 0.0925
     center: [0.0, 0.0, -0.025]
-# mesh:
-#     xyz: [0.0, 0.0, 0.0]
-#     rpy: [0.0, 0.0, 0.0]
-#     scale: [1.0, 1.0, 1.0]
-#     filename: "package://sick_scan/meshes/sick_mrs_1xxx.stl"
+mesh:
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
+    scale: [1.0, 1.0, 1.0]
+    filename: "package://romea_lidar_description/meshes/sick_mrs1000.stl"
