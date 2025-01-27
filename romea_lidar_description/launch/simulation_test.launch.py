@@ -1,0 +1,91 @@
+# Copyright 2022 INRAE, French National Research Institute for Agriculture, Food and Environment
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+from launch import LaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, OpaqueFunction
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
+from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
+
+import xml.etree.ElementTree as ET
+from romea_lidar_description import urdf
+
+
+def launch_setup(context, *args, **kwargs):
+
+    mode = f'simulation_{LaunchConfiguration("simulator").perform(context)}'
+
+    mode = "simulation"
+    prefix = "robot_"
+    name = "lidar"
+
+    description = {
+        "manufacturer": LaunchConfiguration("lidar_manufacturer").perform(context),
+        "model": LaunchConfiguration("lidar_model").perform(context),
+        "rate": int(LaunchConfiguration("lidar_rate").perform(context)),
+    }
+
+    location = {
+        "parent_link": "base_link",
+        "xyz": [0.0, 0.0, 0.0],
+        "rpy": [0.0, 0.0, 1.0]
+    }
+
+    ros_namespace = "robot/lidar"
+
+    urdf_xml = ET.fromstring(urdf(prefix, mode, name, description, location, ros_namespace))
+    child = ET.SubElement(urdf_xml, "link")
+    child.set("name", "robot_base_link")
+
+    with open('/tmp/urdf', 'w') as file:
+        file.write(ET.tostring(urdf_xml, encoding='unicode'))
+
+    simulation = LaunchDescription()
+
+    gazebo = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            get_package_share_directory("gazebo_ros")
+            + "/launch/gazebo.launch.py"
+        ),
+    )
+
+    simulation.add_action(gazebo)
+
+    spawn_imu = Node(
+        package="gazebo_ros",
+        executable="spawn_entity.py",
+        name="spawn_lidar",
+        output="screen",
+        arguments=["-file", "/tmp/urdf", "-entity", "lidar"],
+    )
+
+    simulation.add_action(spawn_imu)
+
+    return [simulation]
+
+
+def generate_launch_description():
+
+    declared_arguments = [
+        DeclareLaunchArgument("simulator", default_value="gazebo_classic"),
+        DeclareLaunchArgument("lidar_manufacturer", default_value=""),
+        DeclareLaunchArgument("lidar_model", default_value=""),
+        DeclareLaunchArgument("lidar_rate", default_value="25"),
+    ]
+
+    return LaunchDescription(
+        declared_arguments + [OpaqueFunction(function=launch_setup)]
+    )

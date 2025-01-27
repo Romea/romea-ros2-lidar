@@ -87,17 +87,7 @@
         ros_namespace="${ros_namespace}" />
     </xacro:if>
 
-
-    <!-- <joint name="${joint_name}" type="fixed">
-      <axis xyz="0 0 1" />
-      <origin xyz="${xyz}" rpy="${rpy}" />
-      <parent link="${parent_link_name}" />
-      <child link="${link_name}" />
-    </joint> -->
-
-    <joint name="${joint_name}" type="revolute">
-      <limit lower="0." upper="0."
-        effort="10000000" velocity="1000000" />
+    <joint name="${joint_name}" type="fixed">
       <axis xyz="0 0 1" />
       <origin xyz="${xyz[0]} ${xyz[1]} ${xyz[2]}"
         rpy="${rpy[0]/180.*pi} ${rpy[1]/180.*pi} ${rpy[2]/180.*pi}" />
