@@ -25,7 +25,7 @@ def urdf_xml():
     name = "lidar"
 
     description = {
-        "type": "sick",
+        "manufacturer": "sick",
         "model": "lms151",
         "rate": 25,
     }

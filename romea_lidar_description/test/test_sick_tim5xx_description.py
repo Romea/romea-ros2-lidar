@@ -51,7 +51,7 @@ def test_get_lidar_geometry_ok():
 
 def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
     user_description = {
-        "type": "sick",
+        "manufacturer": "sick",
         "model": "tim551",
         "rate": 25,
     }
@@ -68,7 +68,7 @@ def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
 
 def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
     user_description = {
-        "type": "sick",
+        "manufacturer": "sick",
         "model": "tim551",
         "azimut_resolution": 0.25,
     }
@@ -85,7 +85,7 @@ def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
 
 def test_get_lidar_complete_configuration_ok():
     user_description = {
-        "type": "sick",
+        "manufacturer": "sick",
         "model": "tim551",
         "rate": 15,
         "azimut_resolution": 1.0,
