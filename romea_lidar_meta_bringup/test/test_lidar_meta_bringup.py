@@ -19,6 +19,7 @@ from numpy import deg2rad, radians
 
 from romea_lidar_meta_bringup import (
     LIDARMetaDescription,
+    get_driver_launch_file_configuration,
     get_complete_sensor_configuration,
     get_sensor_specifications,
     get_sensor_geometry,
@@ -39,22 +40,8 @@ def test_get_namespace(meta_description):
     assert meta_description.get_namespace() == "ns"
 
 
-def test_has_driver_configuration(meta_description):
-    assert meta_description.has_driver_configuration() is True
-
-
-def test_get_driver_package(meta_description):
-    assert meta_description.get_driver_package() == "sick_scan"
-
-
-def test_get_driver_executable(meta_description):
-    assert meta_description.get_driver_executable() == "sick_generic_caller"
-
-
-def test_get_driver_parameters(meta_description):
-    parameters = meta_description.get_driver_parameters()
-    assert parameters["hostname"] == "192.168.1.112"
-    assert parameters["port"] == "2112"
+def test_get_launch_file_configuration(meta_description):
+    assert "lidar_driver" in meta_description.get_launch_file_configuration()
 
 
 def test_get_model(meta_description):
@@ -65,12 +52,8 @@ def test_get_rate(meta_description):
     assert meta_description.get_rate() == 50
 
 
-def test_get_azimut_resolution_deg(meta_description):
-    assert meta_description.get_azimut_resolution_deg() == 0.5
-
-
-def test_get_azimut_resolution_rad(meta_description):
-    assert meta_description.get_azimut_resolution_rad() == deg2rad(0.5)
+def test_get_azimut_resolution(meta_description):
+    assert meta_description.get_azimut_resolution() == 0.5
 
 
 def test_get_parent_link(meta_description):
@@ -81,12 +64,8 @@ def test_get_xyz(meta_description):
     assert meta_description.get_xyz() == [1.0, 2.0, 3.0]
 
 
-def test_get_rpy_deg(meta_description):
-    assert meta_description.get_rpy_deg() == [4.0, 5.0, 6.0]
-
-
-def test_get_rpy_rad(meta_description):
-    assert meta_description.get_rpy_rad() == radians([4.0, 5.0, 6.0]).tolist()
+def test_get_rpy(meta_description):
+    assert meta_description.get_rpy() == [4.0, 5.0, 6.0]
 
 
 def test_get_records(meta_description):

@@ -12,79 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# from ament_index_python import get_package_share_directory
 
-from romea_common_meta_bringup import (
-    MetaDescription,
-    robot_urdf_prefix,
-    device_namespace,
-    device_link_name,
-)
+# from romea_common_meta_bringup import (
+#     MetaDescription,
+#     DriverLaunchFileConfiguration,
+#     robot_urdf_prefix,
+#     device_namespace,
+#     device_link_name,
+# )
+
+# from os.path import join
+# import romea_lidar_description
 
 import romea_lidar_description
-from numpy import radians, deg2rad
+from romea_common_meta_bringup import SensorMetaDescription, DriverLaunchFileConfiguration
 
 
-class LIDARMetaDescription:
-    def __init__(self, meta_description_file_path):
-        self.meta_description = MetaDescription(
-            "lidar", meta_description_file_path)
-
-    def get_name(self):
-        return self.meta_description.get("name")
-
-    def get_namespace(self):
-        return self.meta_description.get_or("namespace", None)
-
-    def has_driver_configuration(self):
-        return self.meta_description.exists("driver")
-
-    def get_driver_package(self):
-        return self.meta_description.get("package", "driver")
-
-    def get_driver_executable(self):
-        return self.meta_description.get("executable", "driver")
-
-    def get_driver_parameters(self):
-        return self.meta_description.get("parameters", "driver")
-
-    def get_configuration(self):
-        return self.meta_description.get("configuration")
-
-    def get_manufacturer(self):
-        return self.meta_description.get("manufacturer", "configuration")
-
-    def get_model(self):
-        return self.meta_description.get("model", "configuration")
+class LIDARMetaDescription(SensorMetaDescription):
+    def __init__(self, meta_description_file_path, robot_name=None):
+        super().__init__("lidar", meta_description_file_path, robot_name)
 
     def get_rate(self):
-        return self.meta_description.get_or("rate", "configuration", None)
+        return self._get_or("rate", "configuration", None)
 
-    def get_azimut_resolution_deg(self):
-        return self.meta_description.get_or("azimut_resolution", "configuration", None)
-
-    def get_azimut_resolution_rad(self):
-        return deg2rad(self.get_azimut_resolution_deg())
-
-    def get_geometry(self):
-        return self.meta_description.get("geometry")
-
-    def get_parent_link(self):
-        return self.meta_description.get("parent_link", "geometry")
-
-    def get_xyz(self):
-        return self.meta_description.get("xyz", "geometry")
-
-    def get_rpy_deg(self):
-        return self.meta_description.get("rpy", "geometry")
-
-    def get_rpy_rad(self):
-        return radians(self.get_rpy_deg()).tolist()
-
-    def get_records(self):
-        return self.meta_description.get_or("records", None,  {})
-
-    def get_bridge(self):
-        return self.meta_description.get_or("bridge", None,  {})
+    def get_azimut_resolution(self):
+        return self._get_or("azimut_resolution", "configuration", None)
 
 
 def load_meta_description(meta_description_file_path):
@@ -109,48 +62,60 @@ def get_complete_sensor_configuration(meta_description):
     )
 
 
-def get_complete_driver_parameters(meta_description, robot_namespace):
-
+def get_driver_launch_file_configuration(meta_description, mode):
+    launch_file_configuration = meta_description.get_launch_file_configuration()
     lidar_configuration = get_complete_sensor_configuration(meta_description)
-    frame_id = device_link_name(robot_namespace, meta_description.get_name())
+    lidar_configuration["frame_id"] = meta_description.get_link()
+    lidar_full_namespace = meta_description.get_full_namespace()
 
-    executable = meta_description.get_driver_executable()
-    parameters = meta_description.get_driver_parameters()
-    parameters["frame_id"] = frame_id
-
-    if executable == "sick_generic_caller":
-        parameters["framerate"] = lidar_configuration["rate"]
-        parameters["min_ang"] = deg2rad(lidar_configuration["minimal_azimut_angle"])
-        parameters["max_ang"] = deg2rad(lidar_configuration["maximal_azimut_angle"])
-        parameters["range_min"] = lidar_configuration["minimal_range"]
-        parameters["range_max"] = lidar_configuration["maximal_range"]
-        if "lms1" in lidar_configuration["model"]:
-            parameters["scanner_type"] = "sick_lms_1xx"
-        if "tim5" in lidar_configuration["model"]:
-            parameters["scanner_type"] = "sick_tim_5xx"
-        if "mrs1" in lidar_configuration["model"]:
-            parameters["scanner_type"] = "sick_mrs_1xxx"
-    else:
-        # TODO (add other drivers)
-        pass
-
-    return parameters
+    return DriverLaunchFileConfiguration("lidar").evaluate(
+        mode, launch_file_configuration, lidar_configuration, lidar_full_namespace
+    )
 
 
 def urdf_description(robot_namespace, mode, meta_description_file_path):
 
-    meta_description = LIDARMetaDescription(meta_description_file_path)
+    meta_description = LIDARMetaDescription(meta_description_file_path, robot_namespace)
 
-    ros_namespace = device_namespace(
-        robot_namespace,
-        meta_description.get_namespace(),
-        meta_description.get_name()
-    )
     return romea_lidar_description.urdf(
-        robot_urdf_prefix(robot_namespace),
+        meta_description.get_urdf_prefix(),
         mode,
         meta_description.get_name(),
         meta_description.get_configuration(),
-        meta_description.get_geometry(),
-        ros_namespace,
+        meta_description.get_location(),
+        meta_description.get_full_namespace(),
     )
+
+# def get_driver_launch_file_configuration(meta_description, robot_namespace):
+#     pkg_path = get_package_share_directory("romea_gps_meta_bringup")
+#     driver_profile_filename = join(pkg_path, "config", meta_description.get_driver_profile())
+
+#     frame_id = device_link_name(robot_namespace, meta_description.get_name())
+#     gps_configuration = get_complete_sensor_configuration(meta_description)
+#     gps_configuration["frame_id"] = frame_id
+
+#     configuration = {
+#         "gps_configuration": gps_configuration,
+#         "driver_configuration": meta_description.get_driver_configuration()
+#     }
+
+#     return DriverLaunchFileConfiguration(driver_profile_filename, configuration).evaluate()
+
+
+# def urdf_description(robot_namespace, mode, meta_description_file_path):
+
+#     meta_description = LIDARMetaDescription(meta_description_file_path)
+
+#     ros_namespace = device_namespace(
+#         robot_namespace,
+#         meta_description.get_namespace(),
+#         meta_description.get_name()
+#     )
+#     return romea_lidar_description.urdf(
+#         robot_urdf_prefix(robot_namespace),
+#         mode,
+#         meta_description.get_name(),
+#         meta_description.get_configuration(),
+#         meta_description.get_geometry(),
+#         ros_namespace,
+#     )

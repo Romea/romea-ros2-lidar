@@ -1,5 +1,4 @@
 name: "lidar"
-namespace: "ns"
 launch_file:
   lidar_driver:
     profile: sick_scan_xd_lms1xx_profile.yaml
@@ -13,12 +12,3 @@ configuration:
   model: lms151
   rate: 50 # hz
   azimut_resolution: 0.5 # degree
-location:
-  parent_link: "base_link"
-  xyz: [1.0, 2.0, 3.0] # meters
-  rpy: [4.0, 5.0, 6.0] # degrees
-records:
-  scan: true
-  cloud: false
-# ros:
-#   namespace: ns

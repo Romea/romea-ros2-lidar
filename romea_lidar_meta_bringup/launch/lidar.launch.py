@@ -19,26 +19,19 @@ from launch.actions import (
     IncludeLaunchDescription,
     DeclareLaunchArgument,
     OpaqueFunction,
-    GroupAction,
 )
 
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
-from launch.launch_description_sources import PythonLaunchDescriptionSource
 
-from romea_common_bringup import device_namespace
-from romea_lidar_bringup import LIDARMetaDescription, get_complete_driver_parameters
-import tempfile
-import yaml
-import os
+from romea_common_meta_bringup import save_temporary_file
+from romea_gps_meta_bringup import LIDARMetaDescription, get_driver_launch_file_configuration
 
 
 def get_mode(context):
     mode = LaunchConfiguration("mode").perform(context)
-    if mode == "simulation":
-        return "simulation_gazebo_classic"
-    else:
-        return mode
+    return "simulation_gazebo_classic" if mode == "simulation" else mode
 
 
 def get_robot_namespace(context):
@@ -46,83 +39,40 @@ def get_robot_namespace(context):
 
 
 def get_meta_description(context):
-
     meta_description_file_path = LaunchConfiguration("meta_description_file_path").perform(context)
-
-    return LIDARMetaDescription(meta_description_file_path)
-
-
-def generate_yaml_temp_file(prefix: str, data: dict):
-    fd, filepath = tempfile.mkstemp(prefix=prefix + '_', suffix='.yaml')
-    with os.fdopen(fd, 'w') as file:
-        file.write(yaml.safe_dump(data))
-
-    return filepath
+    return LIDARMetaDescription(meta_description_file_path, get_robot_namespace(context))
 
 
 def launch_setup(context, *args, **kwargs):
-
     mode = get_mode(context)
     robot_namespace = get_robot_namespace(context)
     meta_description = get_meta_description(context)
+    driver_configuration_file_path = save_temporary_file(
+        get_driver_launch_file_configuration(meta_description, mode),
+        meta_description.get_filename_prefix()+"driver_configuration.yaml"
+    )
 
-    lidar_name = meta_description.get_name()
-    lidar_namespace = str(meta_description.get_namespace() or "")
-    lidar_full_namespace = device_namespace(robot_namespace, lidar_namespace, lidar_name)
-
-    actions = []
-    if mode == "live" and meta_description.has_driver_configuration():
-
-        executable = meta_description.get_driver_executable()
-        executable_parameters = get_complete_driver_parameters(
-            meta_description, robot_namespace
+    return [
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [
+                    PathJoinSubstitution(
+                        [
+                            FindPackageShare("romea_lidar_bringup"),
+                            "launch",
+                            "driver.launch.py",
+                        ]
+                    )
+                ]
+            ),
+            launch_arguments={
+                "mode": mode,
+                "robot_namespace": robot_namespace,
+                "driver_namespace": meta_description.get_name(),
+                "driver_configuration_file_path": driver_configuration_file_path,
+            }.items(),
         )
-
-        driver_configuration_file_path = generate_yaml_temp_file(
-            'gps_driver', executable_parameters
-        )
-
-        actions.append(
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    [
-                        PathJoinSubstitution(
-                            [
-                                FindPackageShare("romea_lidar_bringup"),
-                                "launch",
-                                "drivers/" + meta_description.get_driver_package() + ".launch.py",
-                            ]
-                        )
-                    ]
-                ),
-                launch_arguments={
-                    "executable": executable,
-                    "executable_namespace": lidar_full_namespace,
-                    "configuration_file_path": driver_configuration_file_path,
-                }.items(),
-            )
-        )
-
-    if mode == "simulation_gazebo":
-        actions.append(
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(
-                    [
-                        PathJoinSubstitution(
-                            [
-                                FindPackageShare("romea_lidar_bringup"),
-                                "launch",
-                                "drivers/gazebo_bridge.launch.py",
-                            ]
-                        )
-                    ]
-                ),
-            )
-        )
-
-    # add launch viewer
-
-    return [GroupAction(actions)]
+    ]
 
 
 def generate_launch_description():
