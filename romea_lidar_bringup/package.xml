@@ -17,6 +17,7 @@
   <depend>romea_common_bringup</depend>
   <depend>romea_lidar_description</depend>
   <depend>sick_scan_xd</depend>
+  <depend>ros2_ouster_drivers</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
