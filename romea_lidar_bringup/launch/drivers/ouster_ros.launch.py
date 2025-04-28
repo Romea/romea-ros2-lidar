@@ -23,24 +23,22 @@ import yaml
 
 
 def launch_setup(context, *args, **kwargs):
-    package = LaunchConfiguration("package").perform(context)
+    # package = LaunchConfiguration("package").perform(context)
     # executable = LaunchConfiguration("executable").perform(context)
     config_path = LaunchConfiguration("config_path").perform(context)
     frame_id = LaunchConfiguration("frame_id").perform(context)
-    lidar_model = LaunchConfiguration("lidar_model").perform(context)
-    lidar_name = LaunchConfiguration("lidar_name").perform(context)
+    # lidar_model = LaunchConfiguration("lidar_model").perform(context)
+    # lidar_name = LaunchConfiguration("lidar_name").perform(context)
     resolution = LaunchConfiguration("resolution").perform(context)
     rate = LaunchConfiguration("rate").perform(context)
 
     if rate == "":
-        rate = None
-    else:
-        rate = int(rate)
+        rate = "10"
 
     if resolution == "":
-        resolution = None
+        nb_samples = 512
     else:
-        resolution = float(resolution)
+        nb_samples = round(360. / float(resolution))
 
     driver = LaunchDescription()
 
@@ -64,7 +62,7 @@ def launch_setup(context, *args, **kwargs):
         # lidar_mode[optional]: resolution and rate; possible values: { 512x10,
         # 512x20, 1024x10, 1024x20, 2048x10, 4096x5 }. Leave empty to remain on
         # current the lidar mode.
-        "lidar_mode": "",
+        "lidar_mode": f"{nb_samples}x{rate}",
         # timestamp_mode[optional]: method used to timestamp measurements; possible
         # "values":
         # - TIME_FROM_INTERNAL_OSC
