@@ -111,7 +111,8 @@ def launch_setup(context, *args, **kwargs):
         "pub_static_tf": True,
         # proc_mask[optional]: use any combination of the 6 flags IMG, PCL, IMU, SCAN
         # RAW and TLM to enable or disable their respective messages.
-        "proc_mask": "IMU|PCL|SCAN|IMG|RAW|TLM",
+        # "proc_mask": "IMU|PCL|SCAN|IMG|RAW|TLM",
+        "proc_mask": "IMU|PCL",
         # scan_ring[optional]: use this parameter in conjunction with the SCAN flag
         # to select which beam of the LidarScan to use when producing the LaserScan
         # message. Choose a value the range [0, sensor_beams_count).
@@ -175,9 +176,6 @@ def launch_setup(context, *args, **kwargs):
     # config_parameters will override default values of ouster_params
     ouster_params |= config_parameters
 
-    print("-------------------------------------")
-    print(f"params: {ouster_params}")
-
     param_file = "/tmp/ouster_config.yaml"
 
     with open(param_file, "w") as f:
@@ -199,6 +197,7 @@ def launch_setup(context, *args, **kwargs):
         launch_arguments={
             "params_file": param_file,
             "viz": "false",
+            "ouster_ns": "",
         }.items(),
     )
 
