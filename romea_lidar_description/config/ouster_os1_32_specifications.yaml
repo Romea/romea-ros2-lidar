@@ -4,9 +4,9 @@ maximal_azimut_angle: 180.0
 azimut_angle_increment: [0.703125, 0.3515625, 0.17578125, 0.087890625]
 azimut_angle_std: 0.0
 samples: [512, 1024, 2048, 4096]
-minimal_elevation_angle: -22.5
-maximal_elevation_angle: 22.5
-elevation_angle_increment: 2.5
+minimal_elevation_angle: -21.2
+maximal_elevation_angle: 21.2
+elevation_angle_increment: 1.325
 elevation_angle_std: 0.0
 lasers: 32
 minimal_range: 0.3

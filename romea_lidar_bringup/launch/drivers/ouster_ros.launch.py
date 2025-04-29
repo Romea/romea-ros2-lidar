@@ -96,7 +96,7 @@ def launch_setup(context, *args, **kwargs):
         # sensor_frame[optional]: name to use when referring to the sensor frame.
         "sensor_frame": frame_id,
         # lidar_frame[optional]: name to use when referring to the lidar frame.
-        "lidar_frame": "os_lidar",
+        "lidar_frame": frame_id,
         # imu_frame[optional]: name to use when referring to the imu frame.
         "imu_frame": "os_imu",
         # point_cloud_frame[optional]: which frame of reference to use when
@@ -139,7 +139,8 @@ def launch_setup(context, *args, **kwargs):
         # - ouster_ros/os_point.h
         # - ouster_ros/sensor_point_types.h
         # - ouster_ros/common_point_types.h.
-        "point_type": "original",
+        # "point_type": "original",
+        "point_type": "xyz",
         # azimuth window start[optional]: values range [0, 360000] millidegrees
         "azimuth_window_start": 0,
         # azimuth_window_end[optional]: values range [0, 360000] millidegrees
