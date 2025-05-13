@@ -96,13 +96,13 @@ def launch_setup(context, *args, **kwargs):
         # sensor_frame[optional]: name to use when referring to the sensor frame.
         "sensor_frame": frame_id,
         # lidar_frame[optional]: name to use when referring to the lidar frame.
-        "lidar_frame": frame_id,
+        "lidar_frame": frame_id + "_lidar",
         # imu_frame[optional]: name to use when referring to the imu frame.
-        "imu_frame": "os_imu",
+        "imu_frame": frame_id + "_imu",
         # point_cloud_frame[optional]: which frame of reference to use when
         # generating PointCloud2 or LaserScan messages, select between the values of
         # lidar_frame and sensor_frame.
-        "point_cloud_frame": "os_lidar",
+        "point_cloud_frame": frame_id,
         # pub_static_tf[optional]: when this flag is set to True, the driver will
         # broadcast the TF transforms for the imu/sensor/lidar frames. Prevent the
         # driver from broadcasting TF transforms by setting this parameter to False.
