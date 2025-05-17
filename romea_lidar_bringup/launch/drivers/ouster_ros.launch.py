@@ -71,7 +71,7 @@ def launch_setup(context, *args, **kwargs):
         # - "TIME_FROM_ROS_TIME": This option uses the time of reception of first
         #                       packet of a LidarScan as the timestamp of the IMU,
         #                       PointCloud2 and LaserScan messages.
-        "timestamp_mode": "",
+        "timestamp_mode": "TIME_FROM_PTP_1588",
         # ptp_utc_tai_offset[optional]: UTC/TAI offset in seconds to apply when
         # TIME_FROM_PTP_1588 timestamp mode is used.
         "ptp_utc_tai_offset": -37.0,
