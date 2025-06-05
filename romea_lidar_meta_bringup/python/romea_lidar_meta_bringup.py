@@ -77,28 +77,3 @@ def generate_urdf_description(mode, meta_description):
         meta_description.get_location(),
         meta_description.get_full_namespace(),
     )
-
-# def get_driver_launch_file_configuration(meta_description, mode):
-#     launch_file_configuration = meta_description.get_launch_file_configuration()
-#     lidar_configuration = get_complete_sensor_configuration(meta_description)
-#     lidar_configuration["frame_id"] = meta_description.get_link()
-#     lidar_full_namespace = meta_description.get_full_namespace()
-
-#     return LaunchFileGenerator("lidar").evaluate(
-#         mode, launch_file_configuration, lidar_configuration, lidar_full_namespace
-#     )
-
-
-# def urdf_description(robot_namespace, mode, meta_description_file_path):
-
-#     meta_description = LIDARMetaDescription(meta_description_file_path, robot_namespace)
-
-#     return romea_lidar_description.urdf(
-#         meta_description.get_urdf_prefix(),
-#         mode,
-#         meta_description.get_name(),
-#         meta_description.get_configuration(),
-#         meta_description.get_location(),
-#         meta_description.get_full_namespace(),
-#     )
-

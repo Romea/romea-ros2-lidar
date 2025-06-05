@@ -19,7 +19,6 @@ from numpy import deg2rad, radians
 
 from romea_lidar_meta_bringup import (
     LIDARMetaDescription,
-    get_driver_launch_file_configuration,
     get_complete_sensor_configuration,
     get_sensor_specifications,
     get_sensor_geometry,
@@ -40,8 +39,8 @@ def test_get_namespace(meta_description):
     assert meta_description.get_namespace() == "ns"
 
 
-def test_get_launch_file_configuration(meta_description):
-    assert "lidar_driver" in meta_description.get_launch_file_configuration()
+def test_get_launch_file(meta_description):
+    assert meta_description.get_launch_file() is not None
 
 
 def test_get_model(meta_description):
