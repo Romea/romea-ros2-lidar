@@ -12,21 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# from ament_index_python import get_package_share_directory
-
-# from romea_common_meta_bringup import (
-#     MetaDescription,
-#     DriverLaunchFileConfiguration,
-#     robot_urdf_prefix,
-#     device_namespace,
-#     device_link_name,
-# )
-
-# from os.path import join
-# import romea_lidar_description
-
+import romea_common_description
 import romea_lidar_description
-from romea_common_meta_bringup import SensorMetaDescription, DriverLaunchFileConfiguration
+from romea_common_meta_bringup import SensorMetaDescription, LaunchFileGenerator
 
 
 class LIDARMetaDescription(SensorMetaDescription):
@@ -62,20 +50,24 @@ def get_complete_sensor_configuration(meta_description):
     )
 
 
-def get_driver_launch_file_configuration(meta_description, mode):
-    launch_file_configuration = meta_description.get_launch_file_configuration()
+def generate_configuration_file(meta_description, extended):
+    configuration = get_complete_sensor_configuration(meta_description)
+    units = romea_lidar_description.get_lidar_specification_units()
+    return romea_common_description.generate_configuration_file(configuration, units, extended)
+
+
+def generate_launch_file(meta_description):
     lidar_configuration = get_complete_sensor_configuration(meta_description)
     lidar_configuration["frame_id"] = meta_description.get_link()
-    lidar_full_namespace = meta_description.get_full_namespace()
-
-    return DriverLaunchFileConfiguration("lidar").evaluate(
-        mode, launch_file_configuration, lidar_configuration, lidar_full_namespace
+    return LaunchFileGenerator("lidar").generate(
+        meta_description.get_launch_file(),
+        lidar_configuration,
+        meta_description.get_robot_name(),
+        meta_description.get_name(),
     )
 
 
-def urdf_description(robot_namespace, mode, meta_description_file_path):
-
-    meta_description = LIDARMetaDescription(meta_description_file_path, robot_namespace)
+def generate_urdf_description(mode, meta_description):
 
     return romea_lidar_description.urdf(
         meta_description.get_urdf_prefix(),
@@ -86,36 +78,27 @@ def urdf_description(robot_namespace, mode, meta_description_file_path):
         meta_description.get_full_namespace(),
     )
 
-# def get_driver_launch_file_configuration(meta_description, robot_namespace):
-#     pkg_path = get_package_share_directory("romea_gps_meta_bringup")
-#     driver_profile_filename = join(pkg_path, "config", meta_description.get_driver_profile())
+# def get_driver_launch_file_configuration(meta_description, mode):
+#     launch_file_configuration = meta_description.get_launch_file_configuration()
+#     lidar_configuration = get_complete_sensor_configuration(meta_description)
+#     lidar_configuration["frame_id"] = meta_description.get_link()
+#     lidar_full_namespace = meta_description.get_full_namespace()
 
-#     frame_id = device_link_name(robot_namespace, meta_description.get_name())
-#     gps_configuration = get_complete_sensor_configuration(meta_description)
-#     gps_configuration["frame_id"] = frame_id
-
-#     configuration = {
-#         "gps_configuration": gps_configuration,
-#         "driver_configuration": meta_description.get_driver_configuration()
-#     }
-
-#     return DriverLaunchFileConfiguration(driver_profile_filename, configuration).evaluate()
+#     return LaunchFileGenerator("lidar").evaluate(
+#         mode, launch_file_configuration, lidar_configuration, lidar_full_namespace
+#     )
 
 
 # def urdf_description(robot_namespace, mode, meta_description_file_path):
 
-#     meta_description = LIDARMetaDescription(meta_description_file_path)
+#     meta_description = LIDARMetaDescription(meta_description_file_path, robot_namespace)
 
-#     ros_namespace = device_namespace(
-#         robot_namespace,
-#         meta_description.get_namespace(),
-#         meta_description.get_name()
-#     )
 #     return romea_lidar_description.urdf(
-#         robot_urdf_prefix(robot_namespace),
+#         meta_description.get_urdf_prefix(),
 #         mode,
 #         meta_description.get_name(),
 #         meta_description.get_configuration(),
-#         meta_description.get_geometry(),
-#         ros_namespace,
+#         meta_description.get_location(),
+#         meta_description.get_full_namespace(),
 #     )
+

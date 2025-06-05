@@ -1,13 +1,13 @@
 name: "lidar"
 namespace: "ns"
-launch_file:
-  lidar_driver:
-    profile: sick_scan_xd_lms1xx_profile.yaml
-    configuration:
-      driver:
-        parameters:
-          hostname: "192.168.1.112"
-          port: 2112
+launch:
+  - include:
+      file: "$(find-pkg-share romea_lidar_meta_bringup)/profile/sick_scan_xd_lms1xx.launch.py"
+      arg:
+        - name: ip
+          value: "192.168.1.112"
+        - name: port
+          value: "2112"
 configuration:
   manufacturer: sick
   model: lms151
