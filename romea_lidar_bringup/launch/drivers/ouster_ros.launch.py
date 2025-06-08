@@ -28,7 +28,7 @@ def launch_setup(context, *args, **kwargs):
     config_path = LaunchConfiguration("config_path").perform(context)
     frame_id = LaunchConfiguration("frame_id").perform(context)
     # lidar_model = LaunchConfiguration("lidar_model").perform(context)
-    # lidar_name = LaunchConfiguration("lidar_name").perform(context)
+    lidar_name = LaunchConfiguration("lidar_name").perform(context)
     resolution = LaunchConfiguration("resolution").perform(context)
     rate = LaunchConfiguration("rate").perform(context)
 
@@ -175,7 +175,7 @@ def launch_setup(context, *args, **kwargs):
     # config_parameters will override default values of ouster_params
     ouster_params |= config_parameters
 
-    param_file = "/tmp/ouster_config.yaml"
+    param_file = f"/tmp/{lidar_name}_config.yaml"
 
     with open(param_file, "w") as f:
         full_dict = {"/**": {"ros__parameters": ouster_params}}
