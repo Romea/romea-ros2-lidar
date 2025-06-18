@@ -44,7 +44,10 @@ def test_get_launch_file(meta_description):
 
 
 def test_get_model(meta_description):
-    assert meta_description.get_model() == "lms151"
+    assert meta_description.get_model() == "lms"
+
+def test_get_version(meta_description):
+    assert meta_description.get_version() == "151"
 
 
 def test_get_rate(meta_description):
@@ -75,7 +78,7 @@ def test_get_records(meta_description):
 
 def test_get_receiver_specifications(meta_description):
     lidar_specifactions = get_sensor_specifications(meta_description)
-    assert lidar_specifactions['maximal_range']['dict']['lms15x'] == 50.0
+    assert lidar_specifactions['maximal_range']['dict']['15x'] == 50.0
 
 
 def test_get_sensor_geometry(meta_description):
