@@ -1,0 +1,65 @@
+version:
+  list:
+    [
+      "100",
+      "101",
+      "102",
+      "111",
+      "121",
+      "122",
+      "123",
+      "131",
+      "132",
+      "133",
+      "141",
+      "142",
+      "143",
+      "151",
+      "153",
+      "161",
+    ]
+version_family:
+  depend: version
+  dict:
+    "100": "10x"
+    "101": "10x"
+    "102": "10x"
+    "111": "11x"
+    "121": "12x"
+    "122": "12x"
+    "123": "12x"
+    "131": "13x"
+    "132": "13x"
+    "133": "13x"
+    "141": "14x"
+    "142": "14x"
+    "143": "14x"
+    "151": "15x"
+    "153": "15x"
+    "161": "16x"
+minimal_azimut_angle: -135.0
+maximal_azimut_angle: 135.0
+azimut_angle_std: 0.0
+minimal_range: 0.05
+maximal_range:
+  depend: version_family
+  dict:
+    10x: 20.0
+    11x: 20.0
+    12x: 20.0
+    13x: 20.0
+    14x: 40.0
+    15x: 50.0
+range_std: 0.0
+azimut_resolution:
+  depend: rate
+  dict:
+    25: 0.25
+    50: 0.5
+samples:
+  depend: rate
+  dict:
+    25: 1081
+    50: 541
+rate:
+  list: [25, 50]

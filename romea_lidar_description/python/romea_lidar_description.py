@@ -14,65 +14,28 @@
 
 import xacro
 import yaml
+from romea_common_description import get_geometry_file_path
+from romea_common_description import get_specifications_file_path
+from romea_common_description import generate_configuration_file
 from romea_common_description import DeviceConfiguration as Device
 from ament_index_python.packages import get_package_share_directory
 
 
-def get_sick_model_family(model):
-    if 'lms1' in model:
-        return 'lms1xx'
-    elif 'tim5' in model:
-        return 'tim5xx'
-    elif 'mrs1' in model:
-        return 'mrs1xxx'
-
-    raise RuntimeError(
-        f'Sick {model} lidar is not supported by romea_lidar_description package. '
-        'Please check your configuration or contribute to support this sensor.'
-    )
+def get_lidar_specifications_file_path(lidar_description):
+    return get_specifications_file_path("romea_lidar_description", lidar_description)
 
 
-def get_ouster_model_family(model):
-    if 'os1' in model:
-        return 'os1'
-
-    raise RuntimeError(
-        f'Ouster {model} lidar is not supported by romea_lidar_description package. '
-        'Please check your configuration or contribute to support this sensor.'
-    )
-
-
-def get_lidar_family(manufacturer, model):
-    if manufacturer == 'sick':
-        return get_sick_model_family(model)
-    elif manufacturer == 'ouster':
-        return get_ouster_model_family(model)
-    else:
-        raise RuntimeError(
-            f'No {manufacturer} lidar is unsuported by romea_lidar_description package. '
-            'Please check your configuration or contribute to support this kind of sensor.'
-        )
-
-
-def get_lidar_specifications_file_path(manufacturer, model):
-    family = get_lidar_family(manufacturer, model)
-    pkg_path = get_package_share_directory('romea_lidar_description')
-    return f'{pkg_path}/config/{manufacturer}_{family}_specifications.yaml'
-
-
-def get_lidar_specifications(manufacturer, model):
-    with open(get_lidar_specifications_file_path(manufacturer, model)) as f:
+def get_lidar_specifications(lidar_description):
+    with open(get_lidar_specifications_file_path(lidar_description)) as f:
         return yaml.safe_load(f)
 
 
-def get_lidar_geometry_file_path(manufacturer, model):
-    family = get_lidar_family(manufacturer, model)
-    pkg_path = get_package_share_directory('romea_lidar_description')
-    return f'{pkg_path}/config/{manufacturer}_{family}_geometry.yaml'
+def get_lidar_geometry_file_path(lidar_description):
+    return get_geometry_file_path("romea_lidar_description", lidar_description)
 
 
-def get_lidar_geometry(manufacturer, model):
-    with open(get_lidar_geometry_file_path(manufacturer, model)) as f:
+def get_lidar_geometry(lidar_description):
+    with open(get_lidar_geometry_file_path(lidar_description)) as f:
         return yaml.safe_load(f)
 
 
@@ -89,15 +52,18 @@ def get_lidar_specification_units():
 def get_lidar_complete_configuration(lidar_name, lidar_description):
 
     model = lidar_description["model"]
+    version = lidar_description["version"]
     manufacturer = lidar_description["manufacturer"]
-    lidar_name = f'{manufacturer} {model} lidar called {lidar_name}'
-    specifications = get_lidar_specifications(manufacturer, model)
+    lidar_name = f'{manufacturer} {model} {version} lidar called {lidar_name}'
+    specifications = get_lidar_specifications(lidar_description)
     specifications_units = get_lidar_specification_units()
 
     lidar = Device(lidar_name, specifications, lidar_description, specifications_units)
 
     configuration = {}
-    configuration['model'] = model
+    configuration["model"] = lidar_description["model"]
+    configuration["version"] = lidar_description["version"]
+    configuration["manufacturer"] = lidar_description["manufacturer"]
     configuration['rate'] = lidar.get('rate')
     configuration['minimal_azimut_angle'] = lidar.get('minimal_azimut_angle')
     configuration['maximal_azimut_angle'] = lidar.get('maximal_azimut_angle')
@@ -120,16 +86,15 @@ def get_lidar_complete_configuration(lidar_name, lidar_description):
 
 def urdf(prefix, mode, lidar_name, lidar_description, lidar_location, ros_namespace):
 
+    units = get_lidar_specification_units()
     configuration = get_lidar_complete_configuration(lidar_name, lidar_description)
 
     configuration_yaml_file = f'/tmp/{prefix}{lidar_name}_urdf_configuration.yaml'
 
     with open(configuration_yaml_file, 'w') as f:
-        yaml.dump({**configuration, **lidar_location}, f)
+        f.write(generate_configuration_file({**configuration, **lidar_location}, units, False))
 
-    geometry_yaml_file = get_lidar_geometry_file_path(
-        lidar_description["manufacturer"], lidar_description["model"]
-    )
+    geometry_yaml_file = get_lidar_geometry_file_path(lidar_description)
 
     package_shared_directory = get_package_share_directory('romea_lidar_description')
     if "lasers" in configuration:

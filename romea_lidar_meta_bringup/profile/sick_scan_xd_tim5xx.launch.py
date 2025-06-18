@@ -93,12 +93,11 @@ def launch_setup(context, *args, **kwargs):
 
 def generate_launch_description():
 
-    declared_arguments = [
-        DeclareLaunchArgument("ip"),
-        DeclareLaunchArgument("port"),
-        DeclareLaunchArgument("auto_configuration", default_value="false"),
-    ]
-
     return LaunchDescription(
-        declared_arguments + [OpaqueFunction(function=launch_setup)]
+        [
+            DeclareLaunchArgument("ip"),
+            DeclareLaunchArgument("port"),
+            DeclareLaunchArgument("auto_configuration", default_value="false"),
+            OpaqueFunction(function=launch_setup)
+        ]
     )

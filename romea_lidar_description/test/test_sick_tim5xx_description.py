@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
 from ament_index_python.packages import get_package_share_directory
-
 
 from romea_lidar_description import (
     get_lidar_complete_configuration,
@@ -24,42 +22,56 @@ from romea_lidar_description import (
     get_lidar_specifications,
 )
 
+import pytest
 
-def test_get_lidar_specifications_file_path_ok():
+
+@pytest.fixture(scope="module")
+def user_description():
+
+    return {
+        "manufacturer": "sick",
+        "model": "tim",
+        "version": "551",
+        "rate": 15,
+    }
+
+
+def test_get_lidar_specifications_file_path_ok(user_description):
     assert (
-        get_lidar_specifications_file_path("sick", "tim551")
+        get_lidar_specifications_file_path(user_description)
         == get_package_share_directory("romea_lidar_description")
-        + "/config/sick_tim5xx_specifications.yaml"
+        + "/config/sick_tim_5xx_specifications.yaml"
     )
 
 
-def test_get_lidar_specifications_ok():
-    assert get_lidar_specifications("sick", "tim551")['maximal_range']['dict']['tim551'] == 10.0
+def test_get_lidar_specifications_ok(user_description):
+    assert get_lidar_specifications(user_description)['maximal_range']['dict']['551'] == 10.0
 
 
-def test_get_lidar_geometry_file_path_ok():
+def test_get_lidar_geometry_file_path_ok(user_description):
     assert (
-        get_lidar_geometry_file_path("sick", "tim551")
+        get_lidar_geometry_file_path(user_description)
         == get_package_share_directory("romea_lidar_description")
-        + "/config/sick_tim5xx_geometry.yaml"
+        + "/config/sick_tim_5xx_geometry.yaml"
     )
 
 
-def test_get_lidar_geometry_ok():
-    assert get_lidar_geometry("sick", "tim551")['mass'] == 0.250
+def test_get_lidar_geometry_ok(user_description):
+    assert get_lidar_geometry(user_description)['mass'] == 0.250
 
 
 def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
     user_description = {
         "manufacturer": "sick",
-        "model": "tim551",
+        "model": "tim",
+        "version": "551",
         "rate": 25,
     }
 
     with pytest.raises(ValueError) as excinfo:
         get_lidar_complete_configuration("lidar", user_description)
     msg = (
-        "rate value (25Hz) provided by user is not available for sick tim551 lidar called lidar, "
+        "rate value (25Hz) provided by user is not available for sick tim 551 lidar called lidar, "
         + "it must be equal to 15"
     )
 
@@ -69,7 +81,8 @@ def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
 def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
     user_description = {
         "manufacturer": "sick",
-        "model": "tim551",
+        "model": "tim",
+        "version": "551",
         "azimut_resolution": 0.25,
     }
 
@@ -77,19 +90,13 @@ def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
         get_lidar_complete_configuration("lidar", user_description)
     msg = (
         "azimut_resolution value (0.25°) provided by user is not available "
-        + "for this configuration of sick tim551 lidar called lidar, it must be equal to 1.0"
+        + "for this configuration of sick tim 551 lidar called lidar, it must be equal to 1.0"
     )
 
     assert msg == str(excinfo.value)
 
 
-def test_get_lidar_complete_configuration_ok():
-    user_description = {
-        "manufacturer": "sick",
-        "model": "tim551",
-        "rate": 15,
-        "azimut_resolution": 1.0,
-    }
+def test_get_lidar_complete_configuration_ok(user_description):
 
     configuration = get_lidar_complete_configuration("lidar", user_description)
 

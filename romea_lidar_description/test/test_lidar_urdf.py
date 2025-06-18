@@ -26,7 +26,8 @@ def urdf_xml():
 
     description = {
         "manufacturer": "sick",
-        "model": "lms151",
+        "model": "lms",
+        "version": "151",
         "rate": 25,
     }
 

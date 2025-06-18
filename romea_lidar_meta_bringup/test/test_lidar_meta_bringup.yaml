@@ -10,7 +10,8 @@ launch:
           value: "2112"
 configuration:
   manufacturer: sick
-  model: lms151
+  model: lms
+  version: "151"
   rate: 50 # hz
   azimut_resolution: 0.5 # degree
 location:

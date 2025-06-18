@@ -1,6 +1,6 @@
 # 1) Overview #
 
-The romea_lidar_bringup package provides: 
+The romea_lidar_meta_bringup package provides: 
 
  - **Launch files** able to launch ros2 receiver drivers according a meta-description file provided by user (see next section for LIDAR meta-description file overview), only one driver is supported for the moment :
 
@@ -9,7 +9,7 @@ The romea_lidar_bringup package provides:
    You can launch a LIDAR driver from the command line using: 
 
     ```console
-    ros2 launch romea_lidar_bringup lidar_driver.launch.py robot_namespace:=robot meta_description_file_path:=/path_to_file/meta_description_file.yaml
+    ros2 launch romea_lidar_meta_bringup lidar_driver.launch.py robot_namespace:=robot meta_description_file_path:=/path_to_file/meta_description_file.yaml
     ```
 
    where :
@@ -22,7 +22,7 @@ The romea_lidar_bringup package provides:
  - A **ROS2 python executable** able to create LIDAR URDF description via command line according a given meta-description file  :
 
   ```console
-  ros2 run romea_lidar_bringup urdf_description.py robot_namespace:robot meta_description_file_path:/path_to_file/meta_description_file.yaml > lidar.urdf`
+  ros2 run romea_lidar_meta_bringup urdf_description.py robot_namespace:robot meta_description_file_path:/path_to_file/meta_description_file.yaml > lidar.urdf`
   ```
 
    where :

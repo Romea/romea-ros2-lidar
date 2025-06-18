@@ -1,0 +1,29 @@
+minimal_azimut_angle: -180.0
+maximal_azimut_angle: 180.0
+azimut_resolution:
+  depend: samples
+  dict:
+    512: 0.703125
+    1024: 0.3515625
+    2048: 0.17578125
+azimut_angle_std: 0.0
+samples:
+  list: [512, 1024, 2048]
+  default: 1024
+minimal_elevation_angle: -22.5
+maximal_elevation_angle: 22.5
+elevation_resolution:
+  depend: lasers
+  dict:
+    32: 1.40625
+    64: 0.703125
+    128: 0.3515625
+lasers:
+  list: [32, 64, 128]
+  default: 32
+elevation_angle_std: 0.0
+minimal_range: 0.3
+maximal_range: 55.0
+range_std: 0.0
+rate:
+  list: [10, 20]

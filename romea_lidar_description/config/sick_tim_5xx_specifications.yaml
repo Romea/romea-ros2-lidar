@@ -1,0 +1,31 @@
+version:
+  list: ["510", "551", "561", "571", "581"]
+minimal_azimut_angle: -135.0
+maximal_azimut_angle: 135.0
+azimut_resolution:
+  depend: version
+  dict:
+    "510": 0.33
+    "551": 1.0
+    "561": 1.0
+    "571": 0.33
+    "581": 0.33
+azimut_angle_std: 0.0
+samples:
+  depend: version
+  dict:
+    "510": 811
+    "551": 271
+    "561": 271
+    "571": 811
+    "581": 811
+minimal_range: 0.05
+maximal_range:
+  depend: version
+  dict:
+    "510": 4.0
+    "551": 10.0
+    "561": 10.0
+    "571": 25.0
+range_std: 0.0
+rate: 15

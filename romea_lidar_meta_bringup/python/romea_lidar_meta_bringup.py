@@ -28,20 +28,16 @@ class LIDARMetaDescription(SensorMetaDescription):
         return self._get_or("azimut_resolution", "configuration", None)
 
 
-def load_meta_description(meta_description_file_path):
-    return LIDARMetaDescription(meta_description_file_path)
+def load_meta_description(meta_description_file_path, robot_name=None):
+    return LIDARMetaDescription(meta_description_file_path, robot_name)
 
 
 def get_sensor_specifications(meta_description):
-    return romea_lidar_description.get_lidar_specifications(
-        meta_description.get_manufacturer(), meta_description.get_model()
-    )
+    return romea_lidar_description.get_lidar_specifications(meta_description.get_configuration())
 
 
 def get_sensor_geometry(meta_description):
-    return romea_lidar_description.get_lidar_geometry(
-        meta_description.get_manufacturer(), meta_description.get_model()
-    )
+    return romea_lidar_description.get_lidar_geometry(meta_description.get_configuration())
 
 
 def get_complete_sensor_configuration(meta_description):
@@ -57,13 +53,14 @@ def generate_configuration_file(meta_description, extended):
 
 
 def generate_launch_file(meta_description):
-    lidar_configuration = get_complete_sensor_configuration(meta_description)
-    lidar_configuration["frame_id"] = meta_description.get_link()
+    launch_arguments = [{"name": "mode", "default": "live"}]
+    namespaces = [meta_description.get_robot_name(), meta_description.get_name()]
+    configuration = get_complete_sensor_configuration(meta_description)
+    configuration["tf_prefix"] = meta_description.get_urdf_prefix()
+    configuration["frame_id"] = meta_description.get_link()
+
     return LaunchFileGenerator("lidar").generate(
-        meta_description.get_launch_file(),
-        lidar_configuration,
-        meta_description.get_robot_name(),
-        meta_description.get_name(),
+        meta_description.get_launch_file(), launch_arguments, namespaces, configuration
     )
 
 

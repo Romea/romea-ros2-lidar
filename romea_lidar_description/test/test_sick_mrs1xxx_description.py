@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
 from ament_index_python.packages import get_package_share_directory
-
 
 from romea_lidar_description import (
     get_lidar_complete_configuration,
@@ -24,70 +22,79 @@ from romea_lidar_description import (
     get_lidar_specifications,
 )
 
+import pytest
 
-def test_get_lidar_specifications_file_path_ok():
+
+@pytest.fixture(scope="module")
+def user_description():
+
+    return {
+        "manufacturer": "sick",
+        "model": "mrs",
+        "version": "1000",
+        "rate": 50,
+    }
+
+
+def test_get_lidar_specifications_file_path_ok(user_description):
     assert (
-        get_lidar_specifications_file_path("sick", "mrs1000")
+        get_lidar_specifications_file_path(user_description)
         == get_package_share_directory("romea_lidar_description")
-        + "/config/sick_mrs1xxx_specifications.yaml"
+        + "/config/sick_mrs_1xxx_specifications.yaml"
     )
 
 
-def test_get_lidar_specifications_ok():
-    assert get_lidar_specifications("sick", "mrs1000")['samples']['dict'][0.25] == 1081
+def test_get_lidar_specifications_ok(user_description):
+    assert get_lidar_specifications(user_description)['samples']['list'] == [1081, 2161, 4321]
 
 
-def test_get_lidar_geometry_file_path_ok():
+def test_get_lidar_geometry_file_path_ok(user_description):
     assert (
-        get_lidar_geometry_file_path("sick", "mrs1000")
+        get_lidar_geometry_file_path(user_description)
         == get_package_share_directory("romea_lidar_description")
-        + "/config/sick_mrs1xxx_geometry.yaml"
+        + "/config/sick_mrs_1xxx_geometry.yaml"
     )
 
 
-def test_get_lidar_geometry_ok():
-    assert get_lidar_geometry("sick", "mrs1000")['mass'] == 1.2
+def test_get_lidar_geometry_ok(user_description):
+    assert get_lidar_geometry(user_description)['mass'] == 1.2
 
 
 def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
     user_description = {
         "manufacturer": "sick",
-        "model": "mrs1000",
+        "model": "mrs",
+        "version": "1000",
         "rate": 25,
     }
     with pytest.raises(ValueError) as excinfo:
         get_lidar_complete_configuration("lidar", user_description)
     msg = (
-        "rate value (25Hz) provided by user is not available for sick mrs1000 "
+        "rate value (25Hz) provided by user is not available for sick mrs 1000 "
         + "lidar called lidar, it must be equal to 50"
     )
     assert msg == str(excinfo.value)
 
 
-def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
+def test_get_lidar_complete_configuration_failed_when_samples_is_wrong():
     user_description = {
         "manufacturer": "sick",
-        "model": "mrs1000",
+        "model": "mrs",
+        "version": "1000",
         "rate": 50,
-        "azimut_resolution": 0.5,
+        "samples": 1000,
     }
 
     with pytest.raises(ValueError) as excinfo:
         get_lidar_complete_configuration("lidar", user_description)
     msg = (
-        "azimut_resolution value (0.5°) provided by user is not available for "
-        + "sick mrs1000 lidar called lidar, it must be one of these values: [0.25, 0.125, 0.0625]"
+        "samples value (1000) provided by user is not available for "
+        + "sick mrs 1000 lidar called lidar, it must be one of these values: [1081, 2161, 4321]"
     )
     assert msg == str(excinfo.value)
 
 
-def test_get_lidar_complete_configuration_ok():
-    user_description = {
-        "manufacturer": "sick",
-        "model": "mrs1000",
-        "rate": 50,
-        "azimut_resolution": 0.25,
-    }
+def test_get_lidar_complete_configuration_ok(user_description):
 
     configuration = get_lidar_complete_configuration("lidar", user_description)
 

@@ -10,3 +10,5 @@ minimal_range: m
 maximal_range: m
 range_std: m
 rate: Hz
+xyz: m
+rpy: °
