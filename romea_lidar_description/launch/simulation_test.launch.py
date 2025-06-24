@@ -33,9 +33,10 @@ def launch_setup(context, *args, **kwargs):
     name = "lidar"
 
     description = {
-        "manufacturer": LaunchConfiguration("lidar_manufacturer").perform(context),
-        "model": LaunchConfiguration("lidar_model").perform(context),
-        "rate": int(LaunchConfiguration("lidar_rate").perform(context)),
+        "manufacturer": LaunchConfiguration("manufacturer").perform(context),
+        "model": LaunchConfiguration("model").perform(context),
+        "version": LaunchConfiguration("version").perform(context),
+        "rate": int(LaunchConfiguration("rate").perform(context)),
     }
 
     location = {
@@ -64,7 +65,7 @@ def launch_setup(context, *args, **kwargs):
 
     simulation.add_action(gazebo)
 
-    spawn_imu = Node(
+    spawn_entity = Node(
         package="gazebo_ros",
         executable="spawn_entity.py",
         name="spawn_lidar",
@@ -72,7 +73,7 @@ def launch_setup(context, *args, **kwargs):
         arguments=["-file", "/tmp/urdf", "-entity", "lidar"],
     )
 
-    simulation.add_action(spawn_imu)
+    simulation.add_action(spawn_entity)
 
     return [simulation]
 
@@ -81,9 +82,10 @@ def generate_launch_description():
 
     declared_arguments = [
         DeclareLaunchArgument("simulator", default_value="gazebo_classic"),
-        DeclareLaunchArgument("lidar_manufacturer", default_value=""),
-        DeclareLaunchArgument("lidar_model", default_value=""),
-        DeclareLaunchArgument("lidar_rate", default_value="25"),
+        DeclareLaunchArgument("manufacturer", default_value=""),
+        DeclareLaunchArgument("model", default_value=""),
+        DeclareLaunchArgument("version", default_value=""),
+        DeclareLaunchArgument("rate", default_value="25"),
     ]
 
     return LaunchDescription(

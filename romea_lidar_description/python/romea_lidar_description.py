@@ -49,7 +49,7 @@ def get_lidar_specification_units():
         return yaml.safe_load(f)
 
 
-def get_lidar_complete_configuration(lidar_name, lidar_description):
+def get_lidar_complete_configuration(lidar_name, lidar_description, lidar_location):
 
     model = lidar_description["model"]
     version = lidar_description["version"]
@@ -81,18 +81,23 @@ def get_lidar_complete_configuration(lidar_name, lidar_description):
         configuration['elevation_resolution'] = lidar.get('elevation_resolution')
         configuration['elevation_angle_std'] = lidar.get('elevation_angle_std')
 
-    return configuration
+    return {**configuration, **lidar_location}
+
+
+def generate_lidar_configuration_file(configuration, extended):
+    units = get_lidar_specification_units()
+    return generate_configuration_file(configuration, units, extended)
 
 
 def urdf(prefix, mode, lidar_name, lidar_description, lidar_location, ros_namespace):
 
-    units = get_lidar_specification_units()
-    configuration = get_lidar_complete_configuration(lidar_name, lidar_description)
+    configuration = get_lidar_complete_configuration(
+        lidar_name, lidar_description, lidar_location
+    )
 
     configuration_yaml_file = f'/tmp/{prefix}{lidar_name}_urdf_configuration.yaml'
-
     with open(configuration_yaml_file, 'w') as f:
-        f.write(generate_configuration_file({**configuration, **lidar_location}, units, False))
+        f.write(generate_lidar_configuration_file(configuration, False))
 
     geometry_yaml_file = get_lidar_geometry_file_path(lidar_description)
 
