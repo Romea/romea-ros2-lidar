@@ -15,7 +15,6 @@
 
 import os
 import pytest
-from numpy import deg2rad, radians
 
 from romea_lidar_meta_bringup import (
     LIDARMetaDescription,
@@ -45,6 +44,7 @@ def test_get_launch_file(meta_description):
 
 def test_get_model(meta_description):
     assert meta_description.get_model() == "lms"
+
 
 def test_get_version(meta_description):
     assert meta_description.get_version() == "151"

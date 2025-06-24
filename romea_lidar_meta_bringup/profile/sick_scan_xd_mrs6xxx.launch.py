@@ -52,7 +52,7 @@ def launch_setup(context, *args, **kwargs):
             "range_filter_handling": 0,
             "cloud_topic": "cloud",
             "laserscan_topic": "scan",
-            "imu_topic": "imu/data"
+            "imu_topic": "imu/data",
             "use_generation_timestamp": True,
             "ros_qos": -1,
             "tf_base_frame_id": "foo",

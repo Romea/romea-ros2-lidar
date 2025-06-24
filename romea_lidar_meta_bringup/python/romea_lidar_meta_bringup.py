@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import romea_common_description
 import romea_lidar_description
 from romea_common_meta_bringup import SensorMetaDescription, LaunchFileGenerator
 
@@ -42,7 +41,7 @@ def get_sensor_geometry(meta_description):
 
 def get_complete_sensor_configuration(meta_description):
     return romea_lidar_description.get_lidar_complete_configuration(
-        meta_description.get_name(), 
+        meta_description.get_name(),
         meta_description.get_configuration(),
         meta_description.get_location()
     )

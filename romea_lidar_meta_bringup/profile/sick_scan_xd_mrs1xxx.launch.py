@@ -50,7 +50,7 @@ def launch_setup(context, *args, **kwargs):
             # according sick_lms_1xx.launch from sick_scan_xd we need to specify these parameters
             "intensity_resolution_16bit": False,
             "scandatacfg_azimuth_table": 1,
-            "scan_layer_filter": "4 1 1 1 1", #default ""
+            "scan_layer_filter": "4 1 1 1 1",  # default ""
             # common to all launch
             "range_filter_handling": 0,
             "cloud_topic": "cloud",
