@@ -42,14 +42,15 @@ def get_sensor_geometry(meta_description):
 
 def get_complete_sensor_configuration(meta_description):
     return romea_lidar_description.get_lidar_complete_configuration(
-        meta_description.get_name(), meta_description.get_configuration()
+        meta_description.get_name(), 
+        meta_description.get_configuration(),
+        meta_description.get_location()
     )
 
 
 def generate_configuration_file(meta_description, extended):
     configuration = get_complete_sensor_configuration(meta_description)
-    units = romea_lidar_description.get_lidar_specification_units()
-    return romea_common_description.generate_configuration_file(configuration, units, extended)
+    return romea_lidar_description.generate_lidar_configuration_file(configuration, extended)
 
 
 def generate_launch_file(meta_description):
@@ -59,10 +60,9 @@ def generate_launch_file(meta_description):
     configuration = get_complete_sensor_configuration(meta_description)
     configuration["tf_prefix"] = meta_description.get_urdf_prefix()
     configuration["frame_id"] = meta_description.get_link()
-    location = meta_description.get_location()
 
     return LaunchFileGenerator("lidar").generate(
-        launch_file, launch_arguments, namespaces, {**configuration, **location}
+        launch_file, launch_arguments, namespaces, configuration
     )
 
 
