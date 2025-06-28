@@ -18,9 +18,9 @@ import pytest
 
 from romea_lidar_meta_bringup import (
     LIDARMetaDescription,
-    get_complete_sensor_configuration,
-    get_sensor_specifications,
-    get_sensor_geometry,
+    get_complete_configuration,
+    get_specifications,
+    get_geometry,
 )
 
 
@@ -76,16 +76,16 @@ def test_get_records(meta_description):
     assert records["cloud"] is False
 
 
-def test_get_receiver_specifications(meta_description):
-    lidar_specifactions = get_sensor_specifications(meta_description)
+def test_get_specifications(meta_description):
+    lidar_specifactions = get_specifications(meta_description)
     assert lidar_specifactions['maximal_range']['dict']['15x'] == 50.0
 
 
-def test_get_sensor_geometry(meta_description):
-    lidar_geometry = get_sensor_geometry(meta_description)
+def test_get_geometry(meta_description):
+    lidar_geometry = get_geometry(meta_description)
     assert lidar_geometry['mass'] == 1.1
 
 
-def test_get_complete_sensor_configuration(meta_description):
-    lidar_configuration = get_complete_sensor_configuration(meta_description)
+def test_get_complete_configuration(meta_description):
+    lidar_configuration = get_complete_configuration(meta_description)
     assert lidar_configuration['maximal_range'] == 50.0

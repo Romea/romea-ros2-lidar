@@ -16,11 +16,11 @@ from ament_index_python.packages import get_package_share_directory
 
 
 from romea_lidar_description import (
-    get_lidar_complete_configuration,
-    get_lidar_geometry_file_path,
-    get_lidar_geometry,
-    get_lidar_specifications_file_path,
-    get_lidar_specifications,
+    get_complete_configuration,
+    get_geometry_file_path,
+    get_geometry,
+    get_specifications_file_path,
+    get_specifications,
 )
 
 import pytest
@@ -37,31 +37,31 @@ def user_description():
     }
 
 
-def test_get_lidar_specifications_file_path_ok(user_description):
+def test_get_specifications_file_path_ok(user_description):
     assert (
-        get_lidar_specifications_file_path(user_description)
+        get_specifications_file_path(user_description)
         == get_package_share_directory("romea_lidar_description")
         + "/config/ouster_os_1_specifications.yaml"
     )
 
 
-def test_get_lidar_specifications_ok(user_description):
-    assert get_lidar_specifications(user_description)['samples']['list'] == [512, 1024, 2048]
+def test_get_specifications_ok(user_description):
+    assert get_specifications(user_description)['samples']['list'] == [512, 1024, 2048]
 
 
-def test_get_lidar_geometry_file_path_ok(user_description):
+def test_get_geometry_file_path_ok(user_description):
     assert (
-        get_lidar_geometry_file_path(user_description)
+        get_geometry_file_path(user_description)
         == get_package_share_directory("romea_lidar_description")
         + "/config/ouster_os_1_geometry.yaml"
     )
 
 
-def test_get_lidar_geometry_ok(user_description):
-    assert get_lidar_geometry(user_description)['mass'] == 0.447
+def test_get_geometry_ok(user_description):
+    assert get_geometry(user_description)['mass'] == 0.447
 
 
-def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
+def test_get_complete_configuration_failed_when_rate_is_wrong():
     user_description = {
        "manufacturer": "ouster",
        "model": "os",
@@ -70,7 +70,7 @@ def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
     }
 
     with pytest.raises(ValueError) as excinfo:
-        get_lidar_complete_configuration("lidar", user_description)
+        get_complete_configuration("lidar", user_description, {})
     msg = (
         "rate value (25Hz) provided by user is not available for ouster os 1 lidar "
         + "called lidar, it must be one of these values: [10, 20]"
@@ -80,7 +80,7 @@ def test_get_lidar_complete_configuration_failed_when_rate_is_wrong():
     assert msg == str(excinfo.value)
 
 
-def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
+def test_get_complete_configuration_failed_when_resolution_is_wrong():
 
     user_description = {
        "manufacturer": "ouster",
@@ -91,7 +91,7 @@ def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
     }
 
     with pytest.raises(ValueError) as excinfo:
-        get_lidar_complete_configuration("lidar", user_description)
+        get_complete_configuration("lidar", user_description, {})
     msg = (
         "samples value (1000) provided by user is not available "
         + "for ouster os 1 lidar called lidar, it must be one of these values: [512, 1024, 2048]"
@@ -100,9 +100,9 @@ def test_get_lidar_complete_configuration_failed_when_resolution_is_wrong():
     assert msg == str(excinfo.value)
 
 
-def test_get_lidar_complete_configuration_ok(user_description):
+def test_get_complete_configuration_ok(user_description):
 
-    configuration = get_lidar_complete_configuration("lidar", user_description)
+    configuration = get_complete_configuration("lidar", user_description, {})
 
     assert configuration["maximal_range"] == 55.0
     assert configuration["azimut_resolution"] == 0.3515625

@@ -15,7 +15,7 @@
 
 import pytest
 import xml.etree.ElementTree as ET
-from romea_lidar_description import urdf
+from romea_lidar_description import generate_urdf_description as urdf
 
 
 @pytest.fixture(scope="module")
