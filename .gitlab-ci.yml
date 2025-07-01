@@ -3,4 +3,4 @@ include:
     file: ".gitlab-ci.yml"
 
 variables:
-  PKGS_TO_BUILD_TEST: "romea_lidar_bringup romea_lidar_description"
+  PKGS_TO_BUILD_TEST: "romea_lidar_bringup romea_lidar
