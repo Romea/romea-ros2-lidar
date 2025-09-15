@@ -1,0 +1,11 @@
+mass: 0.23
+aabb:
+    length: 0.055
+    width: 0.055
+    height: 0.063
+    center: [0.0, 0.0, 0.0]
+# mesh:
+#     xyz: [0.0, 0.0, 0.0]
+#     rpy: [1.5707, 0.0, 0.0]
+#     scale: [0.001, 0.001, 0.001]
+#     filename: "package://romea_lidar_description/meshes/robosense_airy.stl"
