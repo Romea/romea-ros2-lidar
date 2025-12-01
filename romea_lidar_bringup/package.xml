@@ -17,7 +17,7 @@
   <depend>romea_common_bringup</depend>
   <depend>romea_lidar_description</depend>
   <depend>sick_scan_xd</depend>
-  <depend>ros2_ouster_drivers</depend>
+  <depend>ros2_ouster</depend>
   <depend>rslidar_sdk</depend>
 
   <export>

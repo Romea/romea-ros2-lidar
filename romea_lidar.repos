@@ -1,18 +1,25 @@
 repositories:
     romea_core/romea_common:
         type: git
-        url: git@gitlab-ssh.irstea.fr:romea_core/romea_common.git
-        version: devel
+        url: git@forge.inrae.fr:romea_core/romea_common.git
     romea_core/romea_lidar:
         type: git
-        url: git@gitlab-ssh.irstea.fr:romea_core/romea_lidar.git
-        version: devel
+        url: git@forge.inrae.fr:romea_core/romea_lidar.git
 
     romea_ros2/tools/romea_common:
         type: git
-        url: git@gitlab-ssh.irstea.fr:romea_ros2/tools/romea_common.git
-        version: devel
+        url: git@forge.inrae.fr:romea_ros2/tools/romea_common.git
     romea_ros2/interfaces/sensors/romea_lidar:
         type: git
-        url: git@gitlab-ssh.irstea.fr:romea_ros2/interfaces/sensors/romea_lidar.git
-        version: devel
+        url: git@forge.inrae.fr:romea_ros2/interfaces/sensors/romea_lidar.git
+
+    third_party/rslidar_sdk:
+        type: git
+        url: https://github.com/RoboSense-LiDAR/rslidar_sdk.git
+    third_party/rslidar_msg:
+        type: git
+        url: https://github.com/RoboSense-LiDAR/rslidar_msg.git
+    third_party/ros2_outster_drivers:
+        type: git
+        url: https://github.com/ros-drivers/ros2_ouster_drivers.git
+
