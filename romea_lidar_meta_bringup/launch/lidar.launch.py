@@ -14,17 +14,14 @@
 
 
 from launch import LaunchDescription
-
-from launch.actions import (
-    IncludeLaunchDescription,
-    DeclareLaunchArgument,
-    OpaqueFunction,
-)
-
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
 from launch.launch_description_sources import AnyLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 
-from romea_lidar_meta_bringup import LIDARMetaDescription, generate_launch_file
+from romea_lidar_meta_bringup.meta_description import (
+    generate_launch_file,
+    LIDARMetaDescription,
+)
 
 
 def get_mode(context):

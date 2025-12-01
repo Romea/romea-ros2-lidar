@@ -14,13 +14,14 @@
 
 
 import os
+
 import pytest
 
-from romea_lidar_meta_bringup import (
-    LIDARMetaDescription,
+from romea_lidar_meta_bringup.meta_description import (
     get_complete_configuration,
-    get_specifications,
     get_geometry,
+    get_specifications,
+    LIDARMetaDescription,
 )
 
 

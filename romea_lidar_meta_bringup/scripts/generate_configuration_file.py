@@ -14,9 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-from romea_lidar_meta_bringup import LIDARMetaDescription, generate_configuration_file
 import sys
+
+from romea_lidar_meta_bringup.meta_description import (
+    generate_configuration_file,
+    LIDARMetaDescription,
+)
+
 
 if __name__ == "__main__":
 

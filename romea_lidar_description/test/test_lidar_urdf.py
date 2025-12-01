@@ -13,8 +13,9 @@
 # limitations under the License.
 
 
-import pytest
 import xml.etree.ElementTree as ET
+
+import pytest
 from romea_lidar_description import generate_urdf_description as urdf
 
 

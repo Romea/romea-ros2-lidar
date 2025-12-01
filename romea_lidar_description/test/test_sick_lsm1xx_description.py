@@ -14,16 +14,15 @@
 
 from ament_index_python.packages import get_package_share_directory
 
+import pytest
 
 from romea_lidar_description import (
     get_complete_configuration,
-    get_geometry_file_path,
     get_geometry,
-    get_specifications_file_path,
+    get_geometry_file_path,
     get_specifications,
+    get_specifications_file_path,
 )
-
-import pytest
 
 
 @pytest.fixture(scope="module")
