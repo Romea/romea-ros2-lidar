@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from romea_common_meta_bringup.meta_description import SensorMetaDescription
+from romea_common_meta_bringup.ros_launch import LaunchFileGenerator
 import romea_lidar_description
-from romea_common_meta_bringup import SensorMetaDescription, LaunchFileGenerator
 
 
 class LIDARMetaDescription(SensorMetaDescription):
