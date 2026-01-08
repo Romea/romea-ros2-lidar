@@ -56,7 +56,11 @@ def generate_configuration_file(meta_description, extended):
 def generate_launch_file(meta_description):
     launch_file = meta_description.get_launch_file()
     launch_arguments = [{"name": "mode", "default": "live"}]
-    namespaces = [meta_description.get_robot_name(), meta_description.get_name()]
+    namespaces = [
+        meta_description.get_robot_name(), 
+        meta_description.get_namespace(),
+        meta_description.get_name()
+    ]
     configuration = get_complete_configuration(meta_description)
     configuration["tf_prefix"] = meta_description.get_urdf_prefix()
     configuration["frame_id"] = meta_description.get_link()
@@ -66,7 +70,7 @@ def generate_launch_file(meta_description):
     )
 
 
-def generate_urdf_description(mode, meta_description):
+def generate_urdf_description(mode, meta_description, standalone=False):
 
     return romea_lidar_description.generate_urdf_description(
         meta_description.get_urdf_prefix(),
@@ -75,4 +79,5 @@ def generate_urdf_description(mode, meta_description):
         meta_description.get_configuration(),
         meta_description.get_location(),
         meta_description.get_full_namespace(),
+        standalone,
     )
