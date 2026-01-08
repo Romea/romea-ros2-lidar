@@ -2,7 +2,7 @@
 <robot name="lidar" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:macro name="lidar2d_sensor"
-    params="prefix mode name configuration geometry mesh_visual ros_namespace">
+    params="prefix mode name configuration geometry mesh_visual ros_namespace standalone">
 
     <xacro:property name="link_name"
       value="${prefix}${name}_link" />
@@ -59,6 +59,9 @@
             <mesh filename="${mesh_filename}"
               scale="${mesh_scale[0]} ${mesh_scale[1]} ${mesh_scale[2]}" />
           </geometry>
+          <material name="lidar_color">
+            <color rgba="0 0 1 1"/>
+          </material>
         </xacro:if>
         <xacro:if value="${mesh_visual == False or 'mesh' not in geometry}">
           <origin xyz="${aabb_center[0]} ${aabb_center[1]} ${aabb_center[2]}" rpy="0 0 0" />
@@ -73,7 +76,6 @@
           <box size="${aabb_length} ${aabb_width} ${aabb_height}" />
         </geometry>
       </collision> -->
-
     </link>
 
     <xacro:if value="${'simulation' in  mode}">
@@ -87,13 +89,15 @@
         ros_namespace="${ros_namespace}" />
     </xacro:if>
 
-    <joint name="${joint_name}" type="fixed">
-      <axis xyz="0 0 1" />
-      <origin xyz="${xyz[0]} ${xyz[1]} ${xyz[2]}"
-        rpy="${rpy[0]/180.*pi} ${rpy[1]/180.*pi} ${rpy[2]/180.*pi}" />
-      <parent link="${parent_link_name}" />
-      <child link="${link_name}" />
-    </joint>
+    <xacro:if value="${standalone == False}">
+      <joint name="${joint_name}" type="fixed">
+        <axis xyz="0 0 1" />
+        <origin xyz="${xyz[0]} ${xyz[1]} ${xyz[2]}"
+          rpy="${rpy[0]/180.*pi} ${rpy[1]/180.*pi} ${rpy[2]/180.*pi}" />
+        <parent link="${parent_link_name}" />
+        <child link="${link_name}" />
+      </joint>
+    </xacro:if>
 
   </xacro:macro>
 

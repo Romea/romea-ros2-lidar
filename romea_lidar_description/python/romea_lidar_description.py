@@ -94,7 +94,7 @@ def generate_configuration_file(configuration, extended):
 
 
 def generate_urdf_description(
-        prefix, mode, lidar_name, lidar_description, lidar_location, ros_namespace
+        prefix, mode, lidar_name, lidar_description, lidar_location, ros_namespace, standalone=False
 ):
 
     configuration = get_complete_configuration(
@@ -114,7 +114,7 @@ def generate_urdf_description(
         xacro_file = package_shared_directory + '/urdf/lidar2D.xacro.urdf'
 
     if mode == 'simulation':
-        mode += '_gazebo_classic'
+        mode += '_gazebo'
 
     urdf_xml = xacro.process_file(
         xacro_file,
@@ -126,6 +126,7 @@ def generate_urdf_description(
             'geometry_config_yaml_file': geometry_yaml_file,
             'mesh_visual': str(True),
             'ros_namespace': ros_namespace,
+            'standalone': str(standalone),
         },
     )
 
