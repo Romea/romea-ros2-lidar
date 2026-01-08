@@ -25,6 +25,11 @@ install(PROGRAMS
 
 if(BUILD_TESTING)
   find_package(ament_cmake_pytest REQUIRED)
+  find_package(ament_lint_auto REQUIRED)
+  set(ament_cmake_flake8_CONFIG_FILE "${CMAKE_SOURCE_DIR}/../.flake8")
+  list(APPEND AMENT_LINT_AUTO_EXCLUDE ament_cmake_copyright)
+  ament_lint_auto_find_test_dependencies()
+
   configure_file(test/test_lidar_meta_bringup.yaml test_lidar_meta_bringup.yaml)
   ament_add_pytest_test(test_lidar_meta_bringup test/test_lidar_meta_bringup.py)
   ament_add_pytest_test(test_urdf_description test/test_urdf_description.py)

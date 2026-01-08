@@ -21,14 +21,14 @@ from launch_ros.actions import LoadComposableNodes, Node
 from launch_ros.descriptions import ComposableNode
 
 
-class LaunchVariables():
+class LaunchVariables:
     def __init__(self, context):
         self.__context = context
 
     def get(self, variable_name):
         try:
             return LaunchConfiguration(variable_name).perform(self.__context)
-        except:
+        except Exception:
             return None
 
 
@@ -41,20 +41,20 @@ def launch_setup(context, *args, **kwargs):
     ros_namespace = var.get("ros_namespace")
 
     if not var.get("lasers"):
-        ros_topic_name =  f"{ros_namespace}/scan"
-        gz_topic_name =  f"{ros_namespace}/scan"        
-        ros_type_name =  "sensor_msgs/msg/LaserScan"
+        ros_topic_name = f"{ros_namespace}/scan"
+        gz_topic_name = f"{ros_namespace}/scan"
+        ros_type_name = "sensor_msgs/msg/LaserScan"
         gz_type_name = "gz.msgs.LaserScan"
     else:
-        ros_topic_name =  f"{ros_namespace}/points"
-        gz_topic_name =  f"{ros_namespace}/points/points"
-        ros_type_name =  "sensor_msgs/msg/PointCloud2"
+        ros_topic_name = f"{ros_namespace}/points"
+        gz_topic_name = f"{ros_namespace}/points/points"
+        ros_type_name = "sensor_msgs/msg/PointCloud2"
         gz_type_name = "gz.msgs.PointCloudPacked"
 
     common_arguments = {
         "package": "ros_gz_bridge",
         "name": "gz_bridge",
-        "parameters" : [
+        "parameters": [
             {"bridge_names": ["lidar_bridge"]},
             {"bridges.lidar_bridge.ros_topic_name": ros_topic_name},
             {"bridges.lidar_bridge.gz_topic_name": gz_topic_name},
@@ -64,7 +64,7 @@ def launch_setup(context, *args, **kwargs):
             {"bridges.lidar_bridge.lazy": True},
             {"bridges.lidar_bridge.qos_profile": "SENSOR_DATA"},
         ],
-    }    
+    }
 
     launch = LaunchDescription()
     if mode == "simulation_gazebo":
@@ -74,12 +74,14 @@ def launch_setup(context, *args, **kwargs):
             launch.add_action(Node(**common_arguments, executable=executable))
         else:
             plugin = "ros_gz_bridge::RosGzBridge"
-            extra_arguments=[{'use_intra_process_comms': True}],
+            extra_arguments = ([{"use_intra_process_comms": True}],)
             launch.add_action(
                 LoadComposableNodes(
                     target_container=container,
                     composable_node_descriptions=[
-                        ComposableNode(**common_arguments, plugin=plugin, extra_arguments=extra_arguments)
+                        ComposableNode(
+                            **common_arguments, plugin=plugin, extra_arguments=extra_arguments
+                        )
                     ],
                 )
             )
@@ -87,12 +89,11 @@ def launch_setup(context, *args, **kwargs):
     return [launch]
 
 
-
 def generate_launch_description():
 
     return LaunchDescription(
         [
             DeclareLaunchArgument("container", default_value=""),
-            OpaqueFunction(function=launch_setup)
+            OpaqueFunction(function=launch_setup),
         ]
     )

@@ -43,8 +43,8 @@ def get_geometry(lidar_description):
 
 
 def get_specification_units_file_path():
-    pkg_path = get_package_share_directory('romea_lidar_description')
-    return f'{pkg_path}/config/specifications_units.yaml'
+    pkg_path = get_package_share_directory("romea_lidar_description")
+    return f"{pkg_path}/config/specifications_units.yaml"
 
 
 def get_specification_units():
@@ -57,33 +57,34 @@ def get_complete_configuration(lidar_name, lidar_description, lidar_location):
     model = lidar_description["model"]
     version = lidar_description["version"]
     manufacturer = lidar_description["manufacturer"]
-    lidar_name = f'{manufacturer} {model} {version} lidar called {lidar_name}'
+    lidar_name = f"{manufacturer} {model} {version} lidar called {lidar_name}"
     specifications = get_specifications(lidar_description)
     specifications_units = get_specification_units()
 
     lidar = romea_common_description.DeviceConfiguration(
-        lidar_name, specifications, lidar_description, specifications_units)
+        lidar_name, specifications, lidar_description, specifications_units
+    )
 
     configuration = {}
     configuration["model"] = lidar_description["model"]
     configuration["version"] = lidar_description["version"]
     configuration["manufacturer"] = lidar_description["manufacturer"]
-    configuration['rate'] = lidar.get('rate')
-    configuration['minimal_azimut_angle'] = lidar.get('minimal_azimut_angle')
-    configuration['maximal_azimut_angle'] = lidar.get('maximal_azimut_angle')
-    configuration['azimut_resolution'] = lidar.get('azimut_resolution')
-    configuration['azimut_angle_std'] = lidar.get('azimut_angle_std')
-    configuration['minimal_range'] = lidar.get('minimal_range')
-    configuration['maximal_range'] = lidar.get('maximal_range')
-    configuration['range_std'] = lidar.get('range_std')
-    configuration['samples'] = lidar.get('samples')
+    configuration["rate"] = lidar.get("rate")
+    configuration["minimal_azimut_angle"] = lidar.get("minimal_azimut_angle")
+    configuration["maximal_azimut_angle"] = lidar.get("maximal_azimut_angle")
+    configuration["azimut_resolution"] = lidar.get("azimut_resolution")
+    configuration["azimut_angle_std"] = lidar.get("azimut_angle_std")
+    configuration["minimal_range"] = lidar.get("minimal_range")
+    configuration["maximal_range"] = lidar.get("maximal_range")
+    configuration["range_std"] = lidar.get("range_std")
+    configuration["samples"] = lidar.get("samples")
 
     if "lasers" in specifications:
-        configuration['lasers'] = lidar.get('lasers')
-        configuration['minimal_elevation_angle'] = lidar.get('minimal_elevation_angle')
-        configuration['maximal_elevation_angle'] = lidar.get('maximal_elevation_angle')
-        configuration['elevation_resolution'] = lidar.get('elevation_resolution')
-        configuration['elevation_angle_std'] = lidar.get('elevation_angle_std')
+        configuration["lasers"] = lidar.get("lasers")
+        configuration["minimal_elevation_angle"] = lidar.get("minimal_elevation_angle")
+        configuration["maximal_elevation_angle"] = lidar.get("maximal_elevation_angle")
+        configuration["elevation_resolution"] = lidar.get("elevation_resolution")
+        configuration["elevation_angle_std"] = lidar.get("elevation_angle_std")
 
     return {**configuration, **lidar_location}
 
@@ -94,39 +95,37 @@ def generate_configuration_file(configuration, extended):
 
 
 def generate_urdf_description(
-        prefix, mode, lidar_name, lidar_description, lidar_location, ros_namespace, standalone=False
+    prefix, mode, lidar_name, lidar_description, lidar_location, ros_namespace, standalone=False
 ):
 
-    configuration = get_complete_configuration(
-        lidar_name, lidar_description, lidar_location
-    )
+    configuration = get_complete_configuration(lidar_name, lidar_description, lidar_location)
 
-    configuration_yaml_file = f'/tmp/{prefix}{lidar_name}_urdf_configuration.yaml'
-    with open(configuration_yaml_file, 'w') as f:
+    configuration_yaml_file = f"/tmp/{prefix}{lidar_name}_urdf_configuration.yaml"
+    with open(configuration_yaml_file, "w") as f:
         f.write(generate_configuration_file(configuration, False))
 
     geometry_yaml_file = get_geometry_file_path(lidar_description)
 
-    package_shared_directory = get_package_share_directory('romea_lidar_description')
+    package_shared_directory = get_package_share_directory("romea_lidar_description")
     if "lasers" in configuration:
-        xacro_file = package_shared_directory + '/urdf/lidar3D.xacro.urdf'
+        xacro_file = package_shared_directory + "/urdf/lidar3D.xacro.urdf"
     else:
-        xacro_file = package_shared_directory + '/urdf/lidar2D.xacro.urdf'
+        xacro_file = package_shared_directory + "/urdf/lidar2D.xacro.urdf"
 
-    if mode == 'simulation':
-        mode += '_gazebo'
+    if mode == "simulation":
+        mode += "_gazebo"
 
     urdf_xml = xacro.process_file(
         xacro_file,
         mappings={
-            'prefix': prefix,
-            'mode': mode,
-            'name': lidar_name,
-            'sensor_config_yaml_file': configuration_yaml_file,
-            'geometry_config_yaml_file': geometry_yaml_file,
-            'mesh_visual': str(True),
-            'ros_namespace': ros_namespace,
-            'standalone': str(standalone),
+            "prefix": prefix,
+            "mode": mode,
+            "name": lidar_name,
+            "sensor_config_yaml_file": configuration_yaml_file,
+            "geometry_config_yaml_file": geometry_yaml_file,
+            "mesh_visual": str(True),
+            "ros_namespace": ros_namespace,
+            "standalone": str(standalone),
         },
     )
 

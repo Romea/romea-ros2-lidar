@@ -26,10 +26,10 @@ def launch_setup(context, *args, **kwargs):
     port = LaunchConfiguration("port").perform(context)
 
     mode = LaunchConfiguration("mode").perform(context)
-    rate = LaunchConfiguration("rate").perform(context)
+    # rate = LaunchConfiguration("rate").perform(context)
     minimal_azimut_angle = LaunchConfiguration("minimal_azimut_angle").perform(context)
     maximal_azimut_angle = LaunchConfiguration("maximal_azimut_angle").perform(context)
-    azimut_resolution = LaunchConfiguration("azimut_resolution").perform(context)
+    # azimut_resolution = LaunchConfiguration("azimut_resolution").perform(context)
     minimal_range = LaunchConfiguration("minimal_range").perform(context)
     maximal_range = LaunchConfiguration("maximal_range").perform(context)
     frame_id = LaunchConfiguration("frame_id").perform(context)

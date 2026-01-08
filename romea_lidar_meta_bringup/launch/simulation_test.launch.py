@@ -12,17 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import xml.etree.ElementTree as ET
 
-from ament_index_python.packages import get_package_share_directory, get_packages_with_prefixes
+from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
-from launch_ros.actions import Node
-
-from romea_imu_meta_bringup.meta_description import generate_urdf_description
 
 
 def launch_setup(context, *args, **kwargs):
@@ -31,7 +27,6 @@ def launch_setup(context, *args, **kwargs):
     robot_namespace = LaunchConfiguration("robot_namespace").perform(context)
     meta_description_file_path = LaunchConfiguration("meta_description_file_path").perform(context)
 
-
     simulation = LaunchDescription()
 
     simulator = IncludeLaunchDescription(
@@ -39,7 +34,7 @@ def launch_setup(context, *args, **kwargs):
             get_package_share_directory("romea_simulation_meta_bringup")
             + "/launch/simulator.launch.py"
         ),
-        launch_arguments={'simulator_type': simulator_type}.items(),
+        launch_arguments={"simulator_type": simulator_type}.items(),
     )
 
     simulation.add_action(simulator)
@@ -50,10 +45,10 @@ def launch_setup(context, *args, **kwargs):
             + "/launch/entity.launch.py"
         ),
         launch_arguments={
-            'simulator_type': simulator_type,
-            'entity_type': "lidar",
-            'robot_namespace': robot_namespace,
-            'meta_description_file_path': meta_description_file_path,
+            "simulator_type": simulator_type,
+            "entity_type": "lidar",
+            "robot_namespace": robot_namespace,
+            "meta_description_file_path": meta_description_file_path,
         }.items(),
     )
 
@@ -61,13 +56,12 @@ def launch_setup(context, *args, **kwargs):
 
     nodes = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            get_package_share_directory("romea_lidar_meta_bringup")
-            + "/launch/lidar.launch.py"
+            get_package_share_directory("romea_lidar_meta_bringup") + "/launch/lidar.launch.py"
         ),
         launch_arguments={
-            'robot_namespace': robot_namespace,
-            'mode': f"simulation_{simulator_type}",
-            'meta_description_file_path': meta_description_file_path,
+            "robot_namespace": robot_namespace,
+            "mode": f"simulation_{simulator_type}",
+            "meta_description_file_path": meta_description_file_path,
         }.items(),
     )
 
@@ -78,13 +72,10 @@ def launch_setup(context, *args, **kwargs):
 
 def generate_launch_description():
 
-
     declared_arguments = [
         DeclareLaunchArgument("simulator", default_value="gazebo"),
         DeclareLaunchArgument("robot_namespace", default_value="robot"),
         DeclareLaunchArgument("meta_description_file_path"),
     ]
 
-    return LaunchDescription(
-        declared_arguments + [OpaqueFunction(function=launch_setup)]
-    )
+    return LaunchDescription(declared_arguments + [OpaqueFunction(function=launch_setup)])
