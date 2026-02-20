@@ -16,18 +16,20 @@
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
+from launch.actions import IncludeLaunchDescription, OpaqueFunction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+
+import romea_common_meta_bringup.ros_launch as common
+import romea_simulation_meta_bringup.ros_launch as simulation
 
 
 def launch_setup(context, *args, **kwargs):
 
-    simulator_type = LaunchConfiguration("simulator").perform(context)
-    robot_namespace = LaunchConfiguration("robot_namespace").perform(context)
-    meta_description_file_path = LaunchConfiguration("meta_description_file_path").perform(context)
+    robot_namespace = common.get_robot_namespace(context)
+    simulator_type = simulation.get_simulator_type(context)
+    meta_description_file_path = common.get_meta_description_file_path(context)
 
-    simulation = LaunchDescription()
+    launch = LaunchDescription()
 
     simulator = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -37,9 +39,9 @@ def launch_setup(context, *args, **kwargs):
         launch_arguments={"simulator_type": simulator_type}.items(),
     )
 
-    simulation.add_action(simulator)
+    launch.add_action(simulator)
 
-    lidar = IncludeLaunchDescription(
+    entity = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             get_package_share_directory("romea_simulation_meta_bringup")
             + "/launch/entity.launch.py"
@@ -52,7 +54,7 @@ def launch_setup(context, *args, **kwargs):
         }.items(),
     )
 
-    simulation.add_action(lidar)
+    launch.add_action(entity)
 
     nodes = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -65,17 +67,18 @@ def launch_setup(context, *args, **kwargs):
         }.items(),
     )
 
-    simulation.add_action(nodes)
+    launch.add_action(nodes)
 
-    return [simulation]
+    return [launch]
 
 
 def generate_launch_description():
 
-    declared_arguments = [
-        DeclareLaunchArgument("simulator", default_value="gazebo"),
-        DeclareLaunchArgument("robot_namespace", default_value="robot"),
-        DeclareLaunchArgument("meta_description_file_path"),
-    ]
-
-    return LaunchDescription(declared_arguments + [OpaqueFunction(function=launch_setup)])
+    return LaunchDescription(
+        [
+            common.declare_robot_namespace("robot"),
+            simulation.declare_simulator_type("gazebo"),
+            common.declare_meta_description_file_path("lidar"),
+            OpaqueFunction(function=launch_setup)
+        ]
+    )
