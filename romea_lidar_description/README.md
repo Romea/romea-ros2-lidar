@@ -43,7 +43,7 @@ lidar_location:
 
 ### Notes
 
-Lidar specifications are defined in files located in the `config/` directory and follow the pattern `<manufacturer>_<model>.<version>_specifications.yaml` (e.g. `sick_lms_1xx_specifications.yaml`). These specification files provide default values such as scan rate, angular resolution, measurement ranges, field of view, noise characteristics which can be overridden by user-defined values in `lidar_description`. 
+Lidar specifications are defined in files located in the `config/` directory and follow the pattern `<manufacturer>_<model>_<version>_specifications.yaml` (e.g. `sick_lms_1xx_specifications.yaml`). These specification files provide default values such as scan rate, angular resolution, measurement ranges, field of view, noise characteristics which can be overridden by user-defined values in `lidar_description`. 
 
 The `xyz` and `rpy` fields define the pose of the lidar relative to the parent link. The `xyz` values specify the translation (in meters), while `rpy` defines the orientation using roll, pitch, and yaw angles expressed in degrees for readability and ease of definition by users. These angles are automatically converted to radians internally by the scripts to comply with ROS and URDF conventions. Together, they describe how the lidar is positioned and oriented within the robot frame.
 
@@ -149,3 +149,5 @@ Currently, the package supports the following lidar manufacturers and models:
 | robotsense | airy |  |
 
 Support for additional lidar models may be added in future releases.
+
+! ajouter une section qui décrit comment on ajoute un nouveau Lidar
