@@ -13,9 +13,16 @@
 # limitations under the License.
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch.actions import DeclareLaunchArgument, OpaqueFunction, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+
+from launch import LaunchDescription
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.substitutions import FindPackageShare
+
+import yaml
 
 
 def launch_setup(context, *args, **kwargs):
@@ -74,7 +81,7 @@ def launch_setup(context, *args, **kwargs):
             # lidar_port[optional]: port value should be in the range [0, 65535]. If you
             # use 0 as the port value then the first avaliable port number will be
             # assigned.
-            "lidar_port": port,
+            "lidar_port": int(port),
             # imu_port[optional]: port value should be in the range [0, 65535]. If you
             # use 0 as the port value then the first avaliable port number will be
             # assigned.
@@ -158,16 +165,41 @@ def launch_setup(context, *args, **kwargs):
             "min_scan_valid_columns_ratio": 0.0,
         }
 
-        launch.add_action(
-            Node(
-                package="ouster_ros",
-                executable="os_driver",
-                name="driver",
-                parameters=[parameters]
-            )
+        # launch.add_action(
+        #     Node(
+        #         package="ouster_ros",
+        #         executable="os_driver",
+        #         name="driver",
+        #         parameters=[parameters]
+        #     )
+        # )
+
+        param_file = f"/tmp/ouster_config.yaml"
+
+        with open(param_file, "w") as f:
+            full_dict = {"/**": {"ros__parameters": parameters}}
+            yaml.dump(full_dict, f)
+
+        launch = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                [
+                    PathJoinSubstitution(
+                        [
+                            FindPackageShare("ouster_ros"),
+                            "launch",
+                            "driver.launch.py",
+                        ]
+                    )
+                ]
+            ),
+            launch_arguments={
+                "params_file": param_file,
+                "viz": "false",
+                "ouster_ns": "",
+            }.items(),
         )
 
-        launch.add_action(launch)
+        # launch.add_action(launch)
 
     return [launch]
 
