@@ -16,8 +16,16 @@
   <depend>ament_index_python</depend>
   <depend>romea_common_meta_bringup</depend>
   <depend>romea_lidar_description</depend>
-  <depend>sick_scan_xd</depend>
-  <depend>ouster-ros</depend>
+  <exec_depend>rslidar_sdk</exec_depend>
+  <exec_depend>sick_scan_xd</exec_depend>
+  <exec_depend>ouster_ros</exec_depend>
+
+  <exec_depend>romea_simulation_meta_bringup</exec_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <test_depend>ament_cmake_pytest</test_depend>
+  <exec_depend>python3-yaml</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

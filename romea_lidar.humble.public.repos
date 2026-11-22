@@ -1,0 +1,29 @@
+repositories:
+    romea_core/romea_common:
+        type: git
+        url: https://github.com/Romea/romea-core-common.git
+        version: main
+    romea_core/romea_lidar:
+        type: git
+        url: https://github.com/Romea/romea-core-lidar.git
+        version: main
+
+    romea_ros2/tools/romea_common:
+        type: git
+        url: https://github.com/Romea/romea-ros2-common.git
+        version: main
+    romea_ros2/tools/romea_simulation:
+        type: git
+        url: https://github.com/Romea/romea-ros2-simulation.git
+        version: main
+    romea_ros2/interfaces/sensors/romea_lidar:
+        type: git
+        url: https://github.com/Romea/romea-ros2-lidar.git
+        version: main
+
+    third_party/rslidar_sdk:
+        type: git
+        url: https://github.com/RoboSense-LiDAR/rslidar_sdk.git
+    third_party/rslidar_msg:
+        type: git
+        url: https://github.com/RoboSense-LiDAR/rslidar_msg.git
