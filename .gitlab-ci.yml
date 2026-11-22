@@ -6,3 +6,19 @@ variables:
   ROS_HUMBLE_IMAGE: "osrf/ros:humble-desktop-full-jammy"
   ROS_JAZZY_IMAGE: "osrf/ros:jazzy-desktop-full-noble"
   PKGS_TO_BUILD_TEST: "romea_lidar_meta_bringup romea_lidar_description"
+
+# GPU lidar sensors need an OpenGL context even when gui:=false.
+.lidar_simulation:
+  script: &lidar_simulation_test
+    - source ros_gitlab_ci/scripts/prepare_test.bash
+    - apt-get install -y --no-install-recommends xvfb xauth libgl1-mesa-dri mesa-utils
+    - export LIBGL_ALWAYS_SOFTWARE=1
+    - xvfb-run -a -s "-screen 0 1280x1024x24" glxinfo -B
+    - xvfb-run -a -s "-screen 0 1280x1024x24" colcon test --packages-select $PKGS_TO_BUILD_TEST --event-handlers console_direct+ --executor sequential
+    - colcon test-result --all --verbose
+
+humble:test:
+  script: *lidar_simulation_test
+
+jazzy:test:
+  script: *lidar_simulation_test
