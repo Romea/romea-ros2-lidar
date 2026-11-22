@@ -204,7 +204,7 @@ This file can be used directly with ROS2 or generated dynamically using `lidar.l
 The package provides **two main launch files**:
 
 * `lidar.launch.py` → for dynamic bringup (live or simulation mode)
-* `simulation_test.launch.py` → for full simulation test
+* `simulation_test.launch.py` → for full simulation
 
 ---
 
@@ -251,6 +251,36 @@ This launch file:
 * generates and loads the URDF
 * spawns the lidar in simulation
 * calls `lidar.launch.py` to start the gazebo bridge
+
+Set `gui:=false` to run without the simulator GUI.
+
+The 2D launch test uses `test/test_simulation_2d.yaml` to simulate a SICK LMS151.
+It checks reception of five `sensor_msgs/msg/LaserScan` messages on
+`/robot/ns/lidar/scan`, with the expected frame and increasing timestamps.
+The lidar is attached to `world` at xyz `[1.0, 2.0, 3.0]` metres and
+rpy `[4.0, 5.0, 6.0]` degrees.
+
+The 3D launch test uses `test/test_simulation_3d.yaml` to simulate an Ouster OS1.
+It checks reception of five `sensor_msgs/msg/PointCloud2` messages on
+`/robot/ns/lidar/points`, with the expected frame and increasing timestamps.
+
+Both tests use the common simulation world with normal gravity and focus on the
+simulation-to-ROS bridge, without checking individual ranges or point coordinates.
+In standalone mode, `location.parent_link: world` fixes the sensor to the
+simulation world at the configured mounting pose. The xacro declares the
+unprefixed `world` link and its fixed joint. With any other parent, the
+standalone sensor has no mounting joint and remains free under gravity.
+When integrated into a robot (`standalone: false`), the parent link must
+be supplied by the robot model.
+The robot namespace still prefixes sensor links and ROS topics.
+
+Gazebo Classic is selected when `gazebo_ros` is available; otherwise the tests
+use Gazebo through `ros_gz`.
+
+```bash
+colcon test --packages-select romea_lidar_meta_bringup \
+  --ctest-args -R "test_test_lidar.*gazebo_simulation.*launch.py" --output-on-failure
+```
 
 ---
 ## 5) Supported lidars

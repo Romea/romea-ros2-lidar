@@ -1,0 +1,19 @@
+name: lidar
+namespace: ns
+launch:
+  - include:
+      file: $(find-pkg-share romea_lidar_meta_bringup)/profile/gz_bridge.launch.py
+      if: $(eval "'$(var mode)' == 'simulation_gazebo'")
+configuration:
+  manufacturer: ouster
+  model: os
+  version: "1"
+  rate: 10
+  samples: 512
+  lasers: 32
+location:
+  parent_link: world  # Fixed to the simulation world in standalone mode
+  xyz: [1.0, 2.0, 3.0]
+  rpy: [4.0, 5.0, 6.0]
+records:
+  points: true

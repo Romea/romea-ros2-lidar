@@ -1,0 +1,18 @@
+name: lidar
+namespace: ns
+launch:
+  - include:
+      file: $(find-pkg-share romea_lidar_meta_bringup)/profile/gz_bridge.launch.py
+      if: $(eval "'$(var mode)' == 'simulation_gazebo'")
+configuration:
+  manufacturer: sick
+  model: lms
+  version: "151"
+  rate: 50
+  azimut_resolution: 0.5
+location:
+  parent_link: world  # Fixed to the simulation world in standalone mode
+  xyz: [1.0, 2.0, 3.0]
+  rpy: [4.0, 5.0, 6.0]
+records:
+  scan: true
