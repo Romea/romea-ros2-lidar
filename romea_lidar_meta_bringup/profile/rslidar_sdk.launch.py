@@ -14,10 +14,8 @@
 
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, OpaqueFunction, IncludeLaunchDescription
-from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch_ros.substitutions import FindPackageShare
+from launch.actions import DeclareLaunchArgument, OpaqueFunction
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 import yaml
@@ -52,13 +50,12 @@ def launch_setup(context, *args, **kwargs):
                 "driver": {
                     #  LiDAR type - RS16, RS32, RSBP, RSAIRY, RSHELIOS, RSHELIOS_16P, RS128, RS80,
                     #  RS48, RSP128, RSP80, RSP48, RSM1, RSM1_JUMBO, RSM2, RSM3, RSE1, RSMX.
-                    "lidar_type": "",       
-                                                       
+                    "lidar_type": "",
                     "msop_port": 6699,        # Msop port of lidar
                     "difop_port": 7788,       # Difop port of lidar
                     "imu_port": 0,            # IMU port of lidar(only for RSAIRY, RSE1), 0 means
                                               # no imu. If you want to use IMU, please first set
-                                              # ENABLE_IMU_DATA_PARSE to ON in CMakeLists.txt 
+                                              # ENABLE_IMU_DATA_PARSE to ON in CMakeLists.txt
 
                     "user_layer_bytes": 0,    # Bytes of user layer. If 0, disabled
                     "tail_layer_bytes": 0,    # Bytes of tail layer. If 0, disabled
@@ -69,16 +66,16 @@ def launch_setup(context, *args, **kwargs):
                     "use_lidar_clock": True,  # true: Use the lidar clock as the message timestamp
                                               # false: Use the system clock as the timestamp
                     "dense_points": False,    # true: discard NAN points; false: reserve NAN points
-                          
-                    "ts_first_point": False,  # true: time-stamp point cloud with the first point; 
-                                              # false: with the last point;   
+
+                    "ts_first_point": False,  # true: time-stamp point cloud with the first point;
+                                              # false: with the last point;
                                               # these parameters are used from mechanical lidar
 
                     "start_angle": 0,         # Start angle of point cloud
                     "end_angle": 360,         # End angle of point cloud
 
                     #  When msg_source is 3, the following parameters will be used
-                    "pcap_repeat": True,             # true: The pcap bag will repeat play   
+                    "pcap_repeat": True,             # true: The pcap bag will repeat play
                     "pcap_rate": 1.0,                # Rate to read the pcap file
                     "pcap_path": "/tmp/lidar.pcap",  # The path of pcap file
                 },

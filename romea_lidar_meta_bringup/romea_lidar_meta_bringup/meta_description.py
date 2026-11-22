@@ -18,6 +18,7 @@ import romea_lidar_description
 
 
 class LIDARMetaDescription(SensorMetaDescription):
+
     def __init__(self, meta_description_file_path, robot_name=None):
         super().__init__("lidar", meta_description_file_path, robot_name)
 
