@@ -3,4 +3,6 @@ include:
     file: ".gitlab-ci.yml"
 
 variables:
-  PKGS_TO_BUILD_TEST: "romea_lidar_meta_bringup romea_lidar"
+  ROS_HUMBLE_IMAGE: "osrf/ros:humble-desktop-full-jammy"
+  ROS_JAZZY_IMAGE: "osrf/ros:jazzy-desktop-full-noble"
+  PKGS_TO_BUILD_TEST: "romea_lidar_meta_bringup romea_lidar_description"
